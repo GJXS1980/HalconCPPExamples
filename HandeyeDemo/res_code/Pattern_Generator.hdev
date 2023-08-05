@@ -12,9 +12,9 @@
 <c>* CalTabDescrFile 标定板描述文件的文件路径（.descr）。</c>
 <c>* CalTabPSFile 标定板图像文件的文件路径（.ps）</c>
 <c></c>
-<l>gen_caltab (3, 3, 0.02, 0.75, '/home/grantli/handeye_ws/halcon_handeye/circles_pattern/caltab3x3_d15mm.descr', '/home/grantli/handeye_ws/halcon_handeye/circles_pattern/caltab3x3_d15mm.bmp')</l>
+<l>gen_caltab (3, 3, 0.02, 0.75, '../circles_pattern/caltab3x3_d15mm.descr', '../circles_pattern/caltab3x3_d15mm.bmp')</l>
 <c></c>
-<l>gen_caltab (3, 3, 0.03, 0.666667, '/home/grantli/handeye_ws/halcon_handeye/circles_pattern/caltab3x3_d20mm.descr', '/home/grantli/handeye_ws/halcon_handeye/circles_pattern/caltab3x3_d20mm.bmp')</l>
+<l>gen_caltab (3, 3, 0.03, 0.666667, '../circles_pattern/caltab3x3_d20mm.descr', '../circles_pattern/caltab3x3_d20mm.bmp')</l>
 <c></c>
 </body>
 <docu id="main">
