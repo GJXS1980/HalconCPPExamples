@@ -28,3 +28,13 @@ add_executable(
 # 链接HALCON库
 target_link_libraries(HandToEyeDemo halconcpp)
 
+# 添加编译目标
+add_executable(
+    GenCaltabDemo 
+    src/GenCaltabDemo.cpp 
+    )
+
+# 链接HALCON库
+target_link_libraries(GenCaltabDemo halconcpp)
+
+

@@ -10,12 +10,21 @@ make
 ```
 
 3. 运行编译程序
-```
+```bash
 cd ../bin
+
+#   生成标定板
+./GenCaltabDemo
+
+#   手眼标定
 ./HandToEyeDemo
 ```
 
 ### halcon使用流程
+1. 标定板生成
+打开halcon导入，<code>Pattern_Generator.hdev</code>运行即可。
+
+2. 手眼标定
 打开halcon导入，<code>nine_point_calibration.hdev</code>运行即可。
 
 ### 说明
