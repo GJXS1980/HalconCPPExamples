@@ -4,7 +4,7 @@
 <interface/>
 <body>
 <l>dev_close_window ()</l>
-<l>read_image (Image, 'image.png')</l>
+<l>read_image (Image, '../img/image.png')</l>
 <l>get_image_size (Image, Width, Height)</l>
 <l>dev_open_window (0, 0, Width*2, Height*2, 'black', WindowHandle)</l>
 <l>dev_display (Image)</l>

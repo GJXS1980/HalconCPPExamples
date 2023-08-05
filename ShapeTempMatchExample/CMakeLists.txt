@@ -21,3 +21,10 @@ add_executable(ShapeTempMatchExample src/ShapeTempMatchExample_demo.cpp)
 
 # 链接HALCON库
 target_link_libraries(ShapeTempMatchExample halconcpp)
+
+# 添加编译目标
+add_executable(ShapeTempMatchDemo src/main.cpp)
+
+# 链接HALCON库
+target_link_libraries(ShapeTempMatchDemo halconcpp)
+

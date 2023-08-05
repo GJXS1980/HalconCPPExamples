@@ -11,8 +11,6 @@
 #include "HalconCpp.h"
 #include "HDevThread.h"
 
-
-
 using namespace HalconCpp;
 
 namespace halcon_demo
