@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>*</c>
+<c>* Sample program for connecting to a Mech-Eye Industrial 3D Camera, perform image capturing, and adjust camera parameters using HALCON.</c>
+<c>*</c>
+<c>* Replace "MechEye" with the "user_name" or "unique_name" of the camera to be connected.</c>
+<c>* 设置相机设备信息为'MechEye'</c>
+<l>DeviceInfo := 'MechEye'</l>
+<c></c>
+<c>* List the available cameras.</c>
+<c>* 列出可用的相机</c>
+<l>info_framegrabber ('GigEVision2', 'device', Info, DeviceInfos)</l>
+<l>tuple_regexp_select (DeviceInfos, DeviceInfo, MechEyeCameras)</l>
+<l>dev_inspect_ctrl (DeviceInfos)</l>
+<c></c>
+<c>* Stop execution if no cameras are found.</c>
+<c>* 如果没有找到相机则停止执行</c>
+<l>if (not |MechEyeCameras|)</l>
+<l>    stop()</l>
+<l>endif</l>
+<c></c>
+<c>* Connect to the camera: if "user_Name" or "unique_name" is not set in tuple_regexp_select, the first camera in the list will be connected.</c>
+<c>* 连接相机：如果"user_Name"或"unique_name"未在tuple_regexp_select中设置，则将连接到列表中的第一个相机</c>
+<l>open_framegrabber ('GigEVision2', 1, 1, 0, 0, 0, 0, 'default', -1, 'default', -1, 'false', 'default', MechEyeCameras[0], 0, -1, AcqHandle)</l>
+<c></c>
+<c>* 设置帧抓取参数</c>
+<l>get_framegrabber_param (AcqHandle, 'available_param_names', ParameterValues)</l>
+<l>set_framegrabber_param (AcqHandle, 'grab_timeout', 8000)</l>
+<l>set_framegrabber_param (AcqHandle, '[Stream]GevStreamMaxPacketGaps', 500)</l>
+<c></c>
+<c>* Switch the "DeviceScanType" parameter to "Areascan" to obtain the 2D image.</c>
+<c>* 切换"DeviceScanType"参数为"Areascan"以获取2D图像</c>
+<l>set_framegrabber_param (AcqHandle, 'DeviceScanType', 'Areascan')</l>
+<l>set_framegrabber_param (AcqHandle, 'AcquisitionMode', 'SingleFrame')</l>
+<c></c>
+<c>* 获取相机参数：宽度、高度、像素格式</c>
+<l>get_framegrabber_param (AcqHandle, 'Width', Width)</l>
+<l>get_framegrabber_param (AcqHandle, 'Height', Height)</l>
+<l>get_framegrabber_param (AcqHandle, 'PixelFormat', PixelFormat)</l>
+<c></c>
+<c>* Set the "2D Scanning" parameters.</c>
+<c>* 设置"2D Scanning"参数</c>
+<l>set_framegrabber_param (AcqHandle, 'Scan2DExposureMode', 'Timed')</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan2DExposureTime', 100)</l>
+<c></c>
+<c>* Obtain the 2D image from the camera.</c>
+<c>* 获取2D图像</c>
+<l>grab_image (Image2d, AcqHandle)</l>
+<c>* Save the 2D image to the "Image2d.bmp" file.</c>
+<c>* 将2D图像保存到"Image2d.bmp"文件</c>
+<l>write_image( Image2d , 'bmp' , 0 , 'Image2d' )</l>
+<c></c>
+<c>* Switch the "DeviceScanType" parameter to "Areascan3D" to obtain the 3D data.</c>
+<c>* 切换"DeviceScanType"参数为"Areascan3D"以获取3D数据</c>
+<l>set_framegrabber_param (AcqHandle, 'DeviceScanType', 'Areascan3D')</l>
+<c></c>
+<c>* 获取相机参数：宽度、高度、像素格式</c>
+<l>get_framegrabber_param (AcqHandle, 'Width', Width)</l>
+<l>get_framegrabber_param (AcqHandle, 'Height', Height)</l>
+<l>get_framegrabber_param (AcqHandle, 'PixelFormat', PixelFormat)</l>
+<c></c>
+<c>* Set the "3D Scanning" parameters.</c>
+<c>* 设置"3D Scanning"参数</c>
+<l>set_framegrabber_param (AcqHandle, 'Scan3DExposureCount', 1)</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3DExposureTime', 8)</l>
+<c></c>
+<c>* Set the "Depth Range" parameters (unit: mm).</c>
+<c>* 设置"Depth Range"参数（单位：毫米）</c>
+<l>set_framegrabber_param (AcqHandle, 'DepthLowerLimit', 1)</l>
+<l>set_framegrabber_param (AcqHandle, 'DepthUpperLimit', 3000)</l>
+<c></c>
+<c>* 获取相机固件版本号</c>
+<l>get_framegrabber_param (AcqHandle, 'DeviceFirmwareVersion', FirmwareVersion)</l>
+<c></c>
+<c>* Set the "Point Cloud Processing" parameters.</c>
+<c>* Different camera firmware versions have different "Point Cloud Processing" parameters.</c>
+<c>* 设置"Point Cloud Processing"参数</c>
+<c>* 不同相机固件版本有不同的"Point Cloud Processing"参数</c>
+<l>if (FirmwareVersion &lt; '2.1.0')</l>
+<l>    set_framegrabber_param (AcqHandle, 'CloudOutlierFilterMode', 'Normal')</l>
+<l>    set_framegrabber_param (AcqHandle, 'CloudSmoothMode', 'Normal')</l>
+<l>else</l>
+<l>    set_framegrabber_param (AcqHandle, 'PointCloudSurfaceSmoothing', 'Normal')</l>
+<l>    set_framegrabber_param (AcqHandle, 'PointCloudOutlierRemoval', 'Normal')</l>
+<l>    set_framegrabber_param (AcqHandle, 'PointCloudNoiseRemoval', 'Normal')</l>
+<l>    set_framegrabber_param (AcqHandle, 'PointCloudEdgePreservation', 'Normal')</l>
+<l>endif</l>
+<c>        </c>
+<c>* Open the 3D object model generator.</c>
+<c>* 打开3D对象模型生成器</c>
+<l>set_framegrabber_param (AcqHandle, 'create_objectmodel3d', 'enable')</l>
+<l>set_framegrabber_param (AcqHandle, 'add_objectmodel3d_overlay_attrib', 'enable')</l>
+<c></c>
+<c>* Generate the point cloud (stored in the "ObjectModel3D" variable).</c>
+<c>* 生成点云数据（存储在"ObjectModel3D"变量中）</c>
+<l>grab_data(Image3d, Region, Contours, AcqHandle, ObjectModel3D)</l>
+<c></c>
+<c>* 如果点云数据不为空，则保存点云到"PointCloud.ply"文件</c>
+<l>get_object_model_3d_params(ObjectModel3D, 'num_points', NumOfPoints)</l>
+<l>if(NumOfPoints != 0)</l>
+<c>    * Save the point cloud to the "PointCloud.ply" file.</c>
+<l>    write_object_model_3d (ObjectModel3D, 'ply', 'PointCloud.ply', [], [])</l>
+<l>endif</l>
+<c></c>
+<c>* Visualize the point cloud.</c>
+<c>* 可视化点云</c>
+<l>dev_open_window (0, 0, Width, Height, 'black', WindowHandle3d)</l>
+<l>visualize_object_model_3d (WindowHandle3d, ObjectModel3D, [], [], [], [], [], [], [], PoseOut)</l>
+<l>dev_close_window ()</l>
+<c></c>
+<c></c>
+<c>* 清除3D对象模型</c>
+<l>clear_object_model_3d (ObjectModel3D)</l>
+<c>* 关闭相机连接</c>
+<l>close_framegrabber (AcqHandle)</l>
+<c></c>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="addOffset">
+<interface/>
+<body>
+<l>convert_image_type (x, rReal, 'real')</l>
+<l>scale_image (rReal, rRealWithOffest, 1, offest)</l>
+<l>scale_image (rRealWithOffest, rRealWithOffest, scale, 0)</l>
+<l>return ()</l>
+</body>
+<docu id="addOffset">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="decode">
+<interface>
+<io>
+<par name="X" base_type="iconic" dimension="0"/>
+<par name="Y" base_type="iconic" dimension="0"/>
+<par name="Z" base_type="iconic" dimension="0"/>
+</io>
+<oo>
+<par name="DecodedX" base_type="iconic" dimension="0"/>
+<par name="DecodedY" base_type="iconic" dimension="0"/>
+<par name="DecodedZ" base_type="iconic" dimension="0"/>
+</oo>
+<ic>
+<par name="Scale" base_type="ctrl" dimension="0"/>
+<par name="Offset" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c></c>
+<l>convert_image_type (X, xReal, 'real')</l>
+<l>scale_image (xReal, DecodedX, Scale, 0)</l>
+<l>scale_image (DecodedX, DecodedX, 1, Offset)</l>
+<c></c>
+<l>convert_image_type (Y, yReal, 'real')</l>
+<l>scale_image (yReal, DecodedY, Scale, 0)</l>
+<l>scale_image (DecodedY, DecodedY, 1, Offset)</l>
+<c></c>
+<l>convert_image_type (Z, zReal, 'real')</l>
+<l>scale_image (zReal, DecodedZ, Scale, 0)</l>
+<l>scale_image (DecodedZ, DecodedZ, 1, Offset)</l>
+<l>return ()</l>
+</body>
+<docu id="decode">
+<parameters>
+<parameter id="DecodedX"/>
+<parameter id="DecodedY"/>
+<parameter id="DecodedZ"/>
+<parameter id="Offset"/>
+<parameter id="Scale"/>
+<parameter id="X"/>
+<parameter id="Y"/>
+<parameter id="Z"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>

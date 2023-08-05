@@ -11,6 +11,7 @@ make
 
 3. 运行编译程序
 ```
+cd ../bin
 ./ShapeTempMatchExample
 ```
 
