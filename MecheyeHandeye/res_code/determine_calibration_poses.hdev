@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* This sample program is used to determine the calibration poses used during the hand-eye calibration. </c>
+<c>** During hand-eye calibration, the camera needs to obtain images of the calibration board at a series of robot poses. These robot poses are the calibration poses.</c>
+<c>** Please refer to the README file for detailed explanation of the entire process.</c>
+<c></c>
+<c>* Replace "MechEye" with the "user_name" or "unique_name" of the camera to be connected.</c>
+<c>* 替换 "MechEye" 为要连接的相机的 "user_name" 或 "unique_name"</c>
+<l>DeviceInfo := 'MechEye'</l>
+<c></c>
+<c>* List the available cameras.</c>
+<c>* 列出可用的相机</c>
+<l>info_framegrabber ('GigEVision2', 'device', Info, DeviceInfos)</l>
+<l>tuple_regexp_select (DeviceInfos, DeviceInfo, MechEyeCameras)</l>
+<l>dev_inspect_ctrl (DeviceInfos)</l>
+<c></c>
+<c>* Stop execution if no cameras are found.</c>
+<c>* 如果没有找到相机则停止程序执行</c>
+<l>if (not |MechEyeCameras|)</l>
+<l>    stop()</l>
+<l>endif</l>
+<c></c>
+<c>* Connect to the camera: if "user_Name" or "unique_name" is not set in tuple_regexp_select, the first camera in the list will be connected.</c>
+<c>* 连接相机：如果 "user_Name" 或 "unique_name" 在 tuple_regexp_select 中没有设置，则将连接列表中的第一个相机。</c>
+<l>open_framegrabber ('GigEVision2', 1, 1, 0, 0, 0, 0, 'default', -1, 'default', -1, 'false', 'default', MechEyeCameras[0], 0, -1, AcqHandle)</l>
+<c></c>
+<l>get_framegrabber_param (AcqHandle, 'available_param_names', ParameterValues)</l>
+<c></c>
+<l>get_framegrabber_param (AcqHandle, 'DeviceFirmwareVersion', FirmwareVersion)</l>
+<c></c>
+<c>* Stop execution if the camera firmware version is below 2.1.0.</c>
+<c>* 如果相机固件版本低于 2.1.0 则停止程序执行</c>
+<l>if (FirmwareVersion &lt; '2.1.0')</l>
+<l>    stop()</l>
+<l>endif</l>
+<c></c>
+<c>* Switch the "DeviceScanType" parameter to "Areascan" to obtain the 2D image.</c>
+<c>* 将 "DeviceScanType" 参数切换为 "Areascan" 以获取2D图像</c>
+<l>set_framegrabber_param (AcqHandle, 'DeviceScanType', 'Areascan')</l>
+<l>set_framegrabber_param (AcqHandle, 'grab_timeout', 10000)</l>
+<c></c>
+<c>* Set the calibration board model: replace "BDB-5" with the calibration board model in use. Possible values include BDB-5, BDB-6, BDB-7, OCB-005, OCB-010, OCB-015, OCB-020, CGB-020, CGB-035, and CGB-050</c>
+<c>* 设置校准板模型：将 "BDB-5" 替换为正在使用的校准板模型。可能的值包括 BDB-5、BDB-6、BDB-7、OCB-005、OCB-010、OCB-015、OCB-020、CGB-020、CGB-035 和 CGB-050。</c>
+<l>setboardType('BDB-7',boardType)</l>
+<l>set_framegrabber_param (AcqHandle, 'BoardType', boardType)</l>
+<c></c>
+<c>* Start determining the calibration poses. Record the determined calibration poses in the "robot_pose" JSON file.</c>
+<c>* 开始确定校准位姿。将确定的校准位姿记录在 "robot_pose" JSON 文件中。</c>
+<l>Text := 'Press the key that represents the action you want to perform:' + '\n' + 'P - obtain the original 2D image;' + '\n' + 'T - obtain the 2D image with the feature detection results;' + '\n' + 'Q - quit the process'</l>
+<l>dev_get_window (WindowHandle)</l>
+<l>dev_set_window (WindowHandle)</l>
+<l>while(true)    </l>
+<l>    grab_image(Image, AcqHandle)</l>
+<l>    get_framegrabber_param (AcqHandle, 'ExtrinErrCode', ErrCode)</l>
+<l>    disp_text (WindowHandle, Text, 'window', 'top', 'center', 'forest green', [], [])</l>
+<c>    </c>
+<c>    *Read keyboard input</c>
+<c>    *读取键盘输入</c>
+<l>    read_char (WindowHandle, Char, ReCode)</l>
+<l>    if (Char == 'q' or Char =='Q')</l>
+<l>        break</l>
+<l>    endif</l>
+<l>    if (Char == 'p'or Char =='P')</l>
+<l>        set_framegrabber_param (AcqHandle, 'Test Collect', false)</l>
+<l>    endif</l>
+<l>    if (Char == 't'or Char =='T')</l>
+<l>        set_framegrabber_param (AcqHandle, 'Test Collect', true)</l>
+<l>        set_framegrabber_param (AcqHandle, 'UserSetLoad', 0)</l>
+<l>    endif</l>
+<l>endwhile</l>
+<l>set_framegrabber_param (AcqHandle, 'Test Collect', false)</l>
+<l>close_framegrabber (AcqHandle)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="setboardType">
+<interface>
+<ic>
+<par name="input" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="output" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>tuple_regexp_replace (input, ['-0*','replace_all'], '_', output)</l>
+<l>return ()</l>
+</body>
+<docu id="setboardType">
+<parameters>
+<parameter id="input"/>
+<parameter id="output"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>

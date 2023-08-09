@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>*关闭窗口</c>
+<l>dev_close_window ()</l>
+<c>*读取图像</c>
+<l>read_image (origImg,'../data/disparity.jpg')</l>
+<c>*打开窗口并显示</c>
+<l>dev_open_window_fit_image (origImg, 0, 0, -1, -1, WindowHandle)</l>
+<l>dev_display (origImg)</l>
+<c>*读取灰度图信息</c>
+<l>gray_features (origImg,origImg, 'min', Value)</l>
+<l>gray_features (origImg, origImg, 'max', Value1)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

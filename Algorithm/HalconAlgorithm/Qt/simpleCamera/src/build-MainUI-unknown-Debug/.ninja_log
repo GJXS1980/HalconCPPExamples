@@ -1,0 +1,27 @@
+# ninja log v5
+0	82	0	CMakeFiles/MainUI_autogen	7ab1f3dc39b47572
+82	829	1691541606334787548	CMakeFiles/MainUI.dir/main.cpp.o	f321c37e3ff8e876
+0	82	0	MainUI_autogen/include/ui_mainui.h	7ab1f3dc39b47572
+82	740	1691541606246786516	CMakeFiles/MainUI.dir/MainUI_autogen/mocs_compilation.cpp.o	781d82d38d134aab
+0	82	0	MainUI_autogen/mocs_compilation.cpp	7ab1f3dc39b47572
+0	82	0	/home/grantli/halcon_ws/HalconCPPExamples/Algorithm/HalconAlgorithm/Qt/simpleCamera/src/build-MainUI-unknown-Debug/CMakeFiles/MainUI_autogen	7ab1f3dc39b47572
+0	82	0	/home/grantli/halcon_ws/HalconCPPExamples/Algorithm/HalconAlgorithm/Qt/simpleCamera/src/build-MainUI-unknown-Debug/MainUI_autogen/mocs_compilation.cpp	7ab1f3dc39b47572
+0	82	0	/home/grantli/halcon_ws/HalconCPPExamples/Algorithm/HalconAlgorithm/Qt/simpleCamera/src/build-MainUI-unknown-Debug/MainUI_autogen/include/ui_mainui.h	7ab1f3dc39b47572
+0	89	0	CMakeFiles/MainUI_autogen	7ab1f3dc39b47572
+0	89	0	MainUI_autogen/mocs_compilation.cpp	7ab1f3dc39b47572
+0	89	0	MainUI_autogen/include/ui_mainui.h	7ab1f3dc39b47572
+0	89	0	/home/grantli/halcon_ws/HalconCPPExamples/Algorithm/HalconAlgorithm/Qt/simpleCamera/src/build-MainUI-unknown-Debug/CMakeFiles/MainUI_autogen	7ab1f3dc39b47572
+0	89	0	/home/grantli/halcon_ws/HalconCPPExamples/Algorithm/HalconAlgorithm/Qt/simpleCamera/src/build-MainUI-unknown-Debug/MainUI_autogen/mocs_compilation.cpp	7ab1f3dc39b47572
+0	89	0	/home/grantli/halcon_ws/HalconCPPExamples/Algorithm/HalconAlgorithm/Qt/simpleCamera/src/build-MainUI-unknown-Debug/MainUI_autogen/include/ui_mainui.h	7ab1f3dc39b47572
+89	824	1691541719263777643	CMakeFiles/MainUI.dir/MainUI_autogen/mocs_compilation.cpp.o	734afd8cd27cf036
+90	897	1691541719335778075	CMakeFiles/MainUI.dir/main.cpp.o	8129a3198d4db836
+90	1256	1691541719695780235	CMakeFiles/MainUI.dir/mainui.cpp.o	9ec4acebc729da9e
+1257	1488	1691541719923781604	MainUI	85e23662db76c6be
+1	5	0	CMakeFiles/MainUI_autogen	7ab1f3dc39b47572
+1	5	0	MainUI_autogen/mocs_compilation.cpp	7ab1f3dc39b47572
+1	5	0	MainUI_autogen/include/ui_mainui.h	7ab1f3dc39b47572
+1	5	0	/home/grantli/halcon_ws/HalconCPPExamples/Algorithm/HalconAlgorithm/Qt/simpleCamera/src/build-MainUI-unknown-Debug/CMakeFiles/MainUI_autogen	7ab1f3dc39b47572
+1	5	0	/home/grantli/halcon_ws/HalconCPPExamples/Algorithm/HalconAlgorithm/Qt/simpleCamera/src/build-MainUI-unknown-Debug/MainUI_autogen/mocs_compilation.cpp	7ab1f3dc39b47572
+1	5	0	/home/grantli/halcon_ws/HalconCPPExamples/Algorithm/HalconAlgorithm/Qt/simpleCamera/src/build-MainUI-unknown-Debug/MainUI_autogen/include/ui_mainui.h	7ab1f3dc39b47572
+5	1046	1691541798876120037	CMakeFiles/MainUI.dir/mainui.cpp.o	9ec4acebc729da9e
+1046	1262	1691541799092120614	MainUI	85e23662db76c6be

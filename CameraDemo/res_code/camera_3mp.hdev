@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c as_id="image_acquisition" as_name="Image Acquisition 02" as_grp="[1,1]" as_ord="1">* ubuntu</c>
+<l as_id="image_acquisition" as_name="Image Acquisition 02" as_grp="[1,1]" as_ord="2">open_framegrabber ('GStreamer', 0, 0, 0, 0, 0, 0, 'progressive', -1, 'default', -1, 'false', 'default', 'GStreamer_DEV_USB Camera: USB Camera', 0, -1, AcqHandle)</l>
+<l as_id="image_acquisition" as_name="Image Acquisition 02" as_grp="[2,1]" as_ord="1">grab_image_start (AcqHandle, -1)</l>
+<c></c>
+<l as_id="image_acquisition" as_name="Image Acquisition 02" as_grp="[2,2]" as_ord="1">while (true)</l>
+<l as_id="image_acquisition" as_name="Image Acquisition 02" as_grp="[2,3]" as_ord="1">    grab_image_async (Image1, AcqHandle, -1)</l>
+<c as_id="image_acquisition" as_name="Image Acquisition 02" as_grp="[2,4]" as_ord="1">    * Image Acquisition 02: Do something</c>
+<l as_id="image_acquisition" as_name="Image Acquisition 02" as_grp="[3,1]" as_ord="1">endwhile</l>
+<c></c>
+<c></c>
+<l as_id="image_acquisition" as_name="Image Acquisition 02" as_grp="[4,1]" as_ord="1">close_framegrabber (AcqHandle)</l>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

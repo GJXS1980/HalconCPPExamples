@@ -28,6 +28,7 @@ cd ../bin
 打开halcon导入，<code>nine_point_calibration.hdev</code>运行即可。
 
 ### 说明
-可以更改程序中的识别图像，修改文件路径和文件名即可。
+1. 可以更改程序中的识别图像，修改文件路径和文件名即可。
 
+2. [九点标定参考链接](https://zhuanlan.zhihu.com/p/391938754)
 
