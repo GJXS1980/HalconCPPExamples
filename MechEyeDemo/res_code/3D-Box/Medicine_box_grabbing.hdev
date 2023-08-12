@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* ***************************************************************</c>
+<c>* 使用3D数据查找通用盒子的示例。</c>
+<c>* </c>
+<c>* 本示例演示如何在3D场景中查找通用盒子。</c>
+<c>* 首先，从XYZ图像生成3D场景，使用 xyz_to_object_model_3d 操作符。</c>
+<c>* 然后，在3D场景中查找具有指定边长的盒子。</c>
+<c>* </c>
+<c>* find_box_3d 对于每个在调用 find_box_3d 时指定大小范围内找到的盒子，都返回一个 GrippingPose</c>
+<c>* 这个 GrippingPose 可以提供给已进行手眼标定的机器人，以夹取找到的盒子</c>
+<c>* 请确保 GrippingPose 和机器人使用相同的姿态类型（参见 create_pose）</c>
+<c>* </c>
+<c>* 在大多数应用场景中，为了以快速且稳健的方式查找通用盒子，必须对3D场景进行预处理</c>
+<c>* find_box_3d 操作符的文档详细描述了如何准备您的数据，以及在出现问题时如何进行故障排除。</c>
+<c>* </c>
+<c>* 该示例演示了如何使用以下操作符：</c>
+<c>*   xyz_to_object_model_3d,</c>
+<c>*   find_box_3d,</c>
+<c>*   以及  the procedure debug_find_box_3d.</c>
+<c>* </c>
+<c>* ***************************************************************</c>
+<c>* 禁用窗口更新</c>
+<l>dev_update_off ()</l>
+<l>ImagePath := '/home/grantli/halcon_ws/HalconCPPExamples/MechEyeDemo/res_code/3D-Box/img/boxes_'</l>
+<c></c>
+<c>* 关闭之前的窗口，打开新窗口</c>
+<l>dev_close_window ()</l>
+<l>dev_open_window (0, 0, 1024, 768, 'black', WindowHandle)</l>
+<c>* </c>
+<c>* 设置显示字体大小，显示介绍信息</c>
+<l>set_display_font (WindowHandle, 16, 'mono', 'true', 'false')</l>
+<l>dev_disp_introduction ()</l>
+<l>stop ()</l>
+<c>* </c>
+<c>* 显示示例图像</c>
+<l>dev_clear_window ()</l>
+<l>read_image (Image, ImagePath + '01')</l>
+<l>dev_display (Image)</l>
+<l>Message := '这是一个示例场景图像，我们要在其中找到药盒'</l>
+<l>dev_disp_text (Message, 'window', 'top', 'left', 'black', [], [])</l>
+<l>dev_disp_text ('按运行（F5）键继续', 'window', 'bottom', 'right', 'black', [], [])</l>
+<l>stop ()</l>
+<c>* </c>
+<l>RobotToolSize := 0.01</l>
+<c>* 生成机器人工具和基础三维对象模型</c>
+<l>gen_robot_tool_and_base_object_model_3d (RobotToolSize * 0.05, RobotToolSize, OM3DToolOrigin, OM3DBase)</l>
+<c>* </c>
+<l>Pose := []</l>
+<l>for SceneIdx := 1 to 4 by 1</l>
+<c>    * 读取场景图像并创建三维对象模型</c>
+<l>    read_image (ImageXYZ, ImagePath + 'xyz_' + SceneIdx$'02')</l>
+<l>    decompose3 (ImageXYZ, X, Y, Z)</l>
+<l>    xyz_to_object_model_3d (X, Y, Z, OM3DScene)</l>
+<c>    * </c>
+<c>    * 设置箱子三条边的最小和最大值（以米为单位）</c>
+<l>    Len1 := [0.1025, 0.1035]</l>
+<l>    Len2 := [0.0481, 0.0490]</l>
+<l>    Len3 := [0.0215, 0.0225]</l>
+<c>    </c>
+<c>    * 设置箱子检测参数</c>
+<l>    Params := dict{}</l>
+<l>    Params.remove_outer_edges := 'true'</l>
+<l>    Params.max_gap := 150</l>
+<c>    * 寻找箱子</c>
+<l>    find_box_3d (OM3DScene, Len1, Len2, Len3, 0.2, Params, GrippingPose, Score, OM3DBox, BoxInformation)</l>
+<c>    * 可以使用 debug_find_box_3d 过程来调试 find_box_3d 的结果。</c>
+<l>*   debug_find_box_3d (OM3DBox, OM3DScene, BoxInformation, FindBox3DGenParam)</l>
+<c>    * </c>
+<c>    * 可视化找到的箱子和抓取姿势</c>
+<l>    GripTools := []</l>
+<l>    Colors := []</l>
+<l>    for Index := 0 to |Score| - 1 by 1</l>
+<l>        rigid_trans_object_model_3d (OM3DToolOrigin, GrippingPose[7 * Index:7 * Index + 6], OM3DToolTransformed)</l>
+<l>        GripTools := [GripTools,OM3DToolTransformed]</l>
+<c>        * 确定抓取点坐标系的颜色（RGB）</c>
+<l>        Colors := [Colors,'red', 'green', 'blue']</l>
+<l>    endfor</l>
+<c>    * </c>
+<l>    OM3DSampledScene := BoxInformation.sampled_scene</l>
+<l>    OM3DSampledEdges := BoxInformation.sampled_edges</l>
+<l>    gen_visualization_title (BoxInformation, Title)</l>
+<c>    * 颜色和标签的设置</c>
+<l>    Colors := [Colors,gen_tuple_const(|OM3DBox|,'green'),'yellow', 'gray']</l>
+<l>    Labels := [gen_tuple_const(3 * |OM3DBox|,''),Score$'.2f','', '']</l>
+<c>    * 可视化三维对象模型</c>
+<l>    visualize_object_model_3d (WindowHandle, [GripTools,OM3DBox,OM3DSampledEdges,OM3DSampledScene], [], Pose, ['color_' + [0:4 * |OM3DBox| + 2 - 1],'alpha_' + [3 * |OM3DBox|:4 * |OM3DBox| - 1]], [Colors,gen_tuple_const(|OM3DBox|,0.5)], Title, Labels, [], Pose)</l>
+<l>endfor</l>
+<l>dev_disp_text ('      End of program      ', 'window', 'bottom', 'right', 'black', [], [])</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="dev_disp_introduction">
+<interface/>
+<body>
+<l>ContinueMessage := 'Press Run (F5) to continue'</l>
+<l>Message := ['We want to find the pose of boxes in a 3D scene in order to grip them with a robot.', 'To accomplish this, we:', '    1. Read a scene with a XYZ-mapping,', '    2. Create a 3D object model of the scene,', '    3. Call find_box_3d and', '    4. Visualize the results.', '', 'find_box_3d returns a GrippingPose for each found box that is within the size range', 'specified in the call to find_box_3d. This GrippingPose can be provided to a hand-eye', 'calibrated robot to grip the found boxes.', '', 'In most application scenarios, the 3D scene has to be preprocessed in order to find', 'generic boxes fast and robust. The documentation provides detailed descriptions how to', 'prepare your data or how to troubleshoot in case of problems.']</l>
+<l>dev_disp_text (Message, 'window', 'top', 'left', 'white', 'box', 'false')</l>
+<l>dev_disp_text (ContinueMessage, 'window', 'bottom', 'right', 'black', [], [])</l>
+<l>return ()</l>
+</body>
+<docu id="dev_disp_introduction">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="gen_visualization_title">
+<interface>
+<ic>
+<par name="BoxInformation" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="Title" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>Is2DOnly := 1</l>
+<c></c>
+<l>BoxResult := BoxInformation.results</l>
+<l>get_dict_param (BoxResult, 'keys', [], BoxIndices)</l>
+<c>* </c>
+<l>if (|BoxIndices| == 0)</l>
+<l>    Title := 'No box found.'</l>
+<l>else</l>
+<l>    for Index := 0 to |BoxIndices| - 1 by 1</l>
+<l>        if (BoxResult.[Index].one_side_only != 'true')</l>
+<l>            Is2DOnly := 0</l>
+<l>            break</l>
+<l>        endif</l>
+<l>    endfor</l>
+<c>    * </c>
+<l>    if (Is2DOnly)</l>
+<l>        Title := 'The visible side and the computed gripping pose are displayed for each box found.'</l>
+<l>    else</l>
+<l>        Title := 'If more than one side of a box is visible, the box can be fully displayed.'</l>
+<l>    endif</l>
+<l>endif</l>
+<c>* </c>
+<l>return ()</l>
+</body>
+<docu id="gen_visualization_title">
+<parameters>
+<parameter id="BoxInformation"/>
+<parameter id="Title"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>

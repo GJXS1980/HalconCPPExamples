@@ -44,7 +44,7 @@
 <c></c>
 <c>* Set the calibration board model: replace "BDB-5" with the calibration board model in use. Possible values include BDB-5, BDB-6, BDB-7, OCB-005, OCB-010, OCB-015, OCB-020, CGB-020, CGB-035, and CGB-050</c>
 <c>* 设置校准板模型：将 "BDB-5" 替换为正在使用的校准板模型。可能的值包括 BDB-5、BDB-6、BDB-7、OCB-005、OCB-010、OCB-015、OCB-020、CGB-020、CGB-035 和 CGB-050。</c>
-<l>setboardType('BDB-7',boardType)</l>
+<l>setboardType('BDB-6',boardType)</l>
 <l>set_framegrabber_param (AcqHandle, 'BoardType', boardType)</l>
 <c></c>
 <c>* Start determining the calibration poses. Record the determined calibration poses in the "robot_pose" JSON file.</c>

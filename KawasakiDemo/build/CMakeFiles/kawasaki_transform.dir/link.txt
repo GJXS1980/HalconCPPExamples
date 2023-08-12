@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/kawasaki_transform.dir/src/kawasaki_transform.cpp.o -o /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/kawasaki_transform 

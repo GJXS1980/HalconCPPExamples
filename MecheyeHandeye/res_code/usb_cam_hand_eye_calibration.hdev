@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* 替换 "MechEye" 为要连接的相机的 "user_name" 或 "unique_name"</c>
+<l>DeviceInfo := 'Video4Linux2'</l>
+<c></c>
+<c>* new add</c>
+<l>ExtriResult := [] </l>
+<c></c>
+<c>* 列出可用的相机</c>
+<l>info_framegrabber ('Video4Linux2', 'device', Info, DeviceInfos)</l>
+<l>tuple_regexp_select (DeviceInfos, DeviceInfo, MechEyeCameras)</l>
+<l>dev_inspect_ctrl (DeviceInfos)</l>
+<c></c>
+<c>* 如果没有找到相机则停止程序执行</c>
+<l>if (not |MechEyeCameras|)</l>
+<l>    stop()</l>
+<l>endif</l>
+<c></c>
+<c>* 连接相机：如果 "user_Name" 或 "unique_name" 在 tuple_regexp_select 中没有设置，则将连接列表中的第一个相机。</c>
+<l>open_framegrabber ('Video4Linux2', 1, 1, 0, 0, 0, 0, 'default', -1, 'default', -1, 'false', 'default', 0, 0, -1, AcqHandle)</l>
+<l>get_framegrabber_param (AcqHandle, 'available_param_names', ParameterValues)</l>
+<l>get_framegrabber_param (AcqHandle, 'DeviceFirmwareVersion', FirmwareVersion)</l>
+<c></c>
+<c>* 如果相机固件版本低于 2.1.0 则停止程序执行</c>
+<l>if (FirmwareVersion &lt; '2.1.0')</l>
+<l>    stop()</l>
+<l>endif</l>
+<c></c>
+<c>* 设置图像采集的超时时间</c>
+<l>set_framegrabber_param (AcqHandle, 'grab_timeout', 10000)</l>
+<c></c>
+<c>* 将 "DeviceScanType" 参数切换为 "Areascan" 以获取2D图像</c>
+<l>set_framegrabber_param (AcqHandle, 'DeviceScanType', 'Areascan')</l>
+<c></c>
+<c>* 设置相机安装方法：如果相机是安装在手眼间的，将 "EyeInHnad" 替换为 "EyeToHand"</c>
+<l>set_framegrabber_param (AcqHandle, 'CalibrationType', 'EyeToHand')</l>
+<c></c>
+<c>* 设置校准板模型：将 "BDB-5" 替换为正在使用的校准板模型。可能的值包括 BDB-5、BDB-6、BDB-7、OCB-005、OCB-010、OCB-015、OCB-020、CGB-020、CGB-035 和 CGB-050。</c>
+<c>* BDB-5:标定板与相机距离 &lt; 0.6 m;BDB-6:标定板与相机距离 0.6–1.5 m;BDB-7:标定板与相机距离 &gt; 1.5 m</c>
+<l>setboardType('BDB-7',boardType)</l>
+<l>set_framegrabber_param (AcqHandle, 'BoardType', boardType)</l>
+<l>set_framegrabber_param (AcqHandle, 'Test Collect', false)</l>
+<c></c>
+<c>* 从JSON 文件读取数据</c>
+<l>read_dict('kawasaki_pose.json', [], [], DictJson)</l>
+<l>get_dict_param(DictJson,'keys', [], ALLKeys)</l>
+<l>get_dict_tuple(DictJson,'EulerType', EulerType)</l>
+<l>get_dict_tuple(DictJson,'FromDegree', FromDegree)</l>
+<l>get_dict_tuple(DictJson,'pose_count', PoseCount)</l>
+<c></c>
+<c>* 开始执行手眼标定</c>
+<c>* 逐个读取 JSON 文件中的校准位姿</c>
+<l>PatternsResult := []</l>
+<l>for I := 0 to PoseCount-1 by 1</l>
+<l>    PoseDataKey := 'pose_' + I$'02d'</l>
+<l>    get_dict_tuple(DictJson,PoseDataKey,PoseObj)</l>
+<l>    get_dict_tuple(PoseObj,0,Robot_x)</l>
+<l>    get_dict_tuple(PoseObj,1,Robot_y)</l>
+<l>    get_dict_tuple(PoseObj,2,Robot_z)</l>
+<l>    get_dict_tuple(PoseObj,3,Robot_r1)</l>
+<l>    get_dict_tuple(PoseObj,4,Robot_r2)</l>
+<l>    get_dict_tuple(PoseObj,5,Robot_r3)</l>
+<l>    pose := [Robot_x,Robot_y,Robot_z,Robot_r1,Robot_r2,Robot_r3]</l>
+<c>    </c>
+<c>    * 将欧拉角转换为四元数。如果您的机器人使用的欧拉角约定不受支持，请打开下面的过程并添加将此欧拉角约定转换为四元数的代码</c>
+<l>    euler_to_quad(pose, EulerType, FromDegree, PoseQuad)</l>
+<l>    PoseStr := PoseQuad[0] + ',' + PoseQuad[1] + ',' + PoseQuad[2] + ',' + PoseQuad[3] + ',' + PoseQuad[4] + ',' + PoseQuad[5] + ',' + PoseQuad[6]</l>
+<c></c>
+<c>    * Send the current calibration pose to the camera. </c>
+<c>    * 发送当前校准位姿给相机</c>
+<l>    set_framegrabber_param (AcqHandle, 'PoseData', PoseStr) </l>
+<c>    </c>
+<c>    * 将该位姿添加到外参参数计算中</c>
+<l>    set_framegrabber_param (AcqHandle, 'AddPose', 0)</l>
+<c></c>
+<c>    * 移动机器人到JSON 文件中的下一个校准位姿，然后按F5键继续运行该程序</c>
+<l>    stop()</l>
+<c>    * 在当前校准位姿进行图像采集，检测特征，并将特征检测数据添加到外参参数计算中</c>
+<l>    set_framegrabber_param (AcqHandle, 'Test Collect', true)</l>
+<c></c>
+<l>    collect_pattern (AcqHandle, CollectResult)</l>
+<c>    </c>
+<c>    * 在 "PatternsResult" 变量中记录每个校准位姿的特征检测状态</c>
+<l>    tuple_insert(PatternsResult, 0, CollectResult, PatternsResult)    </l>
+<l>    grab_image(Image, AcqHandle)</l>
+<l>    Text := 'No. of the current calibration pose:' + (I+1) + '\n' + 'Total no. of calibration poses:' + PoseCount + '\n' + 'Feature detection status at current pose:' + CollectResult + '\n' +'Move the robot to the next calibration pose.'</l>
+<l>    dev_disp_text (Text, 'window', 'top', 'center', 'black', 'shadow', false)</l>
+<l>endfor</l>
+<c></c>
+<c>* 已在所有校准位姿进行特征检测数据收集。开始计算外参参数</c>
+<l>calibrate_handeye_mmind (AcqHandle, CalibResult, ExtriResult)</l>
+<c></c>
+<c>* 如果计算成功，外参参数将保存在 "ExtrinsicParameters" TXT 文件中。平移分量的单位为m，旋转分量使用四元数描述。</c>
+<c>* 切换输出点云时相机所在的参考坐标系，并获取点云</c>
+<c>* 默认情况下，不切换参考坐标系。如果您需要将点云输出在机器人参考坐标系中，请打开下面的过程，并更改 "Scan3dCoordinateTransformEnable" 参数的值</c>
+<l>captureTranformedPointCloud(AcqHandle,ExtriResult)</l>
+<c></c>
+<c>* The point cloud is saved as a "PointCloud" PLY file.</c>
+<c>* 点云将以 "PointCloud" PLY 文件的形式保存</c>
+<l>close_framegrabber (AcqHandle)</l>
+<c></c>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="collect_pattern">
+<interface>
+<ic>
+<par name="AcqHandle" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="CollectResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>CollectResult := []</l>
+<c>* Start performing image capturing at the current calibration pose, detecting features, and adding the feature detection data to the extrinsic parameter calculation.</c>
+<l>set_framegrabber_param (AcqHandle, 'CollectPatternOnce', 0)</l>
+<l>count_seconds(Start)</l>
+<l>timeout := 10</l>
+<l>while (1)</l>
+<l>    wait_seconds(0.5)</l>
+<l>    set_framegrabber_param (AcqHandle, 'UserSetLoad', 0)</l>
+<c>    * Check whether the above processes have been completed.</c>
+<l>    get_framegrabber_param (AcqHandle, 'CollectStatus', CollectRet)</l>
+<l>    if (CollectRet == 'COLLECT_DONE')      </l>
+<l>      break</l>
+<l>    endif</l>
+<l>    count_seconds(End)   </l>
+<l>    if((End - Start) &gt; timeout)   </l>
+<l>      break</l>
+<l>    endif</l>
+<l>endwhile</l>
+<c>* Check the execution status of the above processes and store the status code in the "CollectResult" variable.</c>
+<l>get_framegrabber_param (AcqHandle, 'ExtrinErrCode', ErrCode)</l>
+<l>CollectResult := ErrCode</l>
+<l>return ()</l>
+</body>
+<docu id="collect_pattern">
+<parameters>
+<parameter id="AcqHandle"/>
+<parameter id="CollectResult"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="calibrate_handeye_mmind">
+<interface>
+<ic>
+<par name="AcqHandle" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="CalibResult" base_type="ctrl" dimension="0"/>
+<par name="ExtriResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>CalibResult := []</l>
+<c>* Start calculating extrinsic parameters.</c>
+<l>set_framegrabber_param (AcqHandle, 'CalibrateHandEye', 0)</l>
+<l>wait_seconds(5)</l>
+<l>count_seconds(Start)</l>
+<c>* Set the timeout period for calculation.</c>
+<l>timeout := 1000</l>
+<l>while (1)</l>
+<l>    wait_seconds(0.5)</l>
+<l>    set_framegrabber_param (AcqHandle, 'UserSetLoad', 0)</l>
+<c>    * Check whether the calculation has been completed.</c>
+<l>    get_framegrabber_param (AcqHandle, 'CalibStatus', CalibRet)    </l>
+<l>    if (CalibRet == 'CALIB_DONE')     </l>
+<l>      break</l>
+<l>    endif</l>
+<l>    count_seconds(End)</l>
+<l>    if((End - Start) &gt; timeout)      </l>
+<l>      break</l>
+<l>    endif</l>
+<l>endwhile</l>
+<c>* Check the execution status of the calculation and store the status code in the "CalibResult" variable.</c>
+<l>get_framegrabber_param (AcqHandle, 'ExtrinErrCode', ErrCode)</l>
+<l>CalibResult := ErrCode</l>
+<c>* If calculation succeeded, store the extrinsic parameters in a "ExtrinsicParameters" TXT file.</c>
+<l>if (ErrCode == 'SUCCESS')</l>
+<l>    get_framegrabber_param (AcqHandle, 'Extrinsic', ExtriResult)</l>
+<l>    get_system_time (MSecond, Second, Minute, Hour, Day, YDay, Month, Year)</l>
+<l>    path := 'Mecheye_EyeToHand'+'-'+Hour$'d'+'h'+Minute$'d'+'min' +'s'+'.txt'</l>
+<l>    open_file (path, 'append', FileHandle)</l>
+<l>    fwrite_string (FileHandle, 'ExtrinsicParameters:')</l>
+<l>    fnew_line (FileHandle)</l>
+<l>    fwrite_string (FileHandle, ExtriResult)</l>
+<l>    fnew_line (FileHandle)</l>
+<l>    close_file (FileHandle)</l>
+<l>endif</l>
+<l>return ()</l>
+</body>
+<docu id="calibrate_handeye_mmind">
+<parameters>
+<parameter id="AcqHandle"/>
+<parameter id="CalibResult"/>
+<parameter id="ExtriResult"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="euler_to_quad">
+<interface>
+<ic>
+<par name="pose" base_type="ctrl" dimension="0"/>
+<par name="EulerType" base_type="ctrl" dimension="0"/>
+<par name="FromDegree" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="PoseQuad" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<c>* This procedure contains the conversions from different Euler angle conventions to quaternions.</c>
+<c>* If you do not see the Euler angle convention used by your robot listed here, please refer to the existing code of this procedure and add the conversion.</c>
+<l>PoseQuad:=[]</l>
+<l>if(FromDegree==1)</l>
+<l>    tuple_rad(pose[3],a)</l>
+<l>    tuple_rad(pose[4],b)</l>
+<l>    tuple_rad(pose[5],c)</l>
+<l>endif</l>
+<l>    a1:=a/2</l>
+<l>    a2:=b/2</l>
+<l>    a3:=c/2</l>
+<l>PoseQuad[0]:=pose[0]</l>
+<l>PoseQuad[1]:=pose[1]</l>
+<l>PoseQuad[2]:=pose[2]</l>
+<c></c>
+<c>* Z-Y'-X''</c>
+<l>if(EulerType=='rzyx')</l>
+<l>    PoseQuad[3] := sin(a1)*sin(a2)*sin(a3) + cos(a1)*cos(a2)*cos(a3)</l>
+<l>    PoseQuad[4] := -sin(a1)*sin(a2)*cos(a3) + sin(a3)*cos(a1)*cos(a2)</l>
+<l>    PoseQuad[5] := sin(a1)*sin(a3)*cos(a2) + sin(a2)*cos(a1)*cos(a3)</l>
+<l>    PoseQuad[6] := sin(a1)*cos(a2)*cos(a3) - sin(a2)*sin(a3)*cos(a1)</l>
+<l>endif</l>
+<c></c>
+<c>* Z-Y'-Z''</c>
+<l>if(EulerType=='rzyz')</l>
+<c>    </c>
+<l>    PoseQuad[3] := cos(a2) * cos(a1+a3)</l>
+<l>    PoseQuad[4] := -sin(a2) * sin(a1-a3)</l>
+<l>    PoseQuad[5] := sin(a2) * cos(a1-a3)</l>
+<l>    PoseQuad[6] := cos(a2) * sin(a1+a3)</l>
+<l>endif</l>
+<c></c>
+<c>* X-Y'-Z''</c>
+<l>if(EulerType=='rxyz')</l>
+<c>    </c>
+<l>    PoseQuad[3] := -sin(a1)*sin(a2)*sin(a3) + cos(a1)*cos(a2)*cos(a3)</l>
+<l>    PoseQuad[4] := sin(a1)*cos(a2)*cos(a3) + sin(a2)*sin(a3)*cos(a1)</l>
+<l>    PoseQuad[5] := -sin(a1)*sin(a3)*cos(a2) + sin(a2)*cos(a1)*cos(a3)</l>
+<l>    PoseQuad[6] := sin(a1)*sin(a2)*cos(a3) + sin(a3)*cos(a1)*cos(a2)</l>
+<l>endif</l>
+<c></c>
+<c>* Z-X'-Z''</c>
+<l>if(EulerType=='rzxz')</l>
+<c>    </c>
+<l>    PoseQuad[3] := cos(a2) * cos(a1+a3)</l>
+<l>    PoseQuad[4] := sin(a2) * cos(a1-a3)</l>
+<l>    PoseQuad[5] := sin(a2) * sin(a1-a3)</l>
+<l>    PoseQuad[6] := cos(a2) * sin(a1+a3)</l>
+<l>endif</l>
+<c></c>
+<c>* X-Y-Z</c>
+<l>if(EulerType=='sxyz')</l>
+<l>    a1:=c/2</l>
+<l>    a2:=b/2</l>
+<l>    a3:=a/2</l>
+<l>    PoseQuad[3] := sin(a1)*sin(a2)*sin(a3) + cos(a1)*cos(a2)*cos(a3)</l>
+<l>    PoseQuad[4] := -sin(a1)*sin(a2)*cos(a3) + sin(a3)*cos(a1)*cos(a2)</l>
+<l>    PoseQuad[5] := sin(a1)*sin(a3)*cos(a2) + sin(a2)*cos(a1)*cos(a3)</l>
+<l>    PoseQuad[6] := sin(a1)*cos(a2)*cos(a3) - sin(a2)*sin(a3)*cos(a1)</l>
+<l>endif</l>
+<c></c>
+<l>return ()</l>
+</body>
+<docu id="euler_to_quad">
+<parameters>
+<parameter id="EulerType"/>
+<parameter id="FromDegree"/>
+<parameter id="PoseQuad"/>
+<parameter id="pose"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="quad_to_euler">
+<interface>
+<ic>
+<par name="PoseQuad" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="Euler" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>Euler:=[]</l>
+<l>w:=PoseQuad[3]</l>
+<l>x:=PoseQuad[4]</l>
+<l>y:=PoseQuad[5]</l>
+<l>z:=PoseQuad[6]</l>
+<l>    r:=atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y))</l>
+<l>    p:=asin(2 * (w * y - z * x))</l>
+<l>    y:=atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))</l>
+<l>    tuple_deg (r, rdeg)</l>
+<l>    tuple_deg (p, pdeg)</l>
+<l>    tuple_deg (y, ydeg)</l>
+<l>    Euler[0]:=PoseQuad[0]</l>
+<l>    Euler[1]:=PoseQuad[1]</l>
+<l>    Euler[2]:=PoseQuad[2] </l>
+<l>    Euler[3]:=rdeg</l>
+<l>    Euler[4]:=pdeg</l>
+<l>    Euler[5]:=ydeg   </l>
+<l>return ()</l>
+</body>
+<docu id="quad_to_euler">
+<parameters>
+<parameter id="Euler"/>
+<parameter id="PoseQuad"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="setboardType">
+<interface>
+<ic>
+<par name="input" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="output" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>tuple_regexp_replace (input, ['-0*','replace_all'], '_', output)</l>
+<l>return ()</l>
+</body>
+<docu id="setboardType">
+<parameters>
+<parameter id="input"/>
+<parameter id="output"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="extrinsicTotransval">
+<interface>
+<ic>
+<par name="extriResult" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="transformVal" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TransformVal := []</l>
+<l>tuple_split (extriResult, ',', tmp)</l>
+<l>tuple_number (tmp, TransformVal)</l>
+<c>*m to mm</c>
+<l>transformVal[0] := TransformVal[0]*1000</l>
+<l>transformVal[1] := TransformVal[1]*1000</l>
+<l>transformVal[2] := TransformVal[2]*1000</l>
+<l>w := TransformVal[3]</l>
+<l>x := TransformVal[4]</l>
+<l>y := TransformVal[5]</l>
+<l>z := TransformVal[6]</l>
+<l>rada := atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y))</l>
+<l>radb := asin(2 * (w * y - z * x))</l>
+<l>radc := atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))</l>
+<l>tuple_deg(rada,dega)</l>
+<l>tuple_deg(radb,degb)</l>
+<l>tuple_deg(radc,degc)</l>
+<l>transformVal[3] := dega</l>
+<l>transformVal[4] := degb</l>
+<l>transformVal[5] := degc</l>
+<l>return ()</l>
+</body>
+<docu id="extrinsicTotransval">
+<parameters>
+<parameter id="extriResult"/>
+<parameter id="transformVal"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="captureTranformedPointCloud">
+<interface>
+<ic>
+<par name="AcqHandle" base_type="ctrl" dimension="0"/>
+<par name="ExtriResult" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c>*Set this parameter to "true" to output point clouds in the robot reference frame.</c>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dCoordinateTransformEnable',false)</l>
+<l>*set_framegrabber_param (AcqHandle, 'Scan3dCoordinateTransformEnable',true)</l>
+<c></c>
+<c>*Transfrom the quaternions in the extrinsic parameters to Euler angles (X-Y-Z).</c>
+<l>extrinsicTotransval(ExtriResult,TransformVal)</l>
+<c>*Set the reference frame transform values to the calculated extrinsic parameters.</c>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dCoordinateTransformSelector', 'RotationX')</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dTransformValue',TransformVal[3])</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dCoordinateTransformSelector', 'RotationY')</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dTransformValue',TransformVal[4])</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dCoordinateTransformSelector', 'RotationZ')</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dTransformValue',TransformVal[5])</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dCoordinateTransformSelector', 'TranslationX')</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dTransformValue',TransformVal[0])</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dCoordinateTransformSelector', 'TranslationY')</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dTransformValue', TransformVal[1])</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dCoordinateTransformSelector', 'TranslationZ')</l>
+<l>set_framegrabber_param (AcqHandle, 'Scan3dTransformValue', TransformVal[2])</l>
+<c>* Switch the "DeviceScanType" parameter to "Areascan3D" to obtain the 3D data.</c>
+<l>set_framegrabber_param (AcqHandle, 'DeviceScanType', 'Areascan3D')</l>
+<c>* Open the 3D object model generator.</c>
+<l>set_framegrabber_param (AcqHandle, 'create_objectmodel3d', 'enable')</l>
+<l>set_framegrabber_param (AcqHandle, 'add_objectmodel3d_overlay_attrib', 'enable')</l>
+<c></c>
+<l>get_framegrabber_param (AcqHandle, 'Width', Width)</l>
+<l>get_framegrabber_param (AcqHandle, 'Height', Height)</l>
+<l>get_framegrabber_param (AcqHandle, 'PixelFormat', PixeLFormat)</l>
+<c></c>
+<c>* Generate the point cloud (stored in the "ObjectModel3D" variable).</c>
+<l>grab_data(Image3d, Region, Contours, AcqHandle, ObjectModel3D)</l>
+<c></c>
+<l>get_object_model_3d_params(ObjectModel3D, 'num_points', NumOfPoints)</l>
+<c></c>
+<l>if(NumOfPoints != 0)</l>
+<c>	* Save the point cloud as a "PointCloud" PLY file.</c>
+<l>	write_object_model_3d (ObjectModel3D, 'ply', 'PointCloud.ply', [], [])</l>
+<l>endif</l>
+<l>clear_object_model_3d (ObjectModel3D)</l>
+<l>return ()</l>
+</body>
+<docu id="captureTranformedPointCloud">
+<parameters>
+<parameter id="AcqHandle"/>
+<parameter id="ExtriResult"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>

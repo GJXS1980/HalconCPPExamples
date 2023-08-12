@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* ***************************************************************</c>
+<c>* Example for the generic box finder using 3D data.</c>
+<c>* </c>
+<c>* This example shows how to find generic boxes in a 3D scene.</c>
+<c>* First, the 3D scene is generated from an XYZ-image with the</c>
+<c>* operator xyz_to_object_model_3d. Then, the boxes with specified</c>
+<c>* side lengths are found in the 3D scene.</c>
+<c>* </c>
+<c>* find_box_3d returns a GrippingPose for each found box that is</c>
+<c>* within the size range specified in the call to find_box_3d.</c>
+<c>* This GrippingPose can be provided to a hand-eye calibrated</c>
+<c>* robot to grip the found boxes. Please ensure that the</c>
+<c>* GrippingPose and the robot use the same pose type (see</c>
+<c>* create_pose).</c>
+<c>* </c>
+<c>* In most application scenarios, the 3D scene has to be</c>
+<c>* preprocessed in order to find generic boxes in a</c>
+<c>* fast and robust way.</c>
+<c>* The documentation of the operator find_box_3d provides</c>
+<c>* detailed descriptions how to prepare your data or how to</c>
+<c>* troubleshoot in case of problems.</c>
+<c>* </c>
+<c>* The example demonstrates how to use the operators</c>
+<c>*   xyz_to_object_model_3d,</c>
+<c>*   find_box_3d,</c>
+<c>*   and the procedure debug_find_box_3d.</c>
+<c>* </c>
+<c>* ***************************************************************</c>
+<l>dev_update_off ()</l>
+<l>ImagePath := 'boxes/cardboard_boxes_'</l>
+<c>* </c>
+<l>dev_close_window ()</l>
+<l>dev_open_window (0, 0, 1024, 768, 'black', WindowHandle)</l>
+<c>* </c>
+<c>* Prepare and display description.</c>
+<l>set_display_font (WindowHandle, 16, 'mono', 'true', 'false')</l>
+<l>dev_disp_introduction ()</l>
+<l>stop ()</l>
+<c>* </c>
+<c>* Show the example image.</c>
+<l>dev_clear_window ()</l>
+<l>read_image (Image, ImagePath + '01')</l>
+<l>dev_display (Image)</l>
+<l>Message := 'This is an image of the example scene in which we want to find the boxes.'</l>
+<l>dev_disp_text (Message, 'window', 'top', 'left', 'black', [], [])</l>
+<l>dev_disp_text ('Press Run (F5) to continue', 'window', 'bottom', 'right', 'black', [], [])</l>
+<l>stop ()</l>
+<c>* </c>
+<l>RobotToolSize := 0.01</l>
+<l>gen_robot_tool_and_base_object_model_3d (RobotToolSize * 0.05, RobotToolSize, OM3DToolOrigin, OM3DBase)</l>
+<c>* </c>
+<l>Pose := []</l>
+<l>for SceneIdx := 1 to 4 by 1</l>
+<c>    * Read the image of the scene and create a 3D object model.</c>
+<l>    read_image (ImageXYZ, ImagePath + 'xyz_' + SceneIdx$'02')</l>
+<l>    decompose3 (ImageXYZ, X, Y, Z)</l>
+<l>    xyz_to_object_model_3d (X, Y, Z, OM3DScene)</l>
+<c>    * </c>
+<c>    * Set the minimum and maximum side lengths of the boxes in meter.</c>
+<l>    Len1 := [0.099, 0.11]</l>
+<l>    Len2 := [0.075, 0.085]</l>
+<l>    Len3 := [0.045, 0.065]</l>
+<c>    * Set box detection parameters.</c>
+<l>    Params := dict{}</l>
+<l>    Params.remove_outer_edges := 'true'</l>
+<l>    Params.max_gap := 150</l>
+<c>    * Find the boxes.</c>
+<l>    find_box_3d (OM3DScene, Len1, Len2, Len3, 0.2, Params, GrippingPose, Score, OM3DBox, BoxInformation)</l>
+<c>    * The procedure debug_find_box_3d can be used to debug the</c>
+<c>    * results of find_box_3d.</c>
+<l>*     debug_find_box_3d (OM3DBox, OM3DScene, BoxInformation, FindBox3DGenParam)</l>
+<c>    * </c>
+<c>    * Visualize the found boxes and the gripping poses.</c>
+<l>    GripTools := []</l>
+<l>    Colors := []</l>
+<l>    for Index := 0 to |Score| - 1 by 1</l>
+<l>        rigid_trans_object_model_3d (OM3DToolOrigin, GrippingPose[7 * Index:7 * Index + 6], OM3DToolTransformed)</l>
+<l>        GripTools := [GripTools,OM3DToolTransformed]</l>
+<c>        * Determine color of the gripping point</c>
+<c>        * coordinate system in RGB.</c>
+<l>        Colors := [Colors,'red', 'green', 'blue']</l>
+<l>    endfor</l>
+<c>    * </c>
+<l>    OM3DSampledScene := BoxInformation.sampled_scene</l>
+<l>    OM3DSampledEdges := BoxInformation.sampled_edges</l>
+<l>    gen_visualization_title (BoxInformation, Title)</l>
+<c>    * </c>
+<l>    Colors := [Colors,gen_tuple_const(|OM3DBox|,'green'),'yellow', 'gray']</l>
+<l>    Labels := [gen_tuple_const(3 * |OM3DBox|,''),Score$'.2f','', '']</l>
+<l>    visualize_object_model_3d (WindowHandle, [GripTools,OM3DBox,OM3DSampledEdges,OM3DSampledScene], [], Pose, ['color_' + [0:4 * |OM3DBox| + 2 - 1],'alpha_' + [3 * |OM3DBox|:4 * |OM3DBox| - 1]], [Colors,gen_tuple_const(|OM3DBox|,0.5)], Title, Labels, [], Pose)</l>
+<l>endfor</l>
+<l>dev_disp_text ('      End of program      ', 'window', 'bottom', 'right', 'black', [], [])</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="dev_disp_introduction">
+<interface/>
+<body>
+<l>ContinueMessage := 'Press Run (F5) to continue'</l>
+<l>Message := ['We want to find the pose of boxes in a 3D scene in order to grip them with a robot.', 'To accomplish this, we:', '    1. Read a scene with a XYZ-mapping,', '    2. Create a 3D object model of the scene,', '    3. Call find_box_3d and', '    4. Visualize the results.', '', 'find_box_3d returns a GrippingPose for each found box that is within the size range', 'specified in the call to find_box_3d. This GrippingPose can be provided to a hand-eye', 'calibrated robot to grip the found boxes.', '', 'In most application scenarios, the 3D scene has to be preprocessed in order to find', 'generic boxes fast and robust. The documentation provides detailed descriptions how to', 'prepare your data or how to troubleshoot in case of problems.']</l>
+<l>dev_disp_text (Message, 'window', 'top', 'left', 'white', 'box', 'false')</l>
+<l>dev_disp_text (ContinueMessage, 'window', 'bottom', 'right', 'black', [], [])</l>
+<l>return ()</l>
+</body>
+<docu id="dev_disp_introduction">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="gen_visualization_title">
+<interface>
+<ic>
+<par name="BoxInformation" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="Title" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>Is2DOnly := 1</l>
+<c></c>
+<l>BoxResult := BoxInformation.results</l>
+<l>get_dict_param (BoxResult, 'keys', [], BoxIndices)</l>
+<c>* </c>
+<l>if (|BoxIndices| == 0)</l>
+<l>    Title := 'No box found.'</l>
+<l>else</l>
+<l>    for Index := 0 to |BoxIndices| - 1 by 1</l>
+<l>        if (BoxResult.[Index].one_side_only != 'true')</l>
+<l>            Is2DOnly := 0</l>
+<l>            break</l>
+<l>        endif</l>
+<l>    endfor</l>
+<c>    * </c>
+<l>    if (Is2DOnly)</l>
+<l>        Title := 'The visible side and the computed gripping pose are displayed for each box found.'</l>
+<l>    else</l>
+<l>        Title := 'If more than one side of a box is visible, the box can be fully displayed.'</l>
+<l>    endif</l>
+<l>endif</l>
+<c>* </c>
+<l>return ()</l>
+</body>
+<docu id="gen_visualization_title">
+<parameters>
+<parameter id="BoxInformation"/>
+<parameter id="Title"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>

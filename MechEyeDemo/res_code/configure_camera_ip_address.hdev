@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="20.11.1.2">
+<procedure name="main">
+<interface/>
+<body>
+<c>*</c>
+<c>* Sample program for checking and setting the IP address, subnetmask, and gateway of Mech-Eye Industrial 3D Camera. </c>
+<c>* Changes of the IP settings take effect after the camera is restarted.</c>
+<c>* Replace "MechEye" with the "user_name" or "unique_name" of the camera to be connected.</c>
+<l>DeviceInfo := 'MechEye'</l>
+<c></c>
+<c>* List the available cameras.</c>
+<l>info_framegrabber ('GigEVision2', 'device', Info, DeviceInfos)</l>
+<l>tuple_regexp_select (DeviceInfos, DeviceInfo, MechEyeCameras)</l>
+<l>dev_inspect_ctrl (DeviceInfos)</l>
+<c></c>
+<c>* Stop execution if no cameras are found.</c>
+<l>if (not |MechEyeCameras|)</l>
+<l>    stop()</l>
+<l>endif</l>
+<c></c>
+<c>* Connect to the camera: if "user_Name" or "unique_name" is not set in tuple_regexp_select, the first camera in the list will be connected.</c>
+<l>open_framegrabber ('GigEVision2', 1, 1, 0, 0, 0, 0, 'default', -1, 'default', -1, 'false', 'default', MechEyeCameras[0], 0, -1, AcqHandle)</l>
+<c></c>
+<l>get_framegrabber_param (AcqHandle, 'available_param_names', ParameterValues)</l>
+<c></c>
+<c>* Obtain the current camera IP address, subnet mask, and default gateway.</c>
+<l>dev_close_inspect_ctrl (DeviceInfos)</l>
+<l>try </l>
+<l>    get_framegrabber_param (AcqHandle, 'GevCurrentIPAddress', CurrentIPAddress)</l>
+<l>    get_framegrabber_param (AcqHandle, 'GevCurrentSubnetMask', CurrentSubnetMask)</l>
+<l>    get_framegrabber_param (AcqHandle, 'GevCurrentDefaultGateway', CurrentDefaultGateway)</l>
+<l>catch (Exception)</l>
+<c>    * Stop execution if the above nodes are not available.</c>
+<l>    stop()</l>
+<l>    dev_close_inspect_ctrl (DeviceInfos)</l>
+<l>    dev_inspect_ctrl (DeviceInfos)</l>
+<l>endtry</l>
+<l>dev_close_inspect_ctrl (DeviceInfos)</l>
+<c></c>
+<c>* Transform the obtained camera IP address, subnet mask, and default gateway into the readable string format.</c>
+<l>CurrentIPAddressString := (rsh(CurrentIPAddress, 24) band 0xff) + '.' + (rsh(CurrentIPAddress, 16) band 0xff) + '.' + (rsh(CurrentIPAddress, 8) band 0xff) + '.' + (rsh(CurrentIPAddress, 0) band 0xff)</l>
+<l>CurrentSubnetMaskString := (rsh(CurrentSubnetMask, 24) band 0xff) + '.' + (rsh(CurrentSubnetMask, 16) band 0xff) + '.' + (rsh(CurrentSubnetMask, 8) band 0xff) + '.' + (rsh(CurrentSubnetMask, 0) band 0xff)</l>
+<l>CurrentDefaultGatewayString := (rsh(CurrentDefaultGateway, 24) band 0xff) + '.' + (rsh(CurrentDefaultGateway, 16) band 0xff) + '.' + (rsh(CurrentDefaultGateway, 8) band 0xff) + '.' + (rsh(CurrentDefaultGateway, 0) band 0xff)</l>
+<c></c>
+<c>* For static IP address: enter the new camera IP address, subnet mask, and default gateway in the string format.</c>
+<l>dev_inspect_ctrl (DeviceInfos)</l>
+<l>IPAddressString := '192.168.20.121'</l>
+<l>SubnetMaskString := '255.255.255.0'</l>
+<l>DefaultGatewayString := '192.168.1.1'</l>
+<c></c>
+<c>* Transform the strings to integers (hexadecimal).</c>
+<l>tuple_split(IPAddressString, '.', IPAddressParts)</l>
+<l>IPAddress := number(IPAddressParts[0]) * lsh(1,24) + number(IPAddressParts[1]) * lsh(1,16) + number(IPAddressParts[2]) * lsh(1,8) + number(IPAddressParts[3]) </l>
+<l>tuple_split(SubnetMaskString, '.', SubnetMaskParts)</l>
+<l>SubnetMask := number(SubnetMaskParts[0]) * lsh(1,24) + number(SubnetMaskParts[1]) * lsh(1,16) + number(SubnetMaskParts[2]) * lsh(1,8) + number(SubnetMaskParts[3]) </l>
+<l>tuple_split(DefaultGatewayString, '.', DefaultGatewayParts)</l>
+<l>DefaultGateway := number(DefaultGatewayParts[0]) * lsh(1,24) + number(DefaultGatewayParts[1]) * lsh(1,16) + number(DefaultGatewayParts[2]) * lsh(1,8) + number(DefaultGatewayParts[3]) </l>
+<c></c>
+<c>* Set the new settings into the camera.</c>
+<l>try </l>
+<c>    * For static IP address: keep this line as is to enable the persistent IP configuration.</c>
+<c>    * For dynamic IP address: change "true" to "false" to disable the persistent IP configuration (and thus enabling IP address assignment via DHCP).</c>
+<l>    set_framegrabber_param (AcqHandle, 'GevCurrentIPConfigurationPersistentIP', true)</l>
+<c></c>
+<c>    * For static IP address: set the new camera IP address, subnet mask and default gateway into the camera.</c>
+<l>    set_framegrabber_param (AcqHandle, 'GevPersistentIPAddress', IPAddress)</l>
+<l>    set_framegrabber_param (AcqHandle, 'GevPersistentSubnetMask', SubnetMask)</l>
+<l>    dev_close_inspect_ctrl (Exception)</l>
+<l>    set_framegrabber_param (AcqHandle, 'GevPersistentDefaultGateway', DefaultGateway)</l>
+<l>catch (Exception)</l>
+<c>    * Stop execution if the above nodes are not available.</c>
+<l>    dev_inspect_ctrl (Exception)</l>
+<l>    stop()</l>
+<l>endtry</l>
+<c></c>
+<l>close_framegrabber (AcqHandle)</l>
+<c></c>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="addOffset">
+<interface/>
+<body>
+<l>convert_image_type (x, rReal, 'real')</l>
+<l>scale_image (rReal, rRealWithOffest, 1, offest)</l>
+<l>scale_image (rRealWithOffest, rRealWithOffest, scale, 0)</l>
+<l>return ()</l>
+</body>
+<docu id="addOffset">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="decode">
+<interface>
+<io>
+<par name="X" base_type="iconic" dimension="0"/>
+<par name="Y" base_type="iconic" dimension="0"/>
+<par name="Z" base_type="iconic" dimension="0"/>
+</io>
+<oo>
+<par name="DecodedX" base_type="iconic" dimension="0"/>
+<par name="DecodedY" base_type="iconic" dimension="0"/>
+<par name="DecodedZ" base_type="iconic" dimension="0"/>
+</oo>
+<ic>
+<par name="Scale" base_type="ctrl" dimension="0"/>
+<par name="Offset" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c></c>
+<l>convert_image_type (X, xReal, 'real')</l>
+<l>scale_image (xReal, DecodedX, Scale, 0)</l>
+<l>scale_image (DecodedX, DecodedX, 1, Offset)</l>
+<c></c>
+<l>convert_image_type (Y, yReal, 'real')</l>
+<l>scale_image (yReal, DecodedY, Scale, 0)</l>
+<l>scale_image (DecodedY, DecodedY, 1, Offset)</l>
+<c></c>
+<l>convert_image_type (Z, zReal, 'real')</l>
+<l>scale_image (zReal, DecodedZ, Scale, 0)</l>
+<l>scale_image (DecodedZ, DecodedZ, 1, Offset)</l>
+<l>return ()</l>
+</body>
+<docu id="decode">
+<parameters>
+<parameter id="DecodedX"/>
+<parameter id="DecodedY"/>
+<parameter id="DecodedZ"/>
+<parameter id="Offset"/>
+<parameter id="Scale"/>
+<parameter id="X"/>
+<parameter id="Y"/>
+<parameter id="Z"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>

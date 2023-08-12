@@ -51,7 +51,7 @@
 <l>grab_image (Image2d, AcqHandle)</l>
 <c>* Save the 2D image to the "Image2d.bmp" file.</c>
 <c>* 将2D图像保存到"Image2d.bmp"文件</c>
-<l>write_image( Image2d , 'jpg' , 0 , 'Image2d' )</l>
+<l>write_image( Image2d , 'png' , 0 , 'med_boxes_03' )</l>
 <c></c>
 <c>* Switch the "DeviceScanType" parameter to "Areascan3D" to obtain the 3D data.</c>
 <c>* 切换"DeviceScanType"参数为"Areascan3D"以获取3D数据</c>

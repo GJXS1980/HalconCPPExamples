@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>*</c>
+<c>* Sample program for obtaining the depth map from Mech-Eye Industrial 3D Camera. </c>
+<c>* The obtained image contains only the depth  (Z values), instead of all X, Y, and Z values. This reduces the image acquisition time.  </c>
+<c>* To use this sample, the firmware version of the camera must be 2.1.0 or above. You can use Mech-Eye Viewer to upgrade the camera firmware.</c>
+<c></c>
+<c>* Replace "MechEye" with the "user_name" or "unique_name" of the camera to be connected.</c>
+<l>DeviceInfo := 'MechEye'</l>
+<c></c>
+<c>* List the available cameras.</c>
+<l>info_framegrabber ('GigEVision2', 'device', Info, DeviceInfos)</l>
+<l>tuple_regexp_select (DeviceInfos, DeviceInfo, MechEyeCameras)</l>
+<l>dev_inspect_ctrl (DeviceInfos)</l>
+<c></c>
+<c>* Stop execution if no cameras are found.</c>
+<l>if (not |MechEyeCameras|)</l>
+<l>    stop()</l>
+<l>endif</l>
+<c></c>
+<c>* Connect to the camera: if "user_Name" or "unique_name" is not set in tuple_regexp_select, the first camera in the list will be connected.</c>
+<l>open_framegrabber ('GigEVision2', 1, 1, 0, 0, 0, 0, 'default', -1, 'default', -1, 'false', 'default', MechEyeCameras[0], 0, -1, AcqHandle)</l>
+<c></c>
+<l>get_framegrabber_param (AcqHandle, 'DeviceFirmwareVersion', FirmwareVersion)</l>
+<c></c>
+<c>* Stop execution if the camera firmware version is below 2.1.0.</c>
+<l>if (FirmwareVersion &lt; '2.1.0')</l>
+<l>    stop()</l>
+<l>endif</l>
+<c></c>
+<c>* Switch the "DeviceScanType" parameter to "Areascan3D" to obtain the 3D data.</c>
+<l>set_framegrabber_param (AcqHandle, 'DeviceScanType', 'Areascan3D')</l>
+<c>* Set the "ComponentSelector" parameter to "Range" to allow configuration of the "PixelFormat" parameter.</c>
+<l>set_framegrabber_param (AcqHandle, 'ComponentSelector', 'Range')</l>
+<c></c>
+<c>* Switch "PixelFormat" parameter to "Coord3D_C16 pixel to get only depth map(2D image containing the Z values).</c>
+<l>set_framegrabber_param (AcqHandle, 'PixelFormat', 'Coord3D_C16')</l>
+<c></c>
+<l>get_framegrabber_param (AcqHandle, 'Width', Width)</l>
+<l>get_framegrabber_param (AcqHandle, 'Height', Height)</l>
+<c></c>
+<c>* Acquire the raw data from the camera and convert the data to a depth map.</c>
+<l>grab_image(DepthRaw, AcqHandle)</l>
+<l>* write_image(DepthRaw , 'tif', 0 , 'med_boxes_03' )</l>
+<c></c>
+<l>set_framegrabber_param (AcqHandle, 'ChunkScan3dCoordinateSelector', 'CoordinateC')</l>
+<l>get_framegrabber_param (AcqHandle, 'ChunkScan3dCoordinateScale', ScaleZ)</l>
+<l>get_framegrabber_param (AcqHandle, 'ChunkScan3dCoordinateOffset', OffsetZ)</l>
+<l>convert_image_type(DepthRaw, DepthReal, 'real')</l>
+<l>scale_image(DepthReal, DepthInMM, ScaleZ, OffsetZ)</l>
+<c>* Convert the unit of depth values in the depth map from mm to m.</c>
+<l>scale_image(DepthInMM, DepthInM, 0.001, 0)</l>
+<c></c>
+<c>* Configure the Canvas window for displaying the obtained depth map.</c>
+<l>WindowScale := 0.4</l>
+<l>WindowWidth := Width * WindowScale</l>
+<l>WindowHeight := Height * WindowScale</l>
+<l>dev_open_window (0, 0, WindowWidth, WindowHeight, 'black', WindowHandle3d)</l>
+<l>dev_display (DepthInM)</l>
+<c></c>
+<c>* 将深度图保存为.tif格式文件</c>
+<l>* write_image(DepthInM, 'tif', 0, 'depth_image.tif')</l>
+<c>* write_object_model_3d</c>
+<l>close_framegrabber (AcqHandle)</l>
+<c></c>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="addOffset">
+<interface/>
+<body>
+<l>convert_image_type (x, rReal, 'real')</l>
+<l>scale_image (rReal, rRealWithOffest, 1, offest)</l>
+<l>scale_image (rRealWithOffest, rRealWithOffest, scale, 0)</l>
+<l>return ()</l>
+</body>
+<docu id="addOffset">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="decode">
+<interface>
+<io>
+<par name="X" base_type="iconic" dimension="0"/>
+<par name="Y" base_type="iconic" dimension="0"/>
+<par name="Z" base_type="iconic" dimension="0"/>
+</io>
+<oo>
+<par name="DecodedX" base_type="iconic" dimension="0"/>
+<par name="DecodedY" base_type="iconic" dimension="0"/>
+<par name="DecodedZ" base_type="iconic" dimension="0"/>
+</oo>
+<ic>
+<par name="Scale" base_type="ctrl" dimension="0"/>
+<par name="Offset" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c></c>
+<l>convert_image_type (X, xReal, 'real')</l>
+<l>scale_image (xReal, DecodedX, Scale, 0)</l>
+<l>scale_image (DecodedX, DecodedX, 1, Offset)</l>
+<c></c>
+<l>convert_image_type (Y, yReal, 'real')</l>
+<l>scale_image (yReal, DecodedY, Scale, 0)</l>
+<l>scale_image (DecodedY, DecodedY, 1, Offset)</l>
+<c></c>
+<l>convert_image_type (Z, zReal, 'real')</l>
+<l>scale_image (zReal, DecodedZ, Scale, 0)</l>
+<l>scale_image (DecodedZ, DecodedZ, 1, Offset)</l>
+<l>return ()</l>
+</body>
+<docu id="decode">
+<parameters>
+<parameter id="DecodedX"/>
+<parameter id="DecodedY"/>
+<parameter id="DecodedZ"/>
+<parameter id="Offset"/>
+<parameter id="Scale"/>
+<parameter id="X"/>
+<parameter id="Y"/>
+<parameter id="Z"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>
