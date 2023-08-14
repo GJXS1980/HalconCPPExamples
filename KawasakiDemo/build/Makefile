@@ -129,6 +129,80 @@ kawasaki_transform/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/build
 .PHONY : kawasaki_transform/fast
 
+#=============================================================================
+# Target rules for targets named KawasakiMecheyeDemo
+
+# Build rule for target.
+KawasakiMecheyeDemo: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 KawasakiMecheyeDemo
+.PHONY : KawasakiMecheyeDemo
+
+# fast build rule for target.
+KawasakiMecheyeDemo/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/KawasakiMecheyeDemo.dir/build.make CMakeFiles/KawasakiMecheyeDemo.dir/build
+.PHONY : KawasakiMecheyeDemo/fast
+
+#=============================================================================
+# Target rules for targets named CaptureDepthMap
+
+# Build rule for target.
+CaptureDepthMap: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CaptureDepthMap
+.PHONY : CaptureDepthMap
+
+# fast build rule for target.
+CaptureDepthMap/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/build
+.PHONY : CaptureDepthMap/fast
+
+src/CaptureDepthMap.o: src/CaptureDepthMap.cpp.o
+.PHONY : src/CaptureDepthMap.o
+
+# target to build an object file
+src/CaptureDepthMap.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/src/CaptureDepthMap.cpp.o
+.PHONY : src/CaptureDepthMap.cpp.o
+
+src/CaptureDepthMap.i: src/CaptureDepthMap.cpp.i
+.PHONY : src/CaptureDepthMap.i
+
+# target to preprocess a source file
+src/CaptureDepthMap.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/src/CaptureDepthMap.cpp.i
+.PHONY : src/CaptureDepthMap.cpp.i
+
+src/CaptureDepthMap.s: src/CaptureDepthMap.cpp.s
+.PHONY : src/CaptureDepthMap.s
+
+# target to generate assembly for a file
+src/CaptureDepthMap.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/src/CaptureDepthMap.cpp.s
+.PHONY : src/CaptureDepthMap.cpp.s
+
+src/kawasaki_mecheye_demo.o: src/kawasaki_mecheye_demo.cpp.o
+.PHONY : src/kawasaki_mecheye_demo.o
+
+# target to build an object file
+src/kawasaki_mecheye_demo.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/KawasakiMecheyeDemo.dir/build.make CMakeFiles/KawasakiMecheyeDemo.dir/src/kawasaki_mecheye_demo.cpp.o
+.PHONY : src/kawasaki_mecheye_demo.cpp.o
+
+src/kawasaki_mecheye_demo.i: src/kawasaki_mecheye_demo.cpp.i
+.PHONY : src/kawasaki_mecheye_demo.i
+
+# target to preprocess a source file
+src/kawasaki_mecheye_demo.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/KawasakiMecheyeDemo.dir/build.make CMakeFiles/KawasakiMecheyeDemo.dir/src/kawasaki_mecheye_demo.cpp.i
+.PHONY : src/kawasaki_mecheye_demo.cpp.i
+
+src/kawasaki_mecheye_demo.s: src/kawasaki_mecheye_demo.cpp.s
+.PHONY : src/kawasaki_mecheye_demo.s
+
+# target to generate assembly for a file
+src/kawasaki_mecheye_demo.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/KawasakiMecheyeDemo.dir/build.make CMakeFiles/KawasakiMecheyeDemo.dir/src/kawasaki_mecheye_demo.cpp.s
+.PHONY : src/kawasaki_mecheye_demo.cpp.s
+
 src/kawasaki_transform.o: src/kawasaki_transform.cpp.o
 .PHONY : src/kawasaki_transform.o
 
@@ -161,7 +235,15 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... CaptureDepthMap"
+	@echo "... KawasakiMecheyeDemo"
 	@echo "... kawasaki_transform"
+	@echo "... src/CaptureDepthMap.o"
+	@echo "... src/CaptureDepthMap.i"
+	@echo "... src/CaptureDepthMap.s"
+	@echo "... src/kawasaki_mecheye_demo.o"
+	@echo "... src/kawasaki_mecheye_demo.i"
+	@echo "... src/kawasaki_mecheye_demo.s"
 	@echo "... src/kawasaki_transform.o"
 	@echo "... src/kawasaki_transform.i"
 	@echo "... src/kawasaki_transform.s"

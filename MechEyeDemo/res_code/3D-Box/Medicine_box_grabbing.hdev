@@ -50,21 +50,21 @@
 <l>gen_robot_tool_and_base_object_model_3d (RobotToolSize * 0.05, RobotToolSize, OM3DToolOrigin, OM3DBase)</l>
 <c>* </c>
 <l>Pose := []</l>
-<l>for SceneIdx := 1 to 4 by 1</l>
+<l>for SceneIdx := 1 to 1 by 1</l>
 <c>    * 读取场景图像并创建三维对象模型</c>
-<l>    read_image (ImageXYZ, ImagePath + 'xyz_' + SceneIdx$'02')</l>
+<l>    read_image (ImageXYZ, ImagePath +'xyz_' + SceneIdx$'02')</l>
 <l>    decompose3 (ImageXYZ, X, Y, Z)</l>
 <l>    xyz_to_object_model_3d (X, Y, Z, OM3DScene)</l>
 <c>    * </c>
 <c>    * 设置箱子三条边的最小和最大值（以米为单位）</c>
-<l>    Len1 := [0.1025, 0.1035]</l>
-<l>    Len2 := [0.0481, 0.0490]</l>
-<l>    Len3 := [0.0215, 0.0225]</l>
+<l>    Len1 := [0.06, 0.08]</l>
+<l>    Len2 := [0.06, 0.08]</l>
+<l>    Len3 := [0.06, 0.08]</l>
 <c>    </c>
 <c>    * 设置箱子检测参数</c>
 <l>    Params := dict{}</l>
-<l>    Params.remove_outer_edges := 'true'</l>
-<l>    Params.max_gap := 150</l>
+<l>    Params.remove_outer_edges := 'false'</l>
+<l>    Params.max_gap := 1000</l>
 <c>    * 寻找箱子</c>
 <l>    find_box_3d (OM3DScene, Len1, Len2, Len3, 0.2, Params, GrippingPose, Score, OM3DBox, BoxInformation)</l>
 <c>    * 可以使用 debug_find_box_3d 过程来调试 find_box_3d 的结果。</c>

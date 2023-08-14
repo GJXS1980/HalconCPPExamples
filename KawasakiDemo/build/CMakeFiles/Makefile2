@@ -64,6 +64,8 @@ CMAKE_BINARY_DIR = /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build
 
 # The main recursive "all" target.
 all: CMakeFiles/kawasaki_transform.dir/all
+all: CMakeFiles/KawasakiMecheyeDemo.dir/all
+all: CMakeFiles/CaptureDepthMap.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -72,6 +74,8 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/kawasaki_transform.dir/clean
+clean: CMakeFiles/KawasakiMecheyeDemo.dir/clean
+clean: CMakeFiles/CaptureDepthMap.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -81,7 +85,7 @@ clean: CMakeFiles/kawasaki_transform.dir/clean
 CMakeFiles/kawasaki_transform.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=1,2 "Built target kawasaki_transform"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=5,6 "Built target kawasaki_transform"
 .PHONY : CMakeFiles/kawasaki_transform.dir/all
 
 # Build rule for subdir invocation for target.
@@ -99,6 +103,58 @@ kawasaki_transform: CMakeFiles/kawasaki_transform.dir/rule
 CMakeFiles/kawasaki_transform.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/clean
 .PHONY : CMakeFiles/kawasaki_transform.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/KawasakiMecheyeDemo.dir
+
+# All Build rule for target.
+CMakeFiles/KawasakiMecheyeDemo.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/KawasakiMecheyeDemo.dir/build.make CMakeFiles/KawasakiMecheyeDemo.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/KawasakiMecheyeDemo.dir/build.make CMakeFiles/KawasakiMecheyeDemo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=3,4 "Built target KawasakiMecheyeDemo"
+.PHONY : CMakeFiles/KawasakiMecheyeDemo.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/KawasakiMecheyeDemo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/KawasakiMecheyeDemo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/KawasakiMecheyeDemo.dir/rule
+
+# Convenience name for target.
+KawasakiMecheyeDemo: CMakeFiles/KawasakiMecheyeDemo.dir/rule
+.PHONY : KawasakiMecheyeDemo
+
+# clean rule for target.
+CMakeFiles/KawasakiMecheyeDemo.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/KawasakiMecheyeDemo.dir/build.make CMakeFiles/KawasakiMecheyeDemo.dir/clean
+.PHONY : CMakeFiles/KawasakiMecheyeDemo.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/CaptureDepthMap.dir
+
+# All Build rule for target.
+CMakeFiles/CaptureDepthMap.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=1,2 "Built target CaptureDepthMap"
+.PHONY : CMakeFiles/CaptureDepthMap.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/CaptureDepthMap.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/CaptureDepthMap.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/CaptureDepthMap.dir/rule
+
+# Convenience name for target.
+CaptureDepthMap: CMakeFiles/CaptureDepthMap.dir/rule
+.PHONY : CaptureDepthMap
+
+# clean rule for target.
+CMakeFiles/CaptureDepthMap.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/clean
+.PHONY : CMakeFiles/CaptureDepthMap.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* ************************************************************</c>
+<c>* 3D Gripping Point Detection example workflow</c>
+<c>* ************************************************************</c>
+<c>* </c>
+<c>* This example shows the deep-learning-based</c>
+<c>* 3D Gripping Point Detection on data taken with an</c>
+<c>* industrial Structured Light 3D camera. HALCON provides</c>
+<c>* a pretrained deep learning model which can detect</c>
+<c>* suitable gripping points without the need to provide</c>
+<c>* a 3D model of the objects that are to be targeted.</c>
+<c>* </c>
+<c>* This method is integrated into the deep learning inference</c>
+<c>* workflow, therefore this example demonstrates the usage of</c>
+<c>* the respective deep-learning-specific operators and</c>
+<c>* procedures.</c>
+<c>* </c>
+<c>* Please note that the HALCON Operator Reference contains</c>
+<c>* helpful additional information:</c>
+<c>* HALCON Operator Reference -&gt; 3D Matching</c>
+<c>* -&gt; 3D Gripping Point Detection</c>
+<c>* </c>
+<c>* ************************************************************ *</c>
+<c>* </c>
+<l>dev_update_off ()</l>
+<l>dev_close_window ()</l>
+<c>* </c>
+<l>ImagePath := '3d_machine_vision/gripping_point_detection/'</l>
+<c>* </c>
+<c>* Enable optional 3D visualization.</c>
+<c>* The 3D visualization can be used for better understanding</c>
+<c>* and interaction. For faster processing choose a</c>
+<c>* 2D visualization.</c>
+<l>Visualization3D := false</l>
+<c>* </c>
+<c>* This feature can be performed on a GPU or CPU.</c>
+<l>DeviceRuntime := ['gpu', 'cpu']</l>
+<c>* </c>
+<c>* If the ground plane is tilted with respect to the camera</c>
+<c>* (i. e. the z-axis), the sorting direction of the</c>
+<c>* gripping points can be estimated orthogonally to the</c>
+<c>* scene.</c>
+<l>SortResultsTiltedCamera := false</l>
+<c>* </c>
+<c>* ************************************************************</c>
+<c>* Preparation and Initialization</c>
+<c>* ************************************************************</c>
+<c>* </c>
+<l>read_dl_model ('pretrained_dl_3d_gripping_point.hdl', DLModelHandle)</l>
+<c>* </c>
+<c>* Optionally the input image size of the model can be</c>
+<c>* changed here.</c>
+<c>* Please refer to the chapter reference for details.</c>
+<l>set_dl_model_param (DLModelHandle, 'image_width', 640)</l>
+<l>set_dl_model_param (DLModelHandle, 'image_height', 480)</l>
+<c>* </c>
+<c>* Determine deep learning device to work with</c>
+<c>* (prefer GPU over CPU).</c>
+<l>set_suitable_inference_device (DLModelHandle, DeviceRuntime)</l>
+<c>* </c>
+<l>create_dl_preprocess_param_from_model (DLModelHandle, 'none', 'full_domain', [], [], [], DLPreprocessParam)</l>
+<c>* </c>
+<l>WindowDict := dict{}</l>
+<l>DLDatasetInfo := dict{}</l>
+<c>* See documentation of dev_display_dl_data for visualization</c>
+<c>* parameter options.</c>
+<l>DisplayParams := dict{gripping_point_size: 25}</l>
+<l>DisplayParams3D := dict{arrow_thickness: 0.003, arrow_length: 0.05}</l>
+<c>* See documentation of gen_dl_3d_gripping_points_and_poses for</c>
+<c>* parameter options.</c>
+<l>DLGrippingPointParams := dict{min_area_size: 300}</l>
+<l>if (SortResultsTiltedCamera)</l>
+<l>    read_image (GrayImage, ImagePath + 'warehouse_gray_01')</l>
+<l>    read_image (XYZImage, ImagePath + 'warehouse_xyz_01')</l>
+<l>    decompose3 (XYZImage, X, Y, Z)</l>
+<l>    estimate_dl_3d_sorting_direction (X, Y, Z, DLGrippingPointParams.sorting_direction)</l>
+<l>    if (Visualization3D)</l>
+<l>        visualize_dl_3d_sorting_direction (X, Y, Z, GrayImage, DLGrippingPointParams.sorting_direction)</l>
+<l>    endif</l>
+<l>endif</l>
+<c>* </c>
+<c>* ************************************************************</c>
+<c>* Inference on Example Images</c>
+<c>* ************************************************************</c>
+<c>* </c>
+<l>for Index := 1 to 9 by 1</l>
+<c>    * </c>
+<c>    * Read in/acquire images.</c>
+<l>    read_image (Image, ImagePath + 'warehouse_gray_' + Index$'.2d')</l>
+<l>    read_image (XYZImage, ImagePath + 'warehouse_xyz_' + Index$'.2d')</l>
+<c>    * If images are not provided as X, Y, Z use access_channel()</c>
+<c>    * or a decompose operator.</c>
+<l>    decompose3 (XYZImage, X, Y, Z)</l>
+<c>    * Normals are optional.</c>
+<c>    * If the sensor provides normals the processing time will be</c>
+<c>    * shorter. Otherwise, the preprocessing will automatically</c>
+<c>    * compute normals based on the given X, Y and Z images.</c>
+<l>    gen_empty_obj (Normals)</l>
+<l>    gen_dl_samples_3d_gripping_point_detection (Image, X, Y, Z, Normals, DLSample)</l>
+<c>    * </c>
+<l>    preprocess_dl_samples (DLSample, DLPreprocessParam)</l>
+<c>    * </c>
+<l>    apply_dl_model (DLModelHandle, DLSample, [], DLResult)</l>
+<c>    * </c>
+<c>    * Generate the result containing poses of possible gripping points.</c>
+<l>    gen_dl_3d_gripping_points_and_poses (DLSample, DLGrippingPointParams, DLResult)</l>
+<c>    * </c>
+<l>    if (Visualization3D)</l>
+<l>        dev_display_dl_data (DLSample, DLResult, DLDatasetInfo, 'gripping_map', DisplayParams, WindowDict)</l>
+<l>        dev_display_dl_3d_data (DLSample, DLResult, DLDatasetInfo, 'gripping_point_cloud', DisplayParams3D, WindowDict)</l>
+<l>    else</l>
+<l>        dev_display_dl_data (DLSample, DLResult, DLDatasetInfo, ['image', 'gripping_map'], DisplayParams, WindowDict)</l>
+<l>        dev_disp_text ('Gripping map', 'window', 'top', 'left', 'black', 'box', 'true')</l>
+<l>        dev_disp_text ('Press F5 to continue', 'window', 'bottom', 'right', 'black', [], [])</l>
+<l>        stop ()</l>
+<l>    endif</l>
+<c>    * </c>
+<l>endfor</l>
+<c>* </c>
+<l>dev_close_window_dict (WindowDict)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="set_suitable_inference_device">
+<interface>
+<ic>
+<par name="DLModelHandle" base_type="ctrl" dimension="0"/>
+<par name="DeviceRuntime" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c>* This procedure sets 'runtime' to the specified</c>
+<c>* device type if possible.</c>
+<c>* </c>
+<l>query_available_dl_devices (gen_tuple_const(|DeviceRuntime|,'runtime'), DeviceRuntime, DLDeviceHandles)</l>
+<c>* </c>
+<l>if (|DLDeviceHandles| == 0)</l>
+<l>    throw ('No supported device found to continue this example.')</l>
+<l>endif</l>
+<c>* </c>
+<l>for Index := 0 to |DLDeviceHandles| - 1 by 1</l>
+<l>    try</l>
+<l>        set_dl_model_param (DLModelHandle, 'device', DLDeviceHandles[Index])</l>
+<l>        break</l>
+<l>    catch (Exception)</l>
+<l>        if (Index == |DLDeviceHandles| - 1)</l>
+<l>            throw ('Could not set any of the supported devices to continue this example.')</l>
+<l>        endif</l>
+<l>    endtry</l>
+<l>endfor</l>
+<c>* </c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="set_suitable_inference_device">
+<parameters>
+<parameter id="DLModelHandle"/>
+<parameter id="DeviceRuntime"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="visualize_dl_3d_sorting_direction">
+<interface>
+<io>
+<par name="X" base_type="iconic" dimension="0"/>
+<par name="Y" base_type="iconic" dimension="0"/>
+<par name="Z" base_type="iconic" dimension="0"/>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Direction" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c>* Set good pose for viewing the scene</c>
+<l>PoseIn := [-0.05, -0.4, 10.0, 314.011, 3.748, 358.584, 0]</l>
+<c>* </c>
+<l>xyz_attrib_to_object_model_3d (X, Y, Z, Image, '&amp;gray', ObjectModel3D)</l>
+<l>get_object_models_center (ObjectModel3D, Center)</l>
+<l>max_diameter_object_model_3d (ObjectModel3D, Diameter)</l>
+<l>gen_arrow_object_model_3d (Diameter * 0.01, Center - Diameter / 16.0 * Direction, Center + Diameter * 3.0 / 16.0 * Direction, OM3DArrow)</l>
+<l>dev_open_window (0, 0, 512, 512, 'black', WindowHandleDirection)</l>
+<l>Instructions[0] := 'Rotate: Left button'</l>
+<l>Instructions[1] := 'Zoom:   Shift + left button'</l>
+<l>Instructions[2] := 'Move:   Ctrl  + left button'</l>
+<l>Message := 'Inspect 3D scene and proposed orthogonal direction'</l>
+<c>* </c>
+<c>* Set a font and a font size.</c>
+<l>Font := 'mono'</l>
+<l>FontSize := 14</l>
+<l>set_display_font (WindowHandleDirection, FontSize, Font, 'true', 'false')</l>
+<c>* </c>
+<l>visualize_object_model_3d (WindowHandleDirection, [ObjectModel3D,OM3DArrow], [], PoseIn, ['color_attrib_0', 'color_1'], ['&amp;gray', 'yellow'], Message, [], Instructions, PoseOut)</l>
+<l>dev_close_window ()</l>
+<l>return ()</l>
+</body>
+<docu id="visualize_dl_3d_sorting_direction">
+<parameters>
+<parameter id="Direction"/>
+<parameter id="Image"/>
+<parameter id="X"/>
+<parameter id="Y"/>
+<parameter id="Z"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>

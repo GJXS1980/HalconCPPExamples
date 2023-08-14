@@ -59,7 +59,7 @@ int main()
     //  相机相对于机器人基座的齐次变换矩阵
     Eigen::Matrix4d transform_cam_to_base = transformMatrixFromPose(-0.329298, 1.03579, 1.15312, 0.0496425, 0.00719909, 0.998676, -0.0113733);
     //  识别到物体相对于相机的齐次变换矩阵
-    Eigen::Matrix4d transform_obj_to_cam = transformMatrixFromPose(-0.257, -0.009, 1.397, 0.0496425, 0.00719909, 0.998676, -0.0113733);
+    Eigen::Matrix4d transform_obj_to_cam = transformMatrixFromPose(-0.240, 0.077, 1.395, 0.0496425, 0.00719909, 0.998676, -0.0113733);
 
 
     // 计算物体相对于机器人基座的位姿

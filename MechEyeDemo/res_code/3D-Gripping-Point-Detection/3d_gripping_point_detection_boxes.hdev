@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* ************************************************************</c>
+<c>* 3D夹持点检测示例工作流程</c>
+<c>* ************************************************************</c>
+<c>* </c>
+<c>* 本示例展示了基于深度学习的3D夹持点检测，使用工业结构光3D相机获取的数据。</c>
+<c>* HALCON提供了经过预训练的深度学习模型，可以在无需提供目标物体的3D模型的情况下检测适当的夹持点</c>
+<c>* </c>
+<c>* 该方法集成到深度学习推理工作流中，因此本示例演示了相应的深度学习特定操作符和过程的使用</c>
+<c>* </c>
+<c>* 请注意，HALCON操作符参考手册包含有用的附加信息：</c>
+<c>* HALCON操作符参考手册 -&gt; 3D匹配</c>
+<c>* &gt; 3D夹持点检测</c>
+<c>* </c>
+<c>* ************************************************************ *</c>
+<c>* </c>
+<c>* 禁用自动刷新窗口</c>
+<l>dev_update_off ()</l>
+<c>* 关闭窗口</c>
+<l>dev_close_window ()</l>
+<c></c>
+<c>* 图像文件路径</c>
+<l>ImagePath := '/home/grantli/halcon_ws/HalconCPPExamples/MechEyeDemo/res_code/3D-Gripping-Point-Detection/'</l>
+<c>* </c>
+<c>* 是否启用可选的3D可视化</c>
+<c>* 3D可视化可以用于更好地理解和交互。如果需要更快的处理速度，选择2D可视化。</c>
+<l>Visualization3D := true</l>
+<c>* </c>
+<c>* 设备运行时设置，可在GPU和CPU之间选择</c>
+<l>DeviceRuntime := 'gpu'</l>
+<c>* </c>
+<c>* 如果地面平面相对于相机有倾斜，可以通过估计排序方向来确定抓取点的排序方向</c>
+<l>SortResultsTiltedCamera := false</l>
+<c>* </c>
+<c>* ************************************************************</c>
+<c>* 准备和初始化</c>
+<c>* ************************************************************</c>
+<c>* 读取深度学习模型</c>
+<l>read_dl_model ('pretrained_dl_3d_gripping_point.hdl', DLModelHandle)</l>
+<c>* </c>
+<c>* 可选地更改模型的输入图像大小</c>
+<l>* set_dl_model_param (DLModelHandle, 'image_width', 1280)</l>
+<l>* set_dl_model_param (DLModelHandle, 'image_height', 1024)</l>
+<c>* </c>
+<c>* 设置用于推理的深度学习设备（优先使用GPU）</c>
+<l>set_suitable_inference_device (DLModelHandle, DeviceRuntime)</l>
+<c>* 从模型创建深度学习预处理参数</c>
+<l>create_dl_preprocess_param_from_model (DLModelHandle, 'none', 'full_domain', [], [], [], DLPreprocessParam)</l>
+<c>* 用于显示的窗口字典和数据集信息</c>
+<l>WindowDict := dict{}</l>
+<l>DLDatasetInfo := dict{}</l>
+<c>* 用于可视化参数的设置</c>
+<l>DisplayParams := dict{gripping_point_size: 25}</l>
+<l>DisplayParams3D := dict{arrow_thickness: 0.003, arrow_length: 0.05}</l>
+<c>* See documentation of gen_dl_3d_gripping_points_and_poses for</c>
+<c>* parameter options.</c>
+<l>DLGrippingPointParams := dict{min_area_size: 300}</l>
+<c>* 如果相机安装倾斜，根据场景估计抓取点的排序方向</c>
+<l>if (SortResultsTiltedCamera)</l>
+<l>    read_image (GrayImage, ImagePath + 'boxes_01')</l>
+<l>    read_image (XYZImage, ImagePath + 'boxes_xyz_01')</l>
+<l>    decompose3 (XYZImage, X, Y, Z)</l>
+<l>    estimate_dl_3d_sorting_direction (X, Y, Z, DLGrippingPointParams.sorting_direction)</l>
+<l>    if (Visualization3D)</l>
+<l>        visualize_dl_3d_sorting_direction (X, Y, Z, GrayImage, DLGrippingPointParams.sorting_direction)</l>
+<l>    endif</l>
+<l>endif</l>
+<c>* </c>
+<c>* ************************************************************</c>
+<c>* 对示例图像进行推理</c>
+<c>* ************************************************************</c>
+<c>* 循环示例图像</c>
+<l>for Index := 1 to 1 by 1</l>
+<c>    * </c>
+<c>    * 读取图像和3D坐标图像</c>
+<l>    read_image (Image, ImagePath + 'boxes_' + Index$'.2d')</l>
+<l>    read_image (XYZImage, ImagePath + 'boxes_xyz_' + Index$'.2d')</l>
+<c>    * 如果未直接提供X、Y、Z图像，则使用decompose3操作来获取它们</c>
+<l>    decompose3 (XYZImage, X, Y, Z)</l>
+<c>    * 如果传感器提供法线信息，处理时间会更短；否则将自动计算法线信息</c>
+<l>    gen_empty_obj (Normals)</l>
+<l>    gen_dl_samples_3d_gripping_point_detection (Image, X, Y, Z, Normals, DLSample)</l>
+<c>    * 示例进行预处理</c>
+<l>    preprocess_dl_samples (DLSample, DLPreprocessParam)</l>
+<c>    * 使用深度学习模型进行推理</c>
+<l>    apply_dl_model (DLModelHandle, DLSample, [], DLResult)</l>
+<c>    * </c>
+<c>    * 生成包含可能的抓取点的姿态的结果</c>
+<l>    gen_dl_3d_gripping_points_and_poses (DLSample, DLGrippingPointParams, DLResult)</l>
+<c>    * 根据可视化选项显示结果</c>
+<l>    if (Visualization3D)</l>
+<l>        dev_display_dl_data (DLSample, DLResult, DLDatasetInfo, 'gripping_map', DisplayParams, WindowDict)</l>
+<l>        dev_display_dl_3d_data (DLSample, DLResult, DLDatasetInfo, 'gripping_point_cloud', DisplayParams3D, WindowDict)</l>
+<l>    else</l>
+<l>        dev_display_dl_data (DLSample, DLResult, DLDatasetInfo, ['image', 'gripping_map'], DisplayParams, WindowDict)</l>
+<l>        dev_disp_text ('Gripping map', 'window', 'top', 'left', 'black', 'box', 'true')</l>
+<l>        dev_disp_text ('Press F5 to continue', 'window', 'bottom', 'right', 'black', [], [])</l>
+<l>        stop ()</l>
+<l>    endif</l>
+<c>    * </c>
+<l>endfor</l>
+<c>* 关闭窗口字典</c>
+<l>dev_close_window_dict (WindowDict)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="set_suitable_inference_device">
+<interface>
+<ic>
+<par name="DLModelHandle" base_type="ctrl" dimension="0"/>
+<par name="DeviceRuntime" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c>* 此过程尝试将 'runtime' 设置为指定的设备类型（如果可能）。</c>
+<c>* </c>
+<l>query_available_dl_devices (gen_tuple_const(|DeviceRuntime|,'runtime'), DeviceRuntime, DLDeviceHandles)</l>
+<c>* 如果没有找到支持的设备，抛出异常并终止示例。</c>
+<l>if (|DLDeviceHandles| == 0)</l>
+<l>    throw ('未找到支持的设备，无法继续执行此示例')</l>
+<l>endif</l>
+<c>* 遍历支持的设备，尝试设置模型的设备类型。</c>
+<l>for Index := 0 to |DLDeviceHandles| - 1 by 1</l>
+<l>    try</l>
+<l>        set_dl_model_param (DLModelHandle, 'device', DLDeviceHandles[Index])</l>
+<l>        break</l>
+<l>    catch (Exception)</l>
+<c>        * 如果无法设置设备类型，则在最后一个设备时抛出异常，终止示例。</c>
+<l>        if (Index == |DLDeviceHandles| - 1)</l>
+<l>            throw ('无法设置任何支持的设备，无法继续执行此示例')</l>
+<l>        endif</l>
+<l>    endtry</l>
+<l>endfor</l>
+<c>* 返回</c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="set_suitable_inference_device">
+<parameters>
+<parameter id="DLModelHandle"/>
+<parameter id="DeviceRuntime"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="visualize_dl_3d_sorting_direction">
+<interface>
+<io>
+<par name="X" base_type="iconic" dimension="0"/>
+<par name="Y" base_type="iconic" dimension="0"/>
+<par name="Z" base_type="iconic" dimension="0"/>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Direction" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c>* 设置适当的姿态以查看场景</c>
+<l>PoseIn := [-0.05, -0.4, 10.0, 314.011, 3.748, 358.584, 0]</l>
+<c>* 使用xyz_attrib_to_object_model_3d将点云数据转换为3D对象模型</c>
+<l>xyz_attrib_to_object_model_3d (X, Y, Z, Image, '&amp;gray', ObjectModel3D)</l>
+<c>* 获取3D对象模型的中心和最大直径</c>
+<l>get_object_models_center (ObjectModel3D, Center)</l>
+<l>max_diameter_object_model_3d (ObjectModel3D, Diameter)</l>
+<c></c>
+<c>* 生成箭头3D对象模型以指示方向</c>
+<l>gen_arrow_object_model_3d (Diameter * 0.01, Center - Diameter / 16.0 * Direction, Center + Diameter * 3.0 / 16.0 * Direction, OM3DArrow)</l>
+<c></c>
+<c>* 打开窗口用于可视化</c>
+<l>dev_open_window (0, 0, 512, 512, 'black', WindowHandleDirection)</l>
+<c></c>
+<c>* 显示旋转、缩放和移动操作的指示说明</c>
+<l>Instructions[0] := 'Rotate: Left button'</l>
+<l>Instructions[1] := 'Zoom:   Shift + left button'</l>
+<l>Instructions[2] := 'Move:   Ctrl  + left button'</l>
+<l>Message := 'Inspect 3D scene and proposed orthogonal direction'</l>
+<c>* </c>
+<c>* 设置显示字体和字体大小</c>
+<l>Font := 'mono'</l>
+<l>FontSize := 14</l>
+<l>set_display_font (WindowHandleDirection, FontSize, Font, 'true', 'false')</l>
+<c>* 可视化3D对象模型和箭头</c>
+<l>visualize_object_model_3d (WindowHandleDirection, [ObjectModel3D,OM3DArrow], [], PoseIn, ['color_attrib_0', 'color_1'], ['&amp;gray', 'yellow'], Message, [], Instructions, PoseOut)</l>
+<c>* 关闭窗口</c>
+<l>dev_close_window ()</l>
+<l>return ()</l>
+</body>
+<docu id="visualize_dl_3d_sorting_direction">
+<parameters>
+<parameter id="Direction"/>
+<parameter id="Image"/>
+<parameter id="X"/>
+<parameter id="Y"/>
+<parameter id="Z"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>

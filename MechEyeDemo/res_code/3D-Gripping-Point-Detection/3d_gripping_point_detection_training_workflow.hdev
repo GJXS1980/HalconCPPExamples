@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.05.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* ************************************************************</c>
+<c>* 3D Gripping Point Detection training workflow</c>
+<c>* ************************************************************</c>
+<c>* </c>
+<c>* This example shows the training of the deep-learning-based</c>
+<c>* 3D Gripping Point Detection on data taken with a LiDAR</c>
+<c>* camera. In general, the pretrained deep learning model can</c>
+<c>* detect gripping points without additional training. However,</c>
+<c>* for some low-quality sensors and/or certain setups, an</c>
+<c>* additional training is necessary to achieve the desired</c>
+<c>* quality of the results.</c>
+<c>* </c>
+<c>* This method is integrated into the deep learning training</c>
+<c>* workflow, therefore this example demonstrates the usage of</c>
+<c>* the respective deep-learning-specific operators and</c>
+<c>* procedures.</c>
+<c>* </c>
+<c>* Please note that the HALCON Operator Reference contains</c>
+<c>* helpful additional information:</c>
+<c>* HALCON Operator Reference -&gt; 3D Matching</c>
+<c>* -&gt; 3D Gripping Point Detection</c>
+<c>* </c>
+<c>* ************************************************************</c>
+<c>* </c>
+<l>dev_update_off ()</l>
+<l>dev_close_window ()</l>
+<l>set_system ('seed_rand', 42)</l>
+<c>* </c>
+<l>ImageDir := '3d_machine_vision/depalletizing/'</l>
+<l>LabelDir := ImageDir + 'labels/'</l>
+<l>OutputDir := '3d_gripping_point_data'</l>
+<c>* </c>
+<c>* Cleanup generated data after in the end.</c>
+<l>RemoveResults := false</l>
+<c>* </c>
+<c>* Enable optional 3D visualization.</c>
+<c>* The 3D visualization can be used for better interpretation</c>
+<c>* of the final results.</c>
+<l>Visualization3D := false</l>
+<c>* </c>
+<c>* This feature can be performed on a GPU or CPU.</c>
+<l>DeviceRuntime := ['gpu', 'cpu']</l>
+<c>* </c>
+<c>* ************************************************************</c>
+<c>* Preparation and Initialization</c>
+<c>* ************************************************************</c>
+<c>* </c>
+<l>read_dl_model ('pretrained_dl_3d_gripping_point.hdl', DLModelHandle)</l>
+<c>* </c>
+<c>* Determine deep learning device to work with</c>
+<c>* (prefer GPU over CPU).</c>
+<l>set_suitable_device (DLModelHandle, DeviceRuntime)</l>
+<c>* </c>
+<c>* Read in a DLDataset.</c>
+<c>* You can create a dataset e.g. with the MVTec Deep Learning</c>
+<c>* Tool. To label the data use a segmentation project and read</c>
+<c>* the images with the</c>
+<c>* read_dl_dataset_3d_gripping_point_detection procedure.</c>
+<l>read_dl_dataset_3d_gripping_point_detection (ImageDir, LabelDir, [128, 0], dict{file_name_xyz_only: 'xyz_'}, DLDataset)</l>
+<c>* </c>
+<c>* Preprocess the data in DLDataset.</c>
+<l>split_dl_dataset (DLDataset, 70, 15, [])</l>
+<l>create_dl_preprocess_param_from_model (DLModelHandle, 'none', 'full_domain', [], [], [], DLPreprocessParam)</l>
+<l>preprocess_dl_dataset (DLDataset, OutputDir, DLPreprocessParam, dict{overwrite_files: 'auto'}, DLDatasetFilename)</l>
+<c>* </c>
+<c>* Inspect 5 randomly selected preprocessed DLSamples visually.</c>
+<l>WindowDict := dict{}</l>
+<l>DatasetSamples := DLDataset.samples</l>
+<l>for Index := 0 to 4 by 1</l>
+<l>    SampleIndex := round(rand(1) * (|DatasetSamples| - 1))</l>
+<l>    read_dl_samples (DLDataset, SampleIndex, DLSample)</l>
+<l>    dev_display_dl_data (DLSample, [], DLDataset, 'gripping_map_ground_truth', [], WindowDict)</l>
+<l>    dev_disp_text ('Press Run (F5) to continue', 'window', 'bottom', 'right', 'black', [], [])</l>
+<l>    stop ()</l>
+<l>endfor</l>
+<l>dev_close_window_dict (WindowDict)</l>
+<c>* </c>
+<c>* ************************************************************</c>
+<c>* Training</c>
+<c>* ************************************************************</c>
+<c>* </c>
+<c>* Set training parameters.</c>
+<l>set_dl_model_param (DLModelHandle, 'solver_type', 'adam')</l>
+<l>set_dl_model_param (DLModelHandle, 'learning_rate', 0.001)</l>
+<l>set_dl_model_param (DLModelHandle, 'batch_size', 2)</l>
+<c>* Here, we run a training of 100 epochs.</c>
+<c>* For better model performance increase the number of epochs,</c>
+<c>* from 100 to e.g. 200.</c>
+<l>create_dl_train_param (DLModelHandle, 100, 1, 'true', 42, [], [], TrainParam)</l>
+<c>* The training and thus the call of train_dl_model_batch ()</c>
+<c>* is done using the following procedure.</c>
+<l>train_dl_model (DLDataset, DLModelHandle, TrainParam, 0, TrainResults, TrainInfos, EvaluationInfos)</l>
+<l>dev_disp_text ('Press F5 to continue', 'window', 'bottom', 'left', 'black', [], [])</l>
+<l>stop ()</l>
+<c>* </c>
+<l>dev_close_window ()</l>
+<l>dev_close_window ()</l>
+<c>* </c>
+<c>* ************************************************************</c>
+<c>* Evaluation</c>
+<c>* ************************************************************</c>
+<c>* </c>
+<c>* We compare the results of the pretrained model to the</c>
+<c>* finetuned model.</c>
+<c>* </c>
+<c>* To remove potential false positives it is possible to</c>
+<c>* restrict the size of regions which are considered during</c>
+<c>* the gripping point determination.</c>
+<l>GrippingPointParams := dict{min_area_size: 300}</l>
+<c>* </c>
+<l>read_dl_model ('pretrained_dl_3d_gripping_point.hdl', DLModelHandlePretrained)</l>
+<l>set_suitable_device (DLModelHandlePretrained, DeviceRuntime)</l>
+<c>* </c>
+<c>* Read the best model, which is written to file by</c>
+<c>* train_dl_model.</c>
+<l>read_dl_model ('model_best.hdl', DLModelHandle)</l>
+<l>set_dl_model_param (DLModelHandle, 'batch_size', 1)</l>
+<l>set_dl_model_param (DLModelHandle, 'optimize_for_inference', 'true')</l>
+<l>set_suitable_device (DLModelHandle, DeviceRuntime)</l>
+<c>* </c>
+<l>GrippingPointParams := dict{min_area_size: 300}</l>
+<c>* </c>
+<l>EvalMeasures := ['gripping_point_precision', 'gripping_point_recall', 'gripping_point_f_score']</l>
+<l>GenParamEval := dict{measures: EvalMeasures, gripping_point_params: GrippingPointParams, show_progress: 'true'}</l>
+<l>evaluate_dl_model (DLDataset, DLModelHandlePretrained, 'split', 'test', GenParamEval, EvaluationResultPretrained, EvalParams)</l>
+<c>* </c>
+<l>evaluate_dl_model (DLDataset, DLModelHandle, 'split', 'test', GenParamEval, EvaluationResult, EvalParams)</l>
+<c>* </c>
+<l>dev_display_gripping_point_evaluation_comparison (['Pretrained model', 'Finetuned model'], [EvaluationResultPretrained,EvaluationResult], WindowHandle)</l>
+<c>* </c>
+<l>dev_disp_text ('Press F5 to continue', 'window', 'bottom', 'left', 'black', [], [])</l>
+<l>stop ()</l>
+<l>dev_close_window ()</l>
+<c>* </c>
+<c>* </c>
+<c>* ************************************************************</c>
+<c>* Inference</c>
+<c>* ************************************************************</c>
+<c>* </c>
+<c>* To demonstrate the inference steps, we apply the trained</c>
+<c>* model to some randomly chosen test images and compare the</c>
+<c>* result to the pretrained model.</c>
+<l>find_dl_samples (DLDataset.samples, 'split', 'test', 'match', SampleIndices)</l>
+<l>read_dl_samples (DLDataset, SampleIndices, TestSamples)</l>
+<c>* </c>
+<l>DisplayParams := dict{gripping_point_size: 25}</l>
+<l>DisplayParams3D := dict{arrow_thickness: 0.003, arrow_length: 0.05}</l>
+<c>* </c>
+<l>if (Visualization3D)</l>
+<l>    WindowDict := dict{}</l>
+<l>    WindowDictPretrained := dict{}</l>
+<l>else</l>
+<l>    dev_open_window (0, 0, 420, 360, 'black', WindowHandleImage)</l>
+<l>    dev_open_window (0, 425, 420, 360, 'black', WindowHandleGrippingMapPretrained)</l>
+<l>    dev_open_window (0, 850, 420, 360, 'black', WindowHandleGrippingMap)</l>
+<l>    WindowDict := dict{gripping_map: WindowHandleGrippingMap}</l>
+<l>    WindowDictPretrained := dict{gripping_map_ground_truth: WindowHandleImage, gripping_map: WindowHandleGrippingMapPretrained}</l>
+<l>endif</l>
+<c>* </c>
+<l>for Index := 0 to |TestSamples| - 1 by 1</l>
+<l>    DLSample := TestSamples[Index]</l>
+<l>    preprocess_dl_samples (DLSample, DLPreprocessParam)</l>
+<l>    apply_dl_model (DLModelHandle, DLSample, [], DLResult)</l>
+<l>    apply_dl_model (DLModelHandlePretrained, DLSample, [], DLResultPretrained)</l>
+<c>    * </c>
+<c>    * Generate the result containing poses of possible</c>
+<c>    * gripping points.</c>
+<l>    gen_dl_3d_gripping_points_and_poses (DLSample, GrippingPointParams, DLResult)</l>
+<l>    gen_dl_3d_gripping_points_and_poses (DLSample, GrippingPointParams, DLResultPretrained)</l>
+<c>    * </c>
+<l>    if (Visualization3D)</l>
+<l>        dev_display_dl_data (DLSample, DLResult, DLDataset, 'gripping_map', DisplayParams, WindowDict)</l>
+<l>        dev_disp_text ('Finetuned Model', 'window', 'top', 'left', 'black', 'box', 'true')</l>
+<l>        dev_display_dl_3d_data (DLSample, DLResult, DLDataset, 'gripping_point_cloud', DisplayParams3D, WindowDict)</l>
+<l>    else</l>
+<l>        dev_display_dl_data (DLSample, DLResultPretrained, DLDataset, ['gripping_map_ground_truth', 'gripping_map'], DisplayParams, WindowDictPretrained)</l>
+<l>        dev_disp_text ('Pretrained Model', 'window', 'top', 'left', 'black', 'box', 'true')</l>
+<l>        dev_display_dl_data (DLSample, DLResult, DLDataset, 'gripping_map', DisplayParams, WindowDict)</l>
+<l>        dev_disp_text ('Finetuned Model', 'window', 'top', 'left', 'black', 'box', 'true')</l>
+<l>        dev_disp_text ('Press F5 to continue', 'window', 'bottom', 'right', 'black', [], [])</l>
+<l>        stop ()</l>
+<l>    endif</l>
+<l>endfor</l>
+<l>dev_close_window_dict (WindowDict)</l>
+<l>dev_close_window_dict (WindowDictPretrained)</l>
+<c>* </c>
+<l>cleanup_results (RemoveResults, OutputDir)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="set_suitable_device">
+<interface>
+<ic>
+<par name="DLModelHandle" base_type="ctrl" dimension="0"/>
+<par name="DeviceRuntime" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c>* This procedure sets the model 'device' to the specified</c>
+<c>* 'runtime' if possible.</c>
+<l>query_available_dl_devices (gen_tuple_const(|DeviceRuntime|,'runtime'), DeviceRuntime, DLDeviceHandles)</l>
+<c>* </c>
+<l>if (|DLDeviceHandles| == 0)</l>
+<l>    throw ('No supported device found to continue this example.')</l>
+<l>endif</l>
+<c>* </c>
+<l>for Index := 0 to |DLDeviceHandles| - 1 by 1</l>
+<l>    try</l>
+<l>        set_dl_model_param (DLModelHandle, 'device', DLDeviceHandles[Index])</l>
+<l>        break</l>
+<l>    catch (Exception)</l>
+<l>        if (Index == |DLDeviceHandles| - 1)</l>
+<l>            throw ('Could not set any of the supported devices to continue this example.')</l>
+<l>        endif</l>
+<l>    endtry</l>
+<l>endfor</l>
+<c>* </c>
+<l>return ()</l>
+</body>
+<docu id="set_suitable_device">
+<parameters>
+<parameter id="DLModelHandle"/>
+<parameter id="DeviceRuntime"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="cleanup_results">
+<interface>
+<ic>
+<par name="RemoveResults" base_type="ctrl" dimension="0"/>
+<par name="OutputDir" base_type="ctrl" dimension="0"/>
+</ic>
+</interface>
+<body>
+<c>* </c>
+<c>* This local example procedure cleans up the output of the example.</c>
+<c>* </c>
+<l>if (not RemoveResults)</l>
+<l>    return ()</l>
+<l>endif</l>
+<c>* Display a warning.</c>
+<l>dev_open_window (0, 0, 600, 300, 'black', WindowHandle)</l>
+<l>set_display_font (WindowHandle, 16, 'mono', 'true', 'false')</l>
+<l>WarningCleanup := ['Congratulations, you have finished the example.', '', 'Unless you would like to use the output data / model,', 'press F5 to clean up.']</l>
+<l>dev_disp_text (WarningCleanup, 'window', 'center', 'center', ['black', 'black', 'coral', 'coral', 'coral'], [], [])</l>
+<c>* </c>
+<l>stop ()</l>
+<l>dev_close_window ()</l>
+<c>* </c>
+<c>* Delete all outputs of the example.</c>
+<l>remove_dir_recursively (OutputDir)</l>
+<l>delete_file ('model_best.hdl')</l>
+<l>delete_file ('model_best_info.hdict')</l>
+<l>return ()</l>
+</body>
+<docu id="cleanup_results">
+<parameters>
+<parameter id="OutputDir"/>
+<parameter id="RemoveResults"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="dev_display_gripping_point_evaluation_comparison">
+<interface>
+<ic>
+<par name="ModelNames" base_type="ctrl" dimension="0"/>
+<par name="EvaluationResults" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="WindowHandle" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<c>* </c>
+<c>* This procedure displays the accuracy comparison of two models.</c>
+<c>* </c>
+<l>if (|ModelNames| != 2 or |EvaluationResults| != 2)</l>
+<l>    throw ('This procedure works only with 2 models.')</l>
+<l>endif</l>
+<l>WindowWidth := 512</l>
+<l>WindowHeight := 512</l>
+<l>PieColors := ['#008000', '#800000']</l>
+<l>ContentStart := WindowHeight * 0.12</l>
+<l>AvailableHeight := WindowHeight * 0.70</l>
+<l>PieRadius := AvailableHeight * 0.12</l>
+<c></c>
+<l>dev_open_window (0, 0, WindowWidth, WindowHeight, 'black', WindowHandle)</l>
+<l>set_display_font (WindowHandle, 14, 'mono', 'true', 'false')</l>
+<c></c>
+<l>PieParams := dict{}</l>
+<l>PieParams.title_color := 'white'</l>
+<l>PieParams.footnote_color := 'green'</l>
+<l>PieColumnDelta := WindowWidth / 2</l>
+<l>PieColumnStart := WindowWidth / 4</l>
+<l>for M := 0 to 1 by 1</l>
+<l>    Eval := EvaluationResults[M]</l>
+<l>    Value := Eval.gripping_point_recall</l>
+<c></c>
+<l>    Space := PieRadius * 2 + 0.12 * AvailableHeight</l>
+<l>    PieRow := ContentStart + Space / 2</l>
+<l>    PieRatios := [Value,1 - Value]</l>
+<l>    PieColumn := PieColumnStart + M * PieColumnDelta</l>
+<l>    PieParams.title := ModelNames[M]</l>
+<l>    PieParams.footnote := 'Gripping Point Recall: ' + Value$'.2f'</l>
+<l>    dev_display_pie_chart (WindowHandle, PieRatios, PieRow, PieColumn, PieRadius, PieColors, PieParams)</l>
+<c></c>
+<l>    PieRow := ContentStart + Space + Space / 2</l>
+<l>    Value := Eval.gripping_point_precision</l>
+<l>    PieRatios := [Value,1 - Value]</l>
+<l>    PieColumn := PieColumnStart + M * PieColumnDelta</l>
+<l>    PieParams.title := ' '</l>
+<l>    PieParams.footnote := 'Gripping Point Precision: ' + Value$'.2f'</l>
+<l>    dev_display_pie_chart (WindowHandle, PieRatios, PieRow, PieColumn, PieRadius, PieColors, PieParams)</l>
+<c></c>
+<c></c>
+<l>    PieRow := ContentStart + Space * 2 + Space / 2</l>
+<l>    Value := Eval.gripping_point_f_score</l>
+<l>    PieRatios := [Value,1 - Value]</l>
+<l>    PieColumn := PieColumnStart + M * PieColumnDelta</l>
+<l>    PieParams.title := ' '</l>
+<l>    PieParams.footnote := 'Gripping Point F-Score: ' + Value$'.2f'</l>
+<l>    dev_display_pie_chart (WindowHandle, PieRatios, PieRow, PieColumn, PieRadius, PieColors, PieParams)</l>
+<l>endfor</l>
+<l>return ()</l>
+<l>return ()</l>
+</body>
+<docu id="dev_display_gripping_point_evaluation_comparison">
+<parameters>
+<parameter id="EvaluationResults"/>
+<parameter id="ModelNames"/>
+<parameter id="WindowHandle"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>
