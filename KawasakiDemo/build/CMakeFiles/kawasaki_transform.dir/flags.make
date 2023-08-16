@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -Dqh_QHpointer -DvtkRenderingContext2D_AUTOINIT="1(vtkRenderingContextOpenGL2)" -DvtkRenderingCore_AUTOINIT="3(vtkInteractionStyle,vtkRenderingFreeType,vtkRenderingOpenGL2)"
 
-CXX_INCLUDES = -I/usr/include/vtk-7.1 -I/usr/include/freetype2 -I/opt/mech-mind/mech-eye-sdk/include -I/usr/include/opencv4 -I/opt/MVTec/HALCON-23.05-Progress/include -I/opt/MVTec/HALCON-23.05-Progress/include/halconcpp -I/usr/include/pcl-1.10 -isystem /usr/include/eigen3
+CXX_INCLUDES = -I/usr/include/vtk-7.1 -I/usr/include/freetype2 -I/opt/mech-mind/mech-eye-sdk/include -I/usr/local/include/opencv4 -I/opt/MVTec/HALCON-23.05-Progress/include -I/opt/MVTec/HALCON-23.05-Progress/include/halconcpp -I/usr/include/pcl-1.10 -isystem /usr/include/eigen3
 
-CXX_FLAGS = -std=gnu++11
+CXX_FLAGS =  -Wall -Ofast -DNDEBUG -Wno-deprecated-declarations  -std=gnu++17
 

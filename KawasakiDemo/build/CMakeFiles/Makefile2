@@ -66,17 +66,44 @@ CMAKE_BINARY_DIR = /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build
 all: CMakeFiles/kawasaki_transform.dir/all
 all: CMakeFiles/KawasakiMecheyeDemo.dir/all
 all: CMakeFiles/CaptureDepthMap.dir/all
+all: CMakeFiles/YoloV8_TRT.dir/all
+all: CMakeFiles/detect_object_image.dir/all
+all: CMakeFiles/benchmark.dir/all
+all: CMakeFiles/detect_object_video.dir/all
+all: libs/tensorrt-cpp-api/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall:
+preinstall: libs/tensorrt-cpp-api/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/kawasaki_transform.dir/clean
 clean: CMakeFiles/KawasakiMecheyeDemo.dir/clean
 clean: CMakeFiles/CaptureDepthMap.dir/clean
+clean: CMakeFiles/YoloV8_TRT.dir/clean
+clean: CMakeFiles/detect_object_image.dir/clean
+clean: CMakeFiles/benchmark.dir/clean
+clean: CMakeFiles/detect_object_video.dir/clean
+clean: libs/tensorrt-cpp-api/clean
 .PHONY : clean
+
+#=============================================================================
+# Directory level rules for directory libs/tensorrt-cpp-api
+
+# Recursive "all" directory target.
+libs/tensorrt-cpp-api/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+libs/tensorrt-cpp-api/all: libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/all
+.PHONY : libs/tensorrt-cpp-api/all
+
+# Recursive "preinstall" directory target.
+libs/tensorrt-cpp-api/preinstall:
+.PHONY : libs/tensorrt-cpp-api/preinstall
+
+# Recursive "clean" directory target.
+libs/tensorrt-cpp-api/clean: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/clean
+libs/tensorrt-cpp-api/clean: libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/clean
+.PHONY : libs/tensorrt-cpp-api/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/kawasaki_transform.dir
@@ -85,7 +112,7 @@ clean: CMakeFiles/CaptureDepthMap.dir/clean
 CMakeFiles/kawasaki_transform.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=5,6 "Built target kawasaki_transform"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=13,14 "Built target kawasaki_transform"
 .PHONY : CMakeFiles/kawasaki_transform.dir/all
 
 # Build rule for subdir invocation for target.
@@ -155,6 +182,165 @@ CaptureDepthMap: CMakeFiles/CaptureDepthMap.dir/rule
 CMakeFiles/CaptureDepthMap.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/clean
 .PHONY : CMakeFiles/CaptureDepthMap.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/YoloV8_TRT.dir
+
+# All Build rule for target.
+CMakeFiles/YoloV8_TRT.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/YoloV8_TRT.dir/build.make CMakeFiles/YoloV8_TRT.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/YoloV8_TRT.dir/build.make CMakeFiles/YoloV8_TRT.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=5,6 "Built target YoloV8_TRT"
+.PHONY : CMakeFiles/YoloV8_TRT.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/YoloV8_TRT.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/YoloV8_TRT.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/YoloV8_TRT.dir/rule
+
+# Convenience name for target.
+YoloV8_TRT: CMakeFiles/YoloV8_TRT.dir/rule
+.PHONY : YoloV8_TRT
+
+# clean rule for target.
+CMakeFiles/YoloV8_TRT.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/YoloV8_TRT.dir/build.make CMakeFiles/YoloV8_TRT.dir/clean
+.PHONY : CMakeFiles/YoloV8_TRT.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/detect_object_image.dir
+
+# All Build rule for target.
+CMakeFiles/detect_object_image.dir/all: CMakeFiles/YoloV8_TRT.dir/all
+CMakeFiles/detect_object_image.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_image.dir/build.make CMakeFiles/detect_object_image.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_image.dir/build.make CMakeFiles/detect_object_image.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=9,10 "Built target detect_object_image"
+.PHONY : CMakeFiles/detect_object_image.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/detect_object_image.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/detect_object_image.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/detect_object_image.dir/rule
+
+# Convenience name for target.
+detect_object_image: CMakeFiles/detect_object_image.dir/rule
+.PHONY : detect_object_image
+
+# clean rule for target.
+CMakeFiles/detect_object_image.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_image.dir/build.make CMakeFiles/detect_object_image.dir/clean
+.PHONY : CMakeFiles/detect_object_image.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/benchmark.dir
+
+# All Build rule for target.
+CMakeFiles/benchmark.dir/all: CMakeFiles/YoloV8_TRT.dir/all
+CMakeFiles/benchmark.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=7,8 "Built target benchmark"
+.PHONY : CMakeFiles/benchmark.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/benchmark.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/benchmark.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/benchmark.dir/rule
+
+# Convenience name for target.
+benchmark: CMakeFiles/benchmark.dir/rule
+.PHONY : benchmark
+
+# clean rule for target.
+CMakeFiles/benchmark.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/clean
+.PHONY : CMakeFiles/benchmark.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/detect_object_video.dir
+
+# All Build rule for target.
+CMakeFiles/detect_object_video.dir/all: CMakeFiles/YoloV8_TRT.dir/all
+CMakeFiles/detect_object_video.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=11,12 "Built target detect_object_video"
+.PHONY : CMakeFiles/detect_object_video.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/detect_object_video.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/detect_object_video.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/detect_object_video.dir/rule
+
+# Convenience name for target.
+detect_object_video: CMakeFiles/detect_object_video.dir/rule
+.PHONY : detect_object_video
+
+# clean rule for target.
+CMakeFiles/detect_object_video.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/clean
+.PHONY : CMakeFiles/detect_object_video.dir/clean
+
+#=============================================================================
+# Target rules for target libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir
+
+# All Build rule for target.
+libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all:
+	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/depend
+	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=17,18 "Built target tensorrt_cpp_api"
+.PHONY : libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+
+# Build rule for subdir invocation for target.
+libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/rule
+
+# Convenience name for target.
+tensorrt_cpp_api: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/rule
+.PHONY : tensorrt_cpp_api
+
+# clean rule for target.
+libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/clean:
+	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/clean
+.PHONY : libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/clean
+
+#=============================================================================
+# Target rules for target libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir
+
+# All Build rule for target.
+libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/depend
+	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=15,16 "Built target run_inference_benchmark"
+.PHONY : libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/all
+
+# Build rule for subdir invocation for target.
+libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/rule
+
+# Convenience name for target.
+run_inference_benchmark: libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/rule
+.PHONY : run_inference_benchmark
+
+# clean rule for target.
+libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/clean:
+	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/clean
+.PHONY : libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -1,5 +1,13 @@
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/kawasaki_transform.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/KawasakiMecheyeDemo.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/CaptureDepthMap.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/YoloV8_TRT.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/detect_object_image.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/benchmark.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/detect_object_video.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/edit_cache.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/rebuild_cache.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/libs/tensorrt-cpp-api/CMakeFiles/edit_cache.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/libs/tensorrt-cpp-api/CMakeFiles/rebuild_cache.dir

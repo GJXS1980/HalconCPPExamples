@@ -155,6 +155,84 @@ CaptureDepthMap/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/build
 .PHONY : CaptureDepthMap/fast
 
+#=============================================================================
+# Target rules for targets named YoloV8_TRT
+
+# Build rule for target.
+YoloV8_TRT: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 YoloV8_TRT
+.PHONY : YoloV8_TRT
+
+# fast build rule for target.
+YoloV8_TRT/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/YoloV8_TRT.dir/build.make CMakeFiles/YoloV8_TRT.dir/build
+.PHONY : YoloV8_TRT/fast
+
+#=============================================================================
+# Target rules for targets named detect_object_image
+
+# Build rule for target.
+detect_object_image: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 detect_object_image
+.PHONY : detect_object_image
+
+# fast build rule for target.
+detect_object_image/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_image.dir/build.make CMakeFiles/detect_object_image.dir/build
+.PHONY : detect_object_image/fast
+
+#=============================================================================
+# Target rules for targets named benchmark
+
+# Build rule for target.
+benchmark: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 benchmark
+.PHONY : benchmark
+
+# fast build rule for target.
+benchmark/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/build
+.PHONY : benchmark/fast
+
+#=============================================================================
+# Target rules for targets named detect_object_video
+
+# Build rule for target.
+detect_object_video: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 detect_object_video
+.PHONY : detect_object_video
+
+# fast build rule for target.
+detect_object_video/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/build
+.PHONY : detect_object_video/fast
+
+#=============================================================================
+# Target rules for targets named tensorrt_cpp_api
+
+# Build rule for target.
+tensorrt_cpp_api: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tensorrt_cpp_api
+.PHONY : tensorrt_cpp_api
+
+# fast build rule for target.
+tensorrt_cpp_api/fast:
+	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/build
+.PHONY : tensorrt_cpp_api/fast
+
+#=============================================================================
+# Target rules for targets named run_inference_benchmark
+
+# Build rule for target.
+run_inference_benchmark: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run_inference_benchmark
+.PHONY : run_inference_benchmark
+
+# fast build rule for target.
+run_inference_benchmark/fast:
+	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/build
+.PHONY : run_inference_benchmark/fast
+
 src/CaptureDepthMap.o: src/CaptureDepthMap.cpp.o
 .PHONY : src/CaptureDepthMap.o
 
@@ -178,6 +256,30 @@ src/CaptureDepthMap.s: src/CaptureDepthMap.cpp.s
 src/CaptureDepthMap.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CaptureDepthMap.dir/build.make CMakeFiles/CaptureDepthMap.dir/src/CaptureDepthMap.cpp.s
 .PHONY : src/CaptureDepthMap.cpp.s
+
+src/benchmark.o: src/benchmark.cpp.o
+.PHONY : src/benchmark.o
+
+# target to build an object file
+src/benchmark.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/src/benchmark.cpp.o
+.PHONY : src/benchmark.cpp.o
+
+src/benchmark.i: src/benchmark.cpp.i
+.PHONY : src/benchmark.i
+
+# target to preprocess a source file
+src/benchmark.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/src/benchmark.cpp.i
+.PHONY : src/benchmark.cpp.i
+
+src/benchmark.s: src/benchmark.cpp.s
+.PHONY : src/benchmark.s
+
+# target to generate assembly for a file
+src/benchmark.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/src/benchmark.cpp.s
+.PHONY : src/benchmark.cpp.s
 
 src/kawasaki_mecheye_demo.o: src/kawasaki_mecheye_demo.cpp.o
 .PHONY : src/kawasaki_mecheye_demo.o
@@ -227,6 +329,78 @@ src/kawasaki_transform.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/src/kawasaki_transform.cpp.s
 .PHONY : src/kawasaki_transform.cpp.s
 
+src/object_detection_image.o: src/object_detection_image.cpp.o
+.PHONY : src/object_detection_image.o
+
+# target to build an object file
+src/object_detection_image.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_image.dir/build.make CMakeFiles/detect_object_image.dir/src/object_detection_image.cpp.o
+.PHONY : src/object_detection_image.cpp.o
+
+src/object_detection_image.i: src/object_detection_image.cpp.i
+.PHONY : src/object_detection_image.i
+
+# target to preprocess a source file
+src/object_detection_image.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_image.dir/build.make CMakeFiles/detect_object_image.dir/src/object_detection_image.cpp.i
+.PHONY : src/object_detection_image.cpp.i
+
+src/object_detection_image.s: src/object_detection_image.cpp.s
+.PHONY : src/object_detection_image.s
+
+# target to generate assembly for a file
+src/object_detection_image.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_image.dir/build.make CMakeFiles/detect_object_image.dir/src/object_detection_image.cpp.s
+.PHONY : src/object_detection_image.cpp.s
+
+src/object_detection_video_stream.o: src/object_detection_video_stream.cpp.o
+.PHONY : src/object_detection_video_stream.o
+
+# target to build an object file
+src/object_detection_video_stream.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/src/object_detection_video_stream.cpp.o
+.PHONY : src/object_detection_video_stream.cpp.o
+
+src/object_detection_video_stream.i: src/object_detection_video_stream.cpp.i
+.PHONY : src/object_detection_video_stream.i
+
+# target to preprocess a source file
+src/object_detection_video_stream.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/src/object_detection_video_stream.cpp.i
+.PHONY : src/object_detection_video_stream.cpp.i
+
+src/object_detection_video_stream.s: src/object_detection_video_stream.cpp.s
+.PHONY : src/object_detection_video_stream.s
+
+# target to generate assembly for a file
+src/object_detection_video_stream.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/src/object_detection_video_stream.cpp.s
+.PHONY : src/object_detection_video_stream.cpp.s
+
+src/yolov8.o: src/yolov8.cpp.o
+.PHONY : src/yolov8.o
+
+# target to build an object file
+src/yolov8.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/YoloV8_TRT.dir/build.make CMakeFiles/YoloV8_TRT.dir/src/yolov8.cpp.o
+.PHONY : src/yolov8.cpp.o
+
+src/yolov8.i: src/yolov8.cpp.i
+.PHONY : src/yolov8.i
+
+# target to preprocess a source file
+src/yolov8.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/YoloV8_TRT.dir/build.make CMakeFiles/YoloV8_TRT.dir/src/yolov8.cpp.i
+.PHONY : src/yolov8.cpp.i
+
+src/yolov8.s: src/yolov8.cpp.s
+.PHONY : src/yolov8.s
+
+# target to generate assembly for a file
+src/yolov8.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/YoloV8_TRT.dir/build.make CMakeFiles/YoloV8_TRT.dir/src/yolov8.cpp.s
+.PHONY : src/yolov8.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -237,16 +411,34 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... CaptureDepthMap"
 	@echo "... KawasakiMecheyeDemo"
+	@echo "... YoloV8_TRT"
+	@echo "... benchmark"
+	@echo "... detect_object_image"
+	@echo "... detect_object_video"
 	@echo "... kawasaki_transform"
+	@echo "... run_inference_benchmark"
+	@echo "... tensorrt_cpp_api"
 	@echo "... src/CaptureDepthMap.o"
 	@echo "... src/CaptureDepthMap.i"
 	@echo "... src/CaptureDepthMap.s"
+	@echo "... src/benchmark.o"
+	@echo "... src/benchmark.i"
+	@echo "... src/benchmark.s"
 	@echo "... src/kawasaki_mecheye_demo.o"
 	@echo "... src/kawasaki_mecheye_demo.i"
 	@echo "... src/kawasaki_mecheye_demo.s"
 	@echo "... src/kawasaki_transform.o"
 	@echo "... src/kawasaki_transform.i"
 	@echo "... src/kawasaki_transform.s"
+	@echo "... src/object_detection_image.o"
+	@echo "... src/object_detection_image.i"
+	@echo "... src/object_detection_image.s"
+	@echo "... src/object_detection_video_stream.o"
+	@echo "... src/object_detection_video_stream.i"
+	@echo "... src/object_detection_video_stream.s"
+	@echo "... src/yolov8.o"
+	@echo "... src/yolov8.i"
+	@echo "... src/yolov8.s"
 .PHONY : help
 
 
