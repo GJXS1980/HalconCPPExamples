@@ -29,7 +29,7 @@ struct YoloV8Config {
     // Calibration data directory. Must be specified when using INT8 precision.
     std::string calibrationDataDirectory;
     // Probability threshold used to filter detected objects
-    float probabilityThreshold = 0.25f;
+    float probabilityThreshold = 0.8f;
     // Non-maximum suppression threshold
     float nmsThreshold = 0.65f;
     // Max number of detected objects to return

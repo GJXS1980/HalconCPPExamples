@@ -140,6 +140,8 @@ KawasakiMecheyeDemo_EXTERNAL_OBJECTS =
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/lib/x86_64-linux-gnu/libboost_iostreams.so
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/lib/x86_64-linux-gnu/libboost_regex.so
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/lib/x86_64-linux-gnu/libqhull.so
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/lib/libOpenNI.so
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/lib/libOpenNI2.so
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/lib/x86_64-linux-gnu/libvtkChartsCore-7.1.so.7.1p.1
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/lib/x86_64-linux-gnu/libvtkInfovisCore-7.1.so.7.1p.1
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/lib/x86_64-linux-gnu/libfreetype.so

@@ -1,6 +1,12 @@
 #include <opencv2/cudaimgproc.hpp>
 #include "yolov8.h"
 
+/**
+ * @brief YoloV8 类的构造函数，用于根据给定的 ONNX 模型路径和配置初始化 YoloV8 实例
+ * 
+ * @param onnxModelPath ONNX 模型文件的路径
+ * @param config YoloV8Config 配置对象，包含相关参数
+ */
 YoloV8::YoloV8(const std::string& onnxModelPath, const YoloV8Config& config)
         : PROBABILITY_THRESHOLD(config.probabilityThreshold)
         , NMS_THRESHOLD(config.nmsThreshold)
@@ -11,8 +17,9 @@ YoloV8::YoloV8(const std::string& onnxModelPath, const YoloV8Config& config)
         , SEGMENTATION_THRESHOLD(config.segmentationThreshold)
         , CLASS_NAMES(config.classNames)
         , NUM_KPS(config.numKPS)
-        , KPS_THRESHOLD(config.kpsThreshold) {
-    // Specify options for GPU inference
+        , KPS_THRESHOLD(config.kpsThreshold) 
+{
+    // 创建一个 Options 对象，用于设置 GPU 推理选项
     Options options;
     options.optBatchSize = 1;
     options.maxBatchSize = 1;
@@ -20,55 +27,69 @@ YoloV8::YoloV8(const std::string& onnxModelPath, const YoloV8Config& config)
     options.precision = config.precision;
     options.calibrationDataDirectoryPath = config.calibrationDataDirectory;
 
-    if (options.precision == Precision::INT8) {
-        if (options.calibrationDataDirectoryPath.empty()) {
-            throw std::runtime_error("Error: Must supply calibration data path for INT8 calibration");
+    // 如果选定的精度是 INT8，则必须提供 INT8 校准数据路径
+    if (options.precision == Precision::INT8) 
+    {
+        if (options.calibrationDataDirectoryPath.empty()) 
+        {
+            throw std::runtime_error("Error: 必须提供 INT8 校准数据路径");
         }
     }
 
-    // Create our TensorRT inference engine
+    // 创建 TensorRT 推理引擎
     m_trtEngine = std::make_unique<Engine>(options);
 
-    // Build the onnx model into a TensorRT engine file
-    // If the engine file already exists, this function will return immediately
-    // The engine file is rebuilt any time the above Options are changed.
+    // 将给定的 ONNX 模型构建为一个 TensorRT 引擎文件
+    // 如果引擎文件已经存在，该函数会立即返回
+    // 如果上述 Options 发生了变化，引擎文件会被重新构建
     auto succ = m_trtEngine->build(onnxModelPath, SUB_VALS, DIV_VALS, NORMALIZE);
-    if (!succ) {
-        const std::string errMsg = "Error: Unable to build the TensorRT engine. "
-                                   "Try increasing TensorRT log severity to kVERBOSE (in /libs/tensorrt-cpp-api/engine.cpp).";
+    if (!succ) 
+    {
+        const std::string errMsg = "Error: 无法构建 TensorRT 引擎。 "
+                                   "请尝试将 TensorRT 日志级别增加到 kVERBOSE（位于 /libs/tensorrt-cpp-api/engine.cpp）。";
         throw std::runtime_error(errMsg);
     }
 
-    // Load the TensorRT engine file
+    // 加载 TensorRT 引擎文件中的网络权重
     succ = m_trtEngine->loadNetwork();
-    if (!succ) {
-        throw std::runtime_error("Error: Unable to load TensorRT engine weights into memory.");
+    if (!succ) 
+    {
+        throw std::runtime_error("Error: 无法将 TensorRT 引擎权重加载到内存中。");
     }
 }
 
-std::vector<std::vector<cv::cuda::GpuMat>> YoloV8::preprocess(const cv::cuda::GpuMat &gpuImg) {
-    // Populate the input vectors
+
+/**
+ * @brief 对输入图像进行预处理，将其转换为模型输入所需的格式
+ * 
+ * @param gpuImg 输入的 GPU 图像
+ * @return 包含预处理后的图像的嵌套 GPU 图像向量的向量
+ */
+std::vector<std::vector<cv::cuda::GpuMat>> YoloV8::preprocess(const cv::cuda::GpuMat &gpuImg) 
+{
+    // 获取输入张量的维度
     const auto& inputDims = m_trtEngine->getInputDims();
 
-    // Convert the image from BGR to RGB
+    // 将图像从 BGR 格式转换为 RGB 格式
     cv::cuda::GpuMat rgbMat;
     cv::cuda::cvtColor(gpuImg, rgbMat, cv::COLOR_BGR2RGB);
 
     auto resized = rgbMat;
 
-    // Resize to the model expected input size while maintaining the aspect ratio with the use of padding
-    if (resized.rows != inputDims[0].d[1] || resized.cols != inputDims[0].d[2]) {
-        // Only resize if not already the right size to avoid unecessary copy
+    // 调整图像大小到模型所需的输入尺寸，同时保持纵横比并使用填充
+    if (resized.rows != inputDims[0].d[1] || resized.cols != inputDims[0].d[2]) 
+    {
+        // 如果尺寸不符合要求，进行调整大小以保持纵横比并填充
         resized = Engine::resizeKeepAspectRatioPadRightBottom(rgbMat, inputDims[0].d[1], inputDims[0].d[2]);
     }
 
-    // Convert to format expected by our inference engine
-    // The reason for the strange format is because it supports models with multiple inputs as well as batching
-    // In our case though, the model only has a single input and we are using a batch size of 1.
+    // 转换为推理引擎所需的格式
+    // 之所以使用奇怪的格式是因为它支持多输入模型以及批处理
+    // 在我们的情况下，模型只有一个输入，并且我们使用批处理大小为 1。
     std::vector<cv::cuda::GpuMat> input{std::move(resized)};
     std::vector<std::vector<cv::cuda::GpuMat>> inputs {std::move(input)};
 
-    // These params will be used in the post-processing stage
+    // 这些参数将在后处理阶段使用
     m_imgHeight = rgbMat.rows;
     m_imgWidth = rgbMat.cols;
     m_ratio =  1.f / std::min(inputDims[0].d[2] / static_cast<float>(rgbMat.cols), inputDims[0].d[1] / static_cast<float>(rgbMat.rows));
@@ -76,8 +97,15 @@ std::vector<std::vector<cv::cuda::GpuMat>> YoloV8::preprocess(const cv::cuda::Gp
     return inputs;
 }
 
-std::vector<Object> YoloV8::detectObjects(const cv::cuda::GpuMat &inputImageBGR) {
-    // Preprocess the input image
+/**
+ * @brief 对输入图像进行目标检测，返回检测到的目标信息
+ * 
+ * @param inputImageBGR 输入的 BGR 图像
+ * @return 包含检测到的目标信息的对象向量
+ */
+std::vector<Object> YoloV8::detectObjects(const cv::cuda::GpuMat &inputImageBGR) 
+{
+    // 预处理输入图像
 #ifdef ENABLE_BENCHMARKS
     static int numIts = 1;
     preciseStopwatch s1;
@@ -88,7 +116,7 @@ std::vector<Object> YoloV8::detectObjects(const cv::cuda::GpuMat &inputImageBGR)
     t1 += s1.elapsedTime<long long, std::chrono::microseconds>();
     std::cout << "Avg Preprocess time: " << (t1 / numIts) / 1000.f << " ms" << std::endl;
 #endif
-    // Run inference using the TensorRT engine
+    // 使用 TensorRT 引擎进行推理
 #ifdef ENABLE_BENCHMARKS
     preciseStopwatch s2;
 #endif
@@ -103,29 +131,34 @@ std::vector<Object> YoloV8::detectObjects(const cv::cuda::GpuMat &inputImageBGR)
     std::cout << "Avg Inference time: " << (t2 / numIts) / 1000.f << " ms" << std::endl;
     preciseStopwatch s3;
 #endif
-    // Check if our model does only object detection or also supports segmentation
+    // 检查模型是否仅支持目标检测或还支持分割
     std::vector<Object> ret;
     const auto& numOutputs = m_trtEngine->getOutputDims().size();
     if (numOutputs == 1) {
-        // Object detection or pose estimation
-        // Since we have a batch size of 1 and only 1 output, we must convert the output from a 3D array to a 1D array.
+        // 目标检测或姿态估计
+        // 由于批处理大小为 1，且只有一个输出，我们需要将输出从 3D 数组转换为 1D 数组。 
         std::vector<float> featureVector;
         Engine::transformOutput(featureVectors, featureVector);
 
         const auto& outputDims = m_trtEngine->getOutputDims();
         int numChannels = outputDims[outputDims.size() - 1].d[1];
-        // TODO: Need to improve this to make it more generic (don't use magic number).
-        // For now it works with Ultralytics pretrained models.
-        if (numChannels == 56) {
-            // Pose estimation
+        // TODO: 需要改进以使其更通用（不要使用魔术数）
+        // 目前它适用于 Ultralytics 预训练模型。
+        if (numChannels == 56) 
+        {
+            // 姿态估计
             ret = postprocessPose(featureVector);
-        } else {
-            // Object detection
+        } 
+        else 
+        {
+            // 目标检测
             ret = postprocessDetect(featureVector);
         }
-    } else {
-        // Segmentation
-        // Since we have a batch size of 1 and 2 outputs, we must convert the output from a 3D array to a 2D array.
+    } 
+    else 
+    {
+        // 分割
+        // 由于批处理大小为 1，且有 2 个输出，我们需要将输出从 3D 数组转换为 2D 数组。
         std::vector<std::vector<float>> featureVector;
         Engine::transformOutput(featureVectors, featureVector);
         ret = postProcessSegmentation(featureVector);
@@ -138,16 +171,34 @@ std::vector<Object> YoloV8::detectObjects(const cv::cuda::GpuMat &inputImageBGR)
     return ret;
 }
 
-std::vector<Object> YoloV8::detectObjects(const cv::Mat &inputImageBGR) {
-    // Upload the image to GPU memory
+
+/**
+ * @brief 在 YoloV8 类中执行目标检测，返回检测到的目标信息。
+ * 
+ * @param inputImageBGR 输入的 BGR 图像
+ * @return 包含检测到的目标信息的对象向量
+ */
+std::vector<Object> YoloV8::detectObjects(const cv::Mat &inputImageBGR) 
+{
+    // 将图像上传到 GPU 内存
     cv::cuda::GpuMat gpuImg;
     gpuImg.upload(inputImageBGR);
 
-    // Call detectObjects with the GPU image
+    // 使用 GPU 图像调用 detectObjects 函数
     return detectObjects(gpuImg);
 }
 
-std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<float>>& featureVectors) {
+
+/**
+ * @brief 对分割模型的输出进行后处理，提取分割目标信息。
+ * 
+ * @param featureVectors 分割模型的输出特征向量
+ * @return 包含分割目标信息的对象向量
+ */
+
+std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<float>>& featureVectors) 
+{
+    // 获取输出维度信息
     const auto& outputDims = m_trtEngine->getOutputDims();
 
     int numChannels = outputDims[outputDims.size() - 1].d[1];
@@ -155,13 +206,15 @@ std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<floa
 
     const auto numClasses = numChannels - SEG_CHANNELS - 4;
 
-    // Ensure the output lengths are correct
-    if (featureVectors[0].size() != static_cast<size_t>(SEG_CHANNELS) * SEG_H * SEG_W) {
-        throw std::logic_error("Output at index 0 has incorrect length");
+    // 确保输出长度正确
+    if (featureVectors[0].size() != static_cast<size_t>(SEG_CHANNELS) * SEG_H * SEG_W) 
+    {
+        throw std::logic_error("第 0 个输出长度不正确");
     }
 
-    if (featureVectors[1].size() != static_cast<size_t>(numChannels) * numAnchors) {
-        throw std::logic_error("Output at index 1 has incorrect length");
+    if (featureVectors[1].size() != static_cast<size_t>(numChannels) * numAnchors) 
+    {
+        throw std::logic_error("第 1 个输出长度不正确");
     }
 
     cv::Mat output = cv::Mat(numChannels, numAnchors, CV_32F, featureVectors[1].data());
@@ -175,26 +228,38 @@ std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<floa
     std::vector<cv::Mat> maskConfs;
     std::vector<int> indices;
 
-    // Object the bounding boxes and class labels
-    for (int i = 0; i < numAnchors; i++) {
+    // 对每个锚框进行处理，解析出边界框和类别标签
+    for (int i = 0; i < numAnchors; i++) 
+    {
+        // 获取当前目标的输出行指针
         auto rowPtr = output.row(i).ptr<float>();
+        
         auto bboxesPtr = rowPtr;
+        // 从输出行数据中获取得分信息
         auto scoresPtr = rowPtr + 4;
+        // 从输出行数据中获取分割掩膜信息
         auto maskConfsPtr = rowPtr + 4 + numClasses;
+        // 找到得分信息中的最大值，确定目标的最可能类别
         auto maxSPtr = std::max_element(scoresPtr, scoresPtr + numClasses);
         float score = *maxSPtr;
-        if (score > PROBABILITY_THRESHOLD) {
+        // 如果最高得分大于阈值，则处理这个目标
+        if (score > PROBABILITY_THRESHOLD) 
+        {
+            // 从输出行数据中获取边界框坐标
             float x = *bboxesPtr++;
             float y = *bboxesPtr++;
             float w = *bboxesPtr++;
             float h = *bboxesPtr;
 
+            // 根据比例因子 m_ratio 调整后的边界框坐标
             float x0 = std::clamp((x - 0.5f * w) * m_ratio, 0.f, m_imgWidth);
             float y0 = std::clamp((y - 0.5f * h) * m_ratio, 0.f, m_imgHeight);
             float x1 = std::clamp((x + 0.5f * w) * m_ratio, 0.f, m_imgWidth);
             float y1 = std::clamp((y + 0.5f * h) * m_ratio, 0.f, m_imgHeight);
 
+            // 提取得分最高的类别作为目标的类别标签
             int label = maxSPtr - scoresPtr;
+            // 构建边界框对象
             cv::Rect_<float> bbox;
             bbox.x = x0;
             bbox.y = y0;
@@ -202,7 +267,7 @@ std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<floa
             bbox.height = y1 - y0;
 
             cv::Mat maskConf = cv::Mat(1, SEG_CHANNELS, CV_32F, maskConfsPtr);
-
+            // 存储目标的信息
             bboxes.push_back(bbox);
             labels.push_back(label);
             scores.push_back(score);
@@ -210,7 +275,14 @@ std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<floa
         }
     }
 
-    // Require OpenCV 4.7 for this function
+    /* 非极大值抑制
+    bboxes: 一个包含目标边界框的向量，每个边界框用一个 cv::Rect 对象表示。这些边界框通常是在检测过程中生成的。
+    scores: 一个包含每个目标框对应的置信度分数的向量。这些分数通常是在检测过程中计算得到的。
+    labels: 一个包含每个目标框对应的类别标签的向量。这些标签通常是在检测过程中确定的。
+    threshold: 非极大值抑制的阈值。如果两个目标框的重叠区域大于等于该阈值，其中一个框将被抑制。
+    nmsOverlapThreshold: NMS 的重叠阈值。如果两个目标框的重叠区域大于等于该阈值，其中一个框将被抑制。
+    indices: 输出的向量，其中包含经过 NMS 处理后保留的目标框的索引。
+    */
     cv::dnn::NMSBoxesBatched(
             bboxes,
             scores,
@@ -220,26 +292,41 @@ std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<floa
             indices
     );
 
-    // Obtain the segmentation masks
+    // 提取分割掩膜
     cv::Mat masks;
     std::vector<Object> objs;
     int cnt = 0;
-    for (auto& i : indices) {
-        if (cnt >= TOP_K) {
+    for (auto& i : indices) 
+    {
+        // 判断是否达到最大处理目标数
+        if (cnt >= TOP_K) 
+        {
             break;
         }
+        // 获取当前目标的边界框信息
         cv::Rect tmp = bboxes[i];
+        // 创建一个 Object 结构体实例
         Object obj;
+        // 将目标的类别标签赋值给 obj.label
         obj.label = labels[i];
+        // 将边界框信息赋值给 obj.rect
         obj.rect = tmp;
+        // 将目标的置信度（概率）赋值给 obj.probability
         obj.probability = scores[i];
+        
         masks.push_back(maskConfs[i]);
+        // 将当前目标的信息存储到 objs 向量中
         objs.push_back(obj);
+         // 增加已处理目标数
         cnt += 1;
     }
+    
+    // std::cout << "掩膜Mask： " << masks << std::endl;
 
-    // Convert segmentation mask to original frame
-    if (!masks.empty()) {
+    // 将分割掩膜映射回原始图像
+    if (!masks.empty()) 
+    {
+        // 计算分割掩膜在原始图像上的位置和大小
         cv::Mat matmulRes = (masks * protos).t();
         cv::Mat maskMat = matmulRes.reshape(indices.size(), { SEG_W, SEG_H });
 
@@ -248,33 +335,45 @@ std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<floa
         const auto inputDims = m_trtEngine->getInputDims();
 
         cv::Rect roi;
-        if (m_imgHeight > m_imgWidth) {
+        if (m_imgHeight > m_imgWidth) 
+        {
             roi = cv::Rect(0, 0, SEG_W * m_imgWidth / m_imgHeight, SEG_H);
-        } else {
+        } 
+        else 
+        {
             roi = cv::Rect(0, 0, SEG_W, SEG_H * m_imgHeight / m_imgWidth);
         }
+        // std::cout << "ROI: " << roi << std::endl;
 
-
+        // 将分割掩膜应用于目标边界框
         for (size_t i = 0; i < indices.size(); i++)
         {
             cv::Mat dest, mask;
-            cv::exp(-maskChannels[i], dest);
-            dest = 1.0 / (1.0 + dest);
-            dest = dest(roi);
+            // 计算分割掩膜的中间结果 dest
+            cv::exp(-maskChannels[i], dest); // 对 maskChannels[i] 中的每个像素应用指数函数
+            dest = 1.0 / (1.0 + dest);   // 将结果进行缩放，使范围在 [0, 1]
+            // 在指定的 ROI 区域内进行操作
+            dest = dest(roi);   // 仅保留 ROI 区域的数据
+            // 调整分割掩膜的大小，使其与原始图像大小匹配
             cv::resize(
                     dest,
                     mask,
                     cv::Size(static_cast<int>(m_imgWidth), static_cast<int>(m_imgHeight)),
                     cv::INTER_LINEAR
             );
+            // 生成目标的二进制分割掩膜
+            // 将 mask 中大于 SEGMENTATION_THRESHOLD 的像素设置为 1，其余像素设置为 0
             objs[i].boxMask = mask(objs[i].rect) > SEGMENTATION_THRESHOLD;
         }
     }
-
     return objs;
 }
 
-std::vector<Object> YoloV8::postprocessPose(std::vector<float> &featureVector) {
+
+
+
+std::vector<Object> YoloV8::postprocessPose(std::vector<float> &featureVector) 
+{
     const auto& outputDims = m_trtEngine->getOutputDims();
     auto numChannels = outputDims[0].d[1];
     auto numAnchors = outputDims[0].d[2];
@@ -289,13 +388,15 @@ std::vector<Object> YoloV8::postprocessPose(std::vector<float> &featureVector) {
     output = output.t();
 
     // Get all the YOLO proposals
-    for (int i = 0; i < numAnchors; i++) {
+    for (int i = 0; i < numAnchors; i++) 
+    {
         auto rowPtr = output.row(i).ptr<float>();
         auto bboxesPtr = rowPtr;
         auto scoresPtr = rowPtr + 4;
         auto kps_ptr = rowPtr + 5;
         float score = *scoresPtr;
-        if (score > PROBABILITY_THRESHOLD) {
+        if (score > PROBABILITY_THRESHOLD) 
+        {
             float x = *bboxesPtr++;
             float y = *bboxesPtr++;
             float w = *bboxesPtr++;
@@ -313,7 +414,8 @@ std::vector<Object> YoloV8::postprocessPose(std::vector<float> &featureVector) {
             bbox.height = y1 - y0;
 
             std::vector<float> kps;
-            for (int k = 0; k < NUM_KPS; k++) {
+            for (int k = 0; k < NUM_KPS; k++) 
+            {
                 float kpsX = *(kps_ptr + 3 * k) * m_ratio;
                 float kpsY = *(kps_ptr + 3 * k + 1) * m_ratio;
                 float kpsS = *(kps_ptr + 3 * k + 2);
@@ -338,8 +440,10 @@ std::vector<Object> YoloV8::postprocessPose(std::vector<float> &featureVector) {
 
     // Choose the top k detections
     int cnt = 0;
-    for (auto& chosenIdx : indices) {
-        if (cnt >= TOP_K) {
+    for (auto& chosenIdx : indices) 
+    {
+        if (cnt >= TOP_K) 
+        {
             break;
         }
 
@@ -355,7 +459,11 @@ std::vector<Object> YoloV8::postprocessPose(std::vector<float> &featureVector) {
 
     return objects;}
 
-std::vector<Object> YoloV8::postprocessDetect(std::vector<float> &featureVector) {
+
+
+
+std::vector<Object> YoloV8::postprocessDetect(std::vector<float> &featureVector) 
+{
     const auto& outputDims = m_trtEngine->getOutputDims();
     auto numChannels = outputDims[0].d[1];
     auto numAnchors = outputDims[0].d[2];
@@ -371,13 +479,15 @@ std::vector<Object> YoloV8::postprocessDetect(std::vector<float> &featureVector)
     output = output.t();
 
     // Get all the YOLO proposals
-    for (int i = 0; i < numAnchors; i++) {
+    for (int i = 0; i < numAnchors; i++) 
+    {
         auto rowPtr = output.row(i).ptr<float>();
         auto bboxesPtr = rowPtr;
         auto scoresPtr = rowPtr + 4;
         auto maxSPtr = std::max_element(scoresPtr, scoresPtr + numClasses);
         float score = *maxSPtr;
-        if (score > PROBABILITY_THRESHOLD) {
+        if (score > PROBABILITY_THRESHOLD) 
+        {
             float x = *bboxesPtr++;
             float y = *bboxesPtr++;
             float w = *bboxesPtr++;
@@ -408,8 +518,10 @@ std::vector<Object> YoloV8::postprocessDetect(std::vector<float> &featureVector)
 
     // Choose the top k detections
     int cnt = 0;
-    for (auto& chosenIdx : indices) {
-        if (cnt >= TOP_K) {
+    for (auto& chosenIdx : indices) 
+    {
+        if (cnt >= TOP_K) 
+        {
             break;
         }
 
@@ -425,11 +537,18 @@ std::vector<Object> YoloV8::postprocessDetect(std::vector<float> &featureVector)
     return objects;
 }
 
-void YoloV8::drawObjectLabels(cv::Mat& image, const std::vector<Object> &objects, unsigned int scale) {
+
+
+
+
+void YoloV8::drawObjectLabels(cv::Mat& image, const std::vector<Object> &objects, unsigned int scale) 
+{
     // If segmentation information is present, start with that
-    if (!objects.empty() && !objects[0].boxMask.empty()) {
+    if (!objects.empty() && !objects[0].boxMask.empty()) 
+    {
         cv::Mat mask = image.clone();
-        for (const auto& object: objects) {
+        for (const auto& object: objects) 
+        {
             // Choose the color
             int colorIndex = object.label % COLOR_LIST.size(); // We have only defined 80 unique colors
             cv::Scalar color = cv::Scalar(COLOR_LIST[colorIndex][0],
@@ -444,7 +563,8 @@ void YoloV8::drawObjectLabels(cv::Mat& image, const std::vector<Object> &objects
     }
 
     // Bounding boxes and annotations
-    for (auto & object : objects) {
+    for (auto & object : objects) 
+    {
         // Choose the color
 		int colorIndex = object.label % COLOR_LIST.size(); // We have only defined 80 unique colors
         cv::Scalar color = cv::Scalar(COLOR_LIST[colorIndex][0],
@@ -452,9 +572,12 @@ void YoloV8::drawObjectLabels(cv::Mat& image, const std::vector<Object> &objects
                                       COLOR_LIST[colorIndex][2]);
         float meanColor = cv::mean(color)[0];
         cv::Scalar txtColor;
-        if (meanColor > 0.5){
+        if (meanColor > 0.5)
+        {
             txtColor = cv::Scalar(0, 0, 0);
-        }else{
+        }
+        else
+        {
             txtColor = cv::Scalar(255, 255, 255);
         }
 
@@ -480,14 +603,18 @@ void YoloV8::drawObjectLabels(cv::Mat& image, const std::vector<Object> &objects
         cv::putText(image, text, cv::Point(x, y + labelSize.height), cv::FONT_HERSHEY_SIMPLEX, 0.35 * scale, txtColor, scale);
 
         // Pose estimation
-        if (!object.kps.empty()) {
+        if (!object.kps.empty()) 
+        {
             auto& kps = object.kps;
-            for (int k = 0; k < NUM_KPS + 2; k++) {
-                if (k < NUM_KPS) {
+            for (int k = 0; k < NUM_KPS + 2; k++) 
+            {
+                if (k < NUM_KPS) 
+                {
                     int   kpsX = std::round(kps[k * 3]);
                     int   kpsY = std::round(kps[k * 3 + 1]);
                     float kpsS = kps[k * 3 + 2];
-                    if (kpsS > KPS_THRESHOLD) {
+                    if (kpsS > KPS_THRESHOLD) 
+                    {
                         cv::Scalar kpsColor = cv::Scalar(KPS_COLORS[k][0], KPS_COLORS[k][1], KPS_COLORS[k][2]);
                         cv::circle(image, {kpsX, kpsY}, 5, kpsColor, -1);
                     }
@@ -502,7 +629,8 @@ void YoloV8::drawObjectLabels(cv::Mat& image, const std::vector<Object> &objects
                 float pos1S = kps[(ske[0] - 1) * 3 + 2];
                 float pos2S = kps[(ske[1] - 1) * 3 + 2];
 
-                if (pos1S > KPS_THRESHOLD && pos2S > KPS_THRESHOLD) {
+                if (pos1S > KPS_THRESHOLD && pos2S > KPS_THRESHOLD) 
+                {
                     cv::Scalar limbColor = cv::Scalar(LIMB_COLORS[k][0], LIMB_COLORS[k][1], LIMB_COLORS[k][2]);
                     cv::line(image, {pos1X, pos1Y}, {pos2X, pos2Y}, limbColor, 2);
                 }

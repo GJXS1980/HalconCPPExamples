@@ -118,3 +118,11 @@ target_link_libraries(benchmark YoloV8_TRT)
 add_executable(detect_object_video src/object_detection_video_stream.cpp)
 target_link_libraries(detect_object_video YoloV8_TRT)
 
+# Build and link the executables
+add_executable(MechEyeDetect src/mecheye_object_detection_image.cpp)
+target_link_libraries(MechEyeDetect YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+
+
+add_executable(MechEyeDetectBox src/mecheye_object_detection.cpp)
+target_link_libraries(MechEyeDetectBox YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+

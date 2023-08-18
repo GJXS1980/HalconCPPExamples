@@ -208,6 +208,32 @@ detect_object_video/fast:
 .PHONY : detect_object_video/fast
 
 #=============================================================================
+# Target rules for targets named MechEyeDetect
+
+# Build rule for target.
+MechEyeDetect: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MechEyeDetect
+.PHONY : MechEyeDetect
+
+# fast build rule for target.
+MechEyeDetect/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/build
+.PHONY : MechEyeDetect/fast
+
+#=============================================================================
+# Target rules for targets named MechEyeDetectBox
+
+# Build rule for target.
+MechEyeDetectBox: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MechEyeDetectBox
+.PHONY : MechEyeDetectBox
+
+# fast build rule for target.
+MechEyeDetectBox/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectBox.dir/build.make CMakeFiles/MechEyeDetectBox.dir/build
+.PHONY : MechEyeDetectBox/fast
+
+#=============================================================================
 # Target rules for targets named tensorrt_cpp_api
 
 # Build rule for target.
@@ -329,6 +355,54 @@ src/kawasaki_transform.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/src/kawasaki_transform.cpp.s
 .PHONY : src/kawasaki_transform.cpp.s
 
+src/mecheye_object_detection.o: src/mecheye_object_detection.cpp.o
+.PHONY : src/mecheye_object_detection.o
+
+# target to build an object file
+src/mecheye_object_detection.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectBox.dir/build.make CMakeFiles/MechEyeDetectBox.dir/src/mecheye_object_detection.cpp.o
+.PHONY : src/mecheye_object_detection.cpp.o
+
+src/mecheye_object_detection.i: src/mecheye_object_detection.cpp.i
+.PHONY : src/mecheye_object_detection.i
+
+# target to preprocess a source file
+src/mecheye_object_detection.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectBox.dir/build.make CMakeFiles/MechEyeDetectBox.dir/src/mecheye_object_detection.cpp.i
+.PHONY : src/mecheye_object_detection.cpp.i
+
+src/mecheye_object_detection.s: src/mecheye_object_detection.cpp.s
+.PHONY : src/mecheye_object_detection.s
+
+# target to generate assembly for a file
+src/mecheye_object_detection.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectBox.dir/build.make CMakeFiles/MechEyeDetectBox.dir/src/mecheye_object_detection.cpp.s
+.PHONY : src/mecheye_object_detection.cpp.s
+
+src/mecheye_object_detection_image.o: src/mecheye_object_detection_image.cpp.o
+.PHONY : src/mecheye_object_detection_image.o
+
+# target to build an object file
+src/mecheye_object_detection_image.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/src/mecheye_object_detection_image.cpp.o
+.PHONY : src/mecheye_object_detection_image.cpp.o
+
+src/mecheye_object_detection_image.i: src/mecheye_object_detection_image.cpp.i
+.PHONY : src/mecheye_object_detection_image.i
+
+# target to preprocess a source file
+src/mecheye_object_detection_image.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/src/mecheye_object_detection_image.cpp.i
+.PHONY : src/mecheye_object_detection_image.cpp.i
+
+src/mecheye_object_detection_image.s: src/mecheye_object_detection_image.cpp.s
+.PHONY : src/mecheye_object_detection_image.s
+
+# target to generate assembly for a file
+src/mecheye_object_detection_image.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/src/mecheye_object_detection_image.cpp.s
+.PHONY : src/mecheye_object_detection_image.cpp.s
+
 src/object_detection_image.o: src/object_detection_image.cpp.o
 .PHONY : src/object_detection_image.o
 
@@ -411,6 +485,8 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... CaptureDepthMap"
 	@echo "... KawasakiMecheyeDemo"
+	@echo "... MechEyeDetect"
+	@echo "... MechEyeDetectBox"
 	@echo "... YoloV8_TRT"
 	@echo "... benchmark"
 	@echo "... detect_object_image"
@@ -430,6 +506,12 @@ help:
 	@echo "... src/kawasaki_transform.o"
 	@echo "... src/kawasaki_transform.i"
 	@echo "... src/kawasaki_transform.s"
+	@echo "... src/mecheye_object_detection.o"
+	@echo "... src/mecheye_object_detection.i"
+	@echo "... src/mecheye_object_detection.s"
+	@echo "... src/mecheye_object_detection_image.o"
+	@echo "... src/mecheye_object_detection_image.i"
+	@echo "... src/mecheye_object_detection_image.s"
 	@echo "... src/object_detection_image.o"
 	@echo "... src/object_detection_image.i"
 	@echo "... src/object_detection_image.s"

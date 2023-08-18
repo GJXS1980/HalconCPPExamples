@@ -144,6 +144,8 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/detect_object_image.dir/DependInfo.cmake"
   "CMakeFiles/benchmark.dir/DependInfo.cmake"
   "CMakeFiles/detect_object_video.dir/DependInfo.cmake"
+  "CMakeFiles/MechEyeDetect.dir/DependInfo.cmake"
+  "CMakeFiles/MechEyeDetectBox.dir/DependInfo.cmake"
   "libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/DependInfo.cmake"
   "libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/DependInfo.cmake"
   )

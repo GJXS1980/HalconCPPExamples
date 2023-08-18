@@ -5,6 +5,8 @@
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/detect_object_image.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/benchmark.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/detect_object_video.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/MechEyeDetect.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/MechEyeDetectBox.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/edit_cache.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/rebuild_cache.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir

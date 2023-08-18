@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
     yoloV8.drawObjectLabels(img, objects);
 
     std::cout << "Detected " << objects.size() << " objects" << std::endl;
+    // std::cout << "Detected " << objects.rect() << " objects" << std::endl;
 
     // Save the image to disk
     const auto outputName = inputImage.substr(0, inputImage.find_last_of('.')) + "_annotated.jpg";
