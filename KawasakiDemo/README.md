@@ -26,6 +26,13 @@ cd bin
 #   摄像头实时识别
 ./detect_object_video --model /path/to/your/onnx/model.onnx --input 0
 
+
+#   梅卡相机测试(拍单张照片)
+./MechEyeDetect --model /path/to/your/onnx/model.onnx
+
+
+#   梅卡相机测试(实时拍)
+./MechEyeDetectBox --model /path/to/your/onnx/model.onnx
 ```
 
 
