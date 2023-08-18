@@ -370,8 +370,6 @@ std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<floa
 }
 
 
-
-
 std::vector<Object> YoloV8::postprocessPose(std::vector<float> &featureVector) 
 {
     const auto& outputDims = m_trtEngine->getOutputDims();
@@ -460,8 +458,6 @@ std::vector<Object> YoloV8::postprocessPose(std::vector<float> &featureVector)
     return objects;}
 
 
-
-
 std::vector<Object> YoloV8::postprocessDetect(std::vector<float> &featureVector) 
 {
     const auto& outputDims = m_trtEngine->getOutputDims();
@@ -536,9 +532,6 @@ std::vector<Object> YoloV8::postprocessDetect(std::vector<float> &featureVector)
 
     return objects;
 }
-
-
-
 
 
 void YoloV8::drawObjectLabels(cv::Mat& image, const std::vector<Object> &objects, unsigned int scale) 

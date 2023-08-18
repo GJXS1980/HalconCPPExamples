@@ -29,7 +29,25 @@ int main(int argc, char *argv[]) {
     // Draw the bounding boxes on the image
     yoloV8.drawObjectLabels(img, objects);
 
-    std::cout << "Detected " << objects.size() << " objects" << std::endl;
+    for (const auto& object: objects) 
+    {
+        if (object.label == 1)
+        {
+            std::cout << "Detected " << object.probability  << std::endl;
+            std::cout << "Detected " << object.boxMask.cols  << std::endl;
+            std::cout << "Detected " << object.boxMask.rows  << std::endl;
+
+        }
+        // Choose the color
+        // int colorIndex = object.label % COLOR_LIST.size(); // We have only defined 80 unique colors
+        // std::cout << "Detected " << object.label <<  std::endl;
+        // std::cout << "Detected " << object.probability  << std::endl;
+
+        // Add the mask for said object
+        // mask(object.rect).setTo(color * 255, object.boxMask);
+    }
+
+    // std::cout << "Detected " << objects.size() << " objects" << std::endl;
     // std::cout << "Detected " << objects.rect() << " objects" << std::endl;
 
     // Save the image to disk

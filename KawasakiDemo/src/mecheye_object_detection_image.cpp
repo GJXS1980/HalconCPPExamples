@@ -12,6 +12,8 @@
 
 #include "yolov8.h"
 #include "cmd_line_util.h"
+#include <pcl/point_types.h>
+#include <typeinfo>
 
 using namespace HalconCpp;
 
@@ -28,7 +30,7 @@ int main(int argc, char *argv[])
     const std::string pointCloudColorPath = "pointCloudColor.ply";
     savePLY(pointXYZBGRMap, pointCloudColorPath);
 
-    //  采集1通道彩色图
+    //  采集彩色图
     mmind::api::ColorMap color;
     showError(device.captureColorMap(color));
     std::string colorFile = "boxes.png";
@@ -41,35 +43,87 @@ int main(int argc, char *argv[])
     YoloV8Config config;
     std::string onnxModelPath;
 
-    // Parse the command line arguments
+    // 从命令行输入参数
 	if (!parseArguments(argc, argv, config, onnxModelPath, colorFile)) 
     {
 		return -1;
     }
 
-     // Create the YoloV8 engine
+     // 创建yolov8配置参数
     YoloV8 yoloV8(onnxModelPath, config);
 
-    // Read the input image
+    // 读取输入文件
     auto img = cv::imread(colorFile);
     if (img.empty()) {
         std::cout << "Error: Unable to read image at path '" << colorFile << "'" << std::endl;
         return -1;
     }
 
-    // Run inference
+    // 运行识别
     const auto objects = yoloV8.detectObjects(img);
 
-    // Draw the bounding boxes on the image
+    //在图片上面画框
     yoloV8.drawObjectLabels(img, objects);
 
-    std::cout << "Detected " << objects.size() << " objects" << std::endl;
-    // std::cout << "Detected " << objects.rect() << " objects" << std::endl;
-
-    // Save the image to disk
+    // 保存照片
     const auto outputName = colorFile.substr(0, colorFile.find_last_of('.')) + "_annotated.jpg";
     cv::imwrite(outputName, img);
     std::cout << "Saved annotated image to: " << outputName << std::endl;
+
+    //  点云处理
+    int count = 0;
+    for (const auto& object: objects) 
+    {
+        if (object.label == 1)
+        {
+            cv::Mat grayImage;
+            // 将彩色图转成灰度图
+            cv::cvtColor(img, grayImage, cv::COLOR_BGR2GRAY);
+            cv::Mat mask = grayImage.clone();
+
+            // 将像素值为255的像素转换为像素值为0
+            cv::threshold(grayImage, mask, 254, 0, cv::THRESH_BINARY);
+
+            //  设置像素值为255
+            cv::Scalar color = cv::Scalar(1, 1, 1);
+            //  在图片上画出掩膜区域
+            mask(object.rect).setTo(color * 255, object.boxMask);
+            cv::addWeighted(grayImage, 0.5, mask, 0.8, 1, grayImage);
+
+            //  保存分割后的灰度图
+            const auto maskName = "mask" + std::to_string(count) + ".png";
+            cv::imwrite(maskName, grayImage);
+            
+            // 读取PLY点云
+            pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+            pcl::PLYReader reader;
+            reader.read("pointCloudColor.ply", *cloud);
+
+            // 点云分割
+            pcl::PointCloud<pcl::PointXYZRGB>::Ptr segmentedCloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+
+            // 遍历每个点云，并根据掩膜提取掩膜区域的点云
+            for (int y = 0; y < grayImage.rows; ++y) {
+                for (int x = 0; x < grayImage.cols; ++x) 
+                {
+                    // 如果掩膜像素值等于255
+                    if (grayImage.at<uchar>(y, x) == 255) 
+                    { 
+                        const pcl::PointXYZRGB& point = cloud->at(x, y); // 提取对应点云中的点
+                        segmentedCloud->push_back(point); // 添加到分割后的点云中
+                    }
+                }
+            }
+
+            // 保存分割后的点云
+            pcl::PLYWriter Writer;
+            const auto plyName = "segmented_point_cloud" + std::to_string(count) + ".ply";
+            Writer.write(plyName, *segmentedCloud);
+        }
+
+        count ++;
+    }
+
 
     return 0;
 }
