@@ -247,6 +247,19 @@ MechEyeDetectEuclideanCluster/fast:
 .PHONY : MechEyeDetectEuclideanCluster/fast
 
 #=============================================================================
+# Target rules for targets named MechEyeDetectRegistration
+
+# Build rule for target.
+MechEyeDetectRegistration: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MechEyeDetectRegistration
+.PHONY : MechEyeDetectRegistration
+
+# fast build rule for target.
+MechEyeDetectRegistration/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistration.dir/build.make CMakeFiles/MechEyeDetectRegistration.dir/build
+.PHONY : MechEyeDetectRegistration/fast
+
+#=============================================================================
 # Target rules for targets named tensorrt_cpp_api
 
 # Build rule for target.
@@ -367,6 +380,30 @@ src/kawasaki_transform.s: src/kawasaki_transform.cpp.s
 src/kawasaki_transform.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/src/kawasaki_transform.cpp.s
 .PHONY : src/kawasaki_transform.cpp.s
+
+src/mecheye_boxes_Point_Cloud_Registration.o: src/mecheye_boxes_Point_Cloud_Registration.cpp.o
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration.o
+
+# target to build an object file
+src/mecheye_boxes_Point_Cloud_Registration.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistration.dir/build.make CMakeFiles/MechEyeDetectRegistration.dir/src/mecheye_boxes_Point_Cloud_Registration.cpp.o
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration.cpp.o
+
+src/mecheye_boxes_Point_Cloud_Registration.i: src/mecheye_boxes_Point_Cloud_Registration.cpp.i
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration.i
+
+# target to preprocess a source file
+src/mecheye_boxes_Point_Cloud_Registration.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistration.dir/build.make CMakeFiles/MechEyeDetectRegistration.dir/src/mecheye_boxes_Point_Cloud_Registration.cpp.i
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration.cpp.i
+
+src/mecheye_boxes_Point_Cloud_Registration.s: src/mecheye_boxes_Point_Cloud_Registration.cpp.s
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration.s
+
+# target to generate assembly for a file
+src/mecheye_boxes_Point_Cloud_Registration.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistration.dir/build.make CMakeFiles/MechEyeDetectRegistration.dir/src/mecheye_boxes_Point_Cloud_Registration.cpp.s
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration.cpp.s
 
 src/mecheye_boxes_detection_EuclideanCluster.o: src/mecheye_boxes_detection_EuclideanCluster.cpp.o
 .PHONY : src/mecheye_boxes_detection_EuclideanCluster.o
@@ -525,6 +562,7 @@ help:
 	@echo "... MechEyeDetect"
 	@echo "... MechEyeDetectBox"
 	@echo "... MechEyeDetectEuclideanCluster"
+	@echo "... MechEyeDetectRegistration"
 	@echo "... YoloV8_TRT"
 	@echo "... benchmark"
 	@echo "... detect_object_image"
@@ -544,6 +582,9 @@ help:
 	@echo "... src/kawasaki_transform.o"
 	@echo "... src/kawasaki_transform.i"
 	@echo "... src/kawasaki_transform.s"
+	@echo "... src/mecheye_boxes_Point_Cloud_Registration.o"
+	@echo "... src/mecheye_boxes_Point_Cloud_Registration.i"
+	@echo "... src/mecheye_boxes_Point_Cloud_Registration.s"
 	@echo "... src/mecheye_boxes_detection_EuclideanCluster.o"
 	@echo "... src/mecheye_boxes_detection_EuclideanCluster.i"
 	@echo "... src/mecheye_boxes_detection_EuclideanCluster.s"

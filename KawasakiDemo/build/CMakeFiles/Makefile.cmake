@@ -147,6 +147,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/MechEyeDetect.dir/DependInfo.cmake"
   "CMakeFiles/MechEyeDetectBox.dir/DependInfo.cmake"
   "CMakeFiles/MechEyeDetectEuclideanCluster.dir/DependInfo.cmake"
+  "CMakeFiles/MechEyeDetectRegistration.dir/DependInfo.cmake"
   "libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/DependInfo.cmake"
   "libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/DependInfo.cmake"
   )
