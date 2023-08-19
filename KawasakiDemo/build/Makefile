@@ -234,6 +234,19 @@ MechEyeDetectBox/fast:
 .PHONY : MechEyeDetectBox/fast
 
 #=============================================================================
+# Target rules for targets named MechEyeDetectEuclideanCluster
+
+# Build rule for target.
+MechEyeDetectEuclideanCluster: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MechEyeDetectEuclideanCluster
+.PHONY : MechEyeDetectEuclideanCluster
+
+# fast build rule for target.
+MechEyeDetectEuclideanCluster/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectEuclideanCluster.dir/build.make CMakeFiles/MechEyeDetectEuclideanCluster.dir/build
+.PHONY : MechEyeDetectEuclideanCluster/fast
+
+#=============================================================================
 # Target rules for targets named tensorrt_cpp_api
 
 # Build rule for target.
@@ -354,6 +367,30 @@ src/kawasaki_transform.s: src/kawasaki_transform.cpp.s
 src/kawasaki_transform.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/src/kawasaki_transform.cpp.s
 .PHONY : src/kawasaki_transform.cpp.s
+
+src/mecheye_boxes_detection_EuclideanCluster.o: src/mecheye_boxes_detection_EuclideanCluster.cpp.o
+.PHONY : src/mecheye_boxes_detection_EuclideanCluster.o
+
+# target to build an object file
+src/mecheye_boxes_detection_EuclideanCluster.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectEuclideanCluster.dir/build.make CMakeFiles/MechEyeDetectEuclideanCluster.dir/src/mecheye_boxes_detection_EuclideanCluster.cpp.o
+.PHONY : src/mecheye_boxes_detection_EuclideanCluster.cpp.o
+
+src/mecheye_boxes_detection_EuclideanCluster.i: src/mecheye_boxes_detection_EuclideanCluster.cpp.i
+.PHONY : src/mecheye_boxes_detection_EuclideanCluster.i
+
+# target to preprocess a source file
+src/mecheye_boxes_detection_EuclideanCluster.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectEuclideanCluster.dir/build.make CMakeFiles/MechEyeDetectEuclideanCluster.dir/src/mecheye_boxes_detection_EuclideanCluster.cpp.i
+.PHONY : src/mecheye_boxes_detection_EuclideanCluster.cpp.i
+
+src/mecheye_boxes_detection_EuclideanCluster.s: src/mecheye_boxes_detection_EuclideanCluster.cpp.s
+.PHONY : src/mecheye_boxes_detection_EuclideanCluster.s
+
+# target to generate assembly for a file
+src/mecheye_boxes_detection_EuclideanCluster.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectEuclideanCluster.dir/build.make CMakeFiles/MechEyeDetectEuclideanCluster.dir/src/mecheye_boxes_detection_EuclideanCluster.cpp.s
+.PHONY : src/mecheye_boxes_detection_EuclideanCluster.cpp.s
 
 src/mecheye_boxes_detection_compute3DCentroid.o: src/mecheye_boxes_detection_compute3DCentroid.cpp.o
 .PHONY : src/mecheye_boxes_detection_compute3DCentroid.o
@@ -487,6 +524,7 @@ help:
 	@echo "... KawasakiMecheyeDemo"
 	@echo "... MechEyeDetect"
 	@echo "... MechEyeDetectBox"
+	@echo "... MechEyeDetectEuclideanCluster"
 	@echo "... YoloV8_TRT"
 	@echo "... benchmark"
 	@echo "... detect_object_image"
@@ -506,6 +544,9 @@ help:
 	@echo "... src/kawasaki_transform.o"
 	@echo "... src/kawasaki_transform.i"
 	@echo "... src/kawasaki_transform.s"
+	@echo "... src/mecheye_boxes_detection_EuclideanCluster.o"
+	@echo "... src/mecheye_boxes_detection_EuclideanCluster.i"
+	@echo "... src/mecheye_boxes_detection_EuclideanCluster.s"
 	@echo "... src/mecheye_boxes_detection_compute3DCentroid.o"
 	@echo "... src/mecheye_boxes_detection_compute3DCentroid.i"
 	@echo "... src/mecheye_boxes_detection_compute3DCentroid.s"

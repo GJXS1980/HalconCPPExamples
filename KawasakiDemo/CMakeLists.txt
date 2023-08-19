@@ -126,3 +126,6 @@ target_link_libraries(MechEyeDetect YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_
 add_executable(MechEyeDetectBox src/mecheye_object_detection.cpp)
 target_link_libraries(MechEyeDetectBox YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
 
+add_executable(MechEyeDetectEuclideanCluster src/mecheye_boxes_detection_EuclideanCluster.cpp)
+target_link_libraries(MechEyeDetectEuclideanCluster YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+
