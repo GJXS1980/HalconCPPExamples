@@ -355,6 +355,30 @@ src/kawasaki_transform.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/src/kawasaki_transform.cpp.s
 .PHONY : src/kawasaki_transform.cpp.s
 
+src/mecheye_boxes_detection_compute3DCentroid.o: src/mecheye_boxes_detection_compute3DCentroid.cpp.o
+.PHONY : src/mecheye_boxes_detection_compute3DCentroid.o
+
+# target to build an object file
+src/mecheye_boxes_detection_compute3DCentroid.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/src/mecheye_boxes_detection_compute3DCentroid.cpp.o
+.PHONY : src/mecheye_boxes_detection_compute3DCentroid.cpp.o
+
+src/mecheye_boxes_detection_compute3DCentroid.i: src/mecheye_boxes_detection_compute3DCentroid.cpp.i
+.PHONY : src/mecheye_boxes_detection_compute3DCentroid.i
+
+# target to preprocess a source file
+src/mecheye_boxes_detection_compute3DCentroid.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/src/mecheye_boxes_detection_compute3DCentroid.cpp.i
+.PHONY : src/mecheye_boxes_detection_compute3DCentroid.cpp.i
+
+src/mecheye_boxes_detection_compute3DCentroid.s: src/mecheye_boxes_detection_compute3DCentroid.cpp.s
+.PHONY : src/mecheye_boxes_detection_compute3DCentroid.s
+
+# target to generate assembly for a file
+src/mecheye_boxes_detection_compute3DCentroid.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/src/mecheye_boxes_detection_compute3DCentroid.cpp.s
+.PHONY : src/mecheye_boxes_detection_compute3DCentroid.cpp.s
+
 src/mecheye_object_detection.o: src/mecheye_object_detection.cpp.o
 .PHONY : src/mecheye_object_detection.o
 
@@ -378,30 +402,6 @@ src/mecheye_object_detection.s: src/mecheye_object_detection.cpp.s
 src/mecheye_object_detection.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectBox.dir/build.make CMakeFiles/MechEyeDetectBox.dir/src/mecheye_object_detection.cpp.s
 .PHONY : src/mecheye_object_detection.cpp.s
-
-src/mecheye_object_detection_image.o: src/mecheye_object_detection_image.cpp.o
-.PHONY : src/mecheye_object_detection_image.o
-
-# target to build an object file
-src/mecheye_object_detection_image.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/src/mecheye_object_detection_image.cpp.o
-.PHONY : src/mecheye_object_detection_image.cpp.o
-
-src/mecheye_object_detection_image.i: src/mecheye_object_detection_image.cpp.i
-.PHONY : src/mecheye_object_detection_image.i
-
-# target to preprocess a source file
-src/mecheye_object_detection_image.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/src/mecheye_object_detection_image.cpp.i
-.PHONY : src/mecheye_object_detection_image.cpp.i
-
-src/mecheye_object_detection_image.s: src/mecheye_object_detection_image.cpp.s
-.PHONY : src/mecheye_object_detection_image.s
-
-# target to generate assembly for a file
-src/mecheye_object_detection_image.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetect.dir/build.make CMakeFiles/MechEyeDetect.dir/src/mecheye_object_detection_image.cpp.s
-.PHONY : src/mecheye_object_detection_image.cpp.s
 
 src/object_detection_image.o: src/object_detection_image.cpp.o
 .PHONY : src/object_detection_image.o
@@ -506,12 +506,12 @@ help:
 	@echo "... src/kawasaki_transform.o"
 	@echo "... src/kawasaki_transform.i"
 	@echo "... src/kawasaki_transform.s"
+	@echo "... src/mecheye_boxes_detection_compute3DCentroid.o"
+	@echo "... src/mecheye_boxes_detection_compute3DCentroid.i"
+	@echo "... src/mecheye_boxes_detection_compute3DCentroid.s"
 	@echo "... src/mecheye_object_detection.o"
 	@echo "... src/mecheye_object_detection.i"
 	@echo "... src/mecheye_object_detection.s"
-	@echo "... src/mecheye_object_detection_image.o"
-	@echo "... src/mecheye_object_detection_image.i"
-	@echo "... src/mecheye_object_detection_image.s"
 	@echo "... src/object_detection_image.o"
 	@echo "... src/object_detection_image.i"
 	@echo "... src/object_detection_image.s"
