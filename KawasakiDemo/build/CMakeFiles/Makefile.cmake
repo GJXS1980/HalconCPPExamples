@@ -148,6 +148,12 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/MechEyeDetectBox.dir/DependInfo.cmake"
   "CMakeFiles/MechEyeDetectEuclideanCluster.dir/DependInfo.cmake"
   "CMakeFiles/MechEyeDetectRegistration.dir/DependInfo.cmake"
+  "CMakeFiles/MechEyeDetectRegistrationVideo.dir/DependInfo.cmake"
+  "CMakeFiles/MechEyeDetectRobot.dir/DependInfo.cmake"
+  "CMakeFiles/cameraHSVDemo.dir/DependInfo.cmake"
+  "CMakeFiles/testDemo.dir/DependInfo.cmake"
+  "CMakeFiles/mecheyeHSVPCLDemo.dir/DependInfo.cmake"
+  "CMakeFiles/mecheyePCLCornerDemo.dir/DependInfo.cmake"
   "libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/DependInfo.cmake"
   "libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/DependInfo.cmake"
   )

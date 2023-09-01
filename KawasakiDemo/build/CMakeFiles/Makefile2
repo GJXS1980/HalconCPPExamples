@@ -74,6 +74,12 @@ all: CMakeFiles/MechEyeDetect.dir/all
 all: CMakeFiles/MechEyeDetectBox.dir/all
 all: CMakeFiles/MechEyeDetectEuclideanCluster.dir/all
 all: CMakeFiles/MechEyeDetectRegistration.dir/all
+all: CMakeFiles/MechEyeDetectRegistrationVideo.dir/all
+all: CMakeFiles/MechEyeDetectRobot.dir/all
+all: CMakeFiles/cameraHSVDemo.dir/all
+all: CMakeFiles/testDemo.dir/all
+all: CMakeFiles/mecheyeHSVPCLDemo.dir/all
+all: CMakeFiles/mecheyePCLCornerDemo.dir/all
 all: libs/tensorrt-cpp-api/all
 .PHONY : all
 
@@ -93,6 +99,12 @@ clean: CMakeFiles/MechEyeDetect.dir/clean
 clean: CMakeFiles/MechEyeDetectBox.dir/clean
 clean: CMakeFiles/MechEyeDetectEuclideanCluster.dir/clean
 clean: CMakeFiles/MechEyeDetectRegistration.dir/clean
+clean: CMakeFiles/MechEyeDetectRegistrationVideo.dir/clean
+clean: CMakeFiles/MechEyeDetectRobot.dir/clean
+clean: CMakeFiles/cameraHSVDemo.dir/clean
+clean: CMakeFiles/testDemo.dir/clean
+clean: CMakeFiles/mecheyeHSVPCLDemo.dir/clean
+clean: CMakeFiles/mecheyePCLCornerDemo.dir/clean
 clean: libs/tensorrt-cpp-api/clean
 .PHONY : clean
 
@@ -120,7 +132,7 @@ libs/tensorrt-cpp-api/clean: libs/tensorrt-cpp-api/CMakeFiles/run_inference_benc
 CMakeFiles/kawasaki_transform.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=21,22 "Built target kawasaki_transform"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=27,28 "Built target kawasaki_transform"
 .PHONY : CMakeFiles/kawasaki_transform.dir/all
 
 # Build rule for subdir invocation for target.
@@ -198,7 +210,7 @@ CMakeFiles/CaptureDepthMap.dir/clean:
 CMakeFiles/YoloV8_TRT.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/YoloV8_TRT.dir/build.make CMakeFiles/YoloV8_TRT.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/YoloV8_TRT.dir/build.make CMakeFiles/YoloV8_TRT.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=13,14 "Built target YoloV8_TRT"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=17,18 "Built target YoloV8_TRT"
 .PHONY : CMakeFiles/YoloV8_TRT.dir/all
 
 # Build rule for subdir invocation for target.
@@ -225,7 +237,7 @@ CMakeFiles/detect_object_image.dir/all: CMakeFiles/YoloV8_TRT.dir/all
 CMakeFiles/detect_object_image.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_image.dir/build.make CMakeFiles/detect_object_image.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_image.dir/build.make CMakeFiles/detect_object_image.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=17,18 "Built target detect_object_image"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=23,24 "Built target detect_object_image"
 .PHONY : CMakeFiles/detect_object_image.dir/all
 
 # Build rule for subdir invocation for target.
@@ -252,7 +264,7 @@ CMakeFiles/benchmark.dir/all: CMakeFiles/YoloV8_TRT.dir/all
 CMakeFiles/benchmark.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=15,16 "Built target benchmark"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=19,20 "Built target benchmark"
 .PHONY : CMakeFiles/benchmark.dir/all
 
 # Build rule for subdir invocation for target.
@@ -279,7 +291,7 @@ CMakeFiles/detect_object_video.dir/all: CMakeFiles/YoloV8_TRT.dir/all
 CMakeFiles/detect_object_video.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=19,20 "Built target detect_object_video"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=25,26 "Built target detect_object_video"
 .PHONY : CMakeFiles/detect_object_video.dir/all
 
 # Build rule for subdir invocation for target.
@@ -407,13 +419,171 @@ CMakeFiles/MechEyeDetectRegistration.dir/clean:
 .PHONY : CMakeFiles/MechEyeDetectRegistration.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/MechEyeDetectRegistrationVideo.dir
+
+# All Build rule for target.
+CMakeFiles/MechEyeDetectRegistrationVideo.dir/all: CMakeFiles/YoloV8_TRT.dir/all
+CMakeFiles/MechEyeDetectRegistrationVideo.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistrationVideo.dir/build.make CMakeFiles/MechEyeDetectRegistrationVideo.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistrationVideo.dir/build.make CMakeFiles/MechEyeDetectRegistrationVideo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=13,14 "Built target MechEyeDetectRegistrationVideo"
+.PHONY : CMakeFiles/MechEyeDetectRegistrationVideo.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/MechEyeDetectRegistrationVideo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/MechEyeDetectRegistrationVideo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/MechEyeDetectRegistrationVideo.dir/rule
+
+# Convenience name for target.
+MechEyeDetectRegistrationVideo: CMakeFiles/MechEyeDetectRegistrationVideo.dir/rule
+.PHONY : MechEyeDetectRegistrationVideo
+
+# clean rule for target.
+CMakeFiles/MechEyeDetectRegistrationVideo.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistrationVideo.dir/build.make CMakeFiles/MechEyeDetectRegistrationVideo.dir/clean
+.PHONY : CMakeFiles/MechEyeDetectRegistrationVideo.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/MechEyeDetectRobot.dir
+
+# All Build rule for target.
+CMakeFiles/MechEyeDetectRobot.dir/all: CMakeFiles/YoloV8_TRT.dir/all
+CMakeFiles/MechEyeDetectRobot.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRobot.dir/build.make CMakeFiles/MechEyeDetectRobot.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRobot.dir/build.make CMakeFiles/MechEyeDetectRobot.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=15,16 "Built target MechEyeDetectRobot"
+.PHONY : CMakeFiles/MechEyeDetectRobot.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/MechEyeDetectRobot.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/MechEyeDetectRobot.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/MechEyeDetectRobot.dir/rule
+
+# Convenience name for target.
+MechEyeDetectRobot: CMakeFiles/MechEyeDetectRobot.dir/rule
+.PHONY : MechEyeDetectRobot
+
+# clean rule for target.
+CMakeFiles/MechEyeDetectRobot.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRobot.dir/build.make CMakeFiles/MechEyeDetectRobot.dir/clean
+.PHONY : CMakeFiles/MechEyeDetectRobot.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/cameraHSVDemo.dir
+
+# All Build rule for target.
+CMakeFiles/cameraHSVDemo.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cameraHSVDemo.dir/build.make CMakeFiles/cameraHSVDemo.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cameraHSVDemo.dir/build.make CMakeFiles/cameraHSVDemo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=21,22 "Built target cameraHSVDemo"
+.PHONY : CMakeFiles/cameraHSVDemo.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/cameraHSVDemo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/cameraHSVDemo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/cameraHSVDemo.dir/rule
+
+# Convenience name for target.
+cameraHSVDemo: CMakeFiles/cameraHSVDemo.dir/rule
+.PHONY : cameraHSVDemo
+
+# clean rule for target.
+CMakeFiles/cameraHSVDemo.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cameraHSVDemo.dir/build.make CMakeFiles/cameraHSVDemo.dir/clean
+.PHONY : CMakeFiles/cameraHSVDemo.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/testDemo.dir
+
+# All Build rule for target.
+CMakeFiles/testDemo.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/testDemo.dir/build.make CMakeFiles/testDemo.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/testDemo.dir/build.make CMakeFiles/testDemo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=37,38 "Built target testDemo"
+.PHONY : CMakeFiles/testDemo.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/testDemo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/testDemo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/testDemo.dir/rule
+
+# Convenience name for target.
+testDemo: CMakeFiles/testDemo.dir/rule
+.PHONY : testDemo
+
+# clean rule for target.
+CMakeFiles/testDemo.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/testDemo.dir/build.make CMakeFiles/testDemo.dir/clean
+.PHONY : CMakeFiles/testDemo.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/mecheyeHSVPCLDemo.dir
+
+# All Build rule for target.
+CMakeFiles/mecheyeHSVPCLDemo.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyeHSVPCLDemo.dir/build.make CMakeFiles/mecheyeHSVPCLDemo.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyeHSVPCLDemo.dir/build.make CMakeFiles/mecheyeHSVPCLDemo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=29,30 "Built target mecheyeHSVPCLDemo"
+.PHONY : CMakeFiles/mecheyeHSVPCLDemo.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/mecheyeHSVPCLDemo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/mecheyeHSVPCLDemo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/mecheyeHSVPCLDemo.dir/rule
+
+# Convenience name for target.
+mecheyeHSVPCLDemo: CMakeFiles/mecheyeHSVPCLDemo.dir/rule
+.PHONY : mecheyeHSVPCLDemo
+
+# clean rule for target.
+CMakeFiles/mecheyeHSVPCLDemo.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyeHSVPCLDemo.dir/build.make CMakeFiles/mecheyeHSVPCLDemo.dir/clean
+.PHONY : CMakeFiles/mecheyeHSVPCLDemo.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/mecheyePCLCornerDemo.dir
+
+# All Build rule for target.
+CMakeFiles/mecheyePCLCornerDemo.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyePCLCornerDemo.dir/build.make CMakeFiles/mecheyePCLCornerDemo.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyePCLCornerDemo.dir/build.make CMakeFiles/mecheyePCLCornerDemo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=31,32 "Built target mecheyePCLCornerDemo"
+.PHONY : CMakeFiles/mecheyePCLCornerDemo.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/mecheyePCLCornerDemo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/mecheyePCLCornerDemo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles 0
+.PHONY : CMakeFiles/mecheyePCLCornerDemo.dir/rule
+
+# Convenience name for target.
+mecheyePCLCornerDemo: CMakeFiles/mecheyePCLCornerDemo.dir/rule
+.PHONY : mecheyePCLCornerDemo
+
+# clean rule for target.
+CMakeFiles/mecheyePCLCornerDemo.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyePCLCornerDemo.dir/build.make CMakeFiles/mecheyePCLCornerDemo.dir/clean
+.PHONY : CMakeFiles/mecheyePCLCornerDemo.dir/clean
+
+#=============================================================================
 # Target rules for target libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir
 
 # All Build rule for target.
 libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all:
 	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/depend
 	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=25,26 "Built target tensorrt_cpp_api"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=35,36 "Built target tensorrt_cpp_api"
 .PHONY : libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
 
 # Build rule for subdir invocation for target.
@@ -439,7 +609,7 @@ libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/clean:
 libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/all: libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir/all
 	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/depend
 	$(MAKE) $(MAKESILENT) -f libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/build.make libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=23,24 "Built target run_inference_benchmark"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles --progress-num=33,34 "Built target run_inference_benchmark"
 .PHONY : libs/tensorrt-cpp-api/CMakeFiles/run_inference_benchmark.dir/all
 
 # Build rule for subdir invocation for target.

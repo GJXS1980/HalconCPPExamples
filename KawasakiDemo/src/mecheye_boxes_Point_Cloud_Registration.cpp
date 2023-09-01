@@ -92,6 +92,8 @@ Eigen::Matrix4d transformMatrixFromPose(double x, double y, double z, double qw,
 // Runs object detection on an input image then saves the annotated image to disk.
 int main(int argc, char *argv[]) 
 {
+    std::string poseResult; //  识别结果
+
     mmind::api::MechEyeDevice device;
     if (!findAndConnect(device))
         return -1;
@@ -404,12 +406,25 @@ int main(int argc, char *argv[])
                 Eigen::Vector3d robot_euler_angles = rotationMatrixToZYZEulerAngles(rotationMatrix);
 
                 // 输出平移向量和欧拉角
-                std::cout << "Translation vector: " << translation.transpose() << std::endl;
+                std::cout << "Translation vector: " << translation.transpose() * 1000 << std::endl;
                 std::cout << "ZYZ Euler angles (phi, theta, psi): " << robot_euler_angles.transpose() << std::endl;
                 
+                //  提取结果
+                poseResult = std::to_string(translation(0)*1000) + "," + std::to_string(translation(1)*1000) + "," + std::to_string(translation(2)*1000) + "," + std::to_string(robot_euler_angles(0)) + "," + std::to_string(robot_euler_angles(1)) + "," + std::to_string(robot_euler_angles(2)) + "," + "1";
+
+                std::cout << "发送结果为: " << poseResult << std::endl;
+
                 // Spin the viewer
                 viewer->spin();
             }
+        }
+        else
+        {
+            //  发送结果
+            
+            poseResult = std::to_string(0.0) + "," + std::to_string(0.0) + "," + std::to_string(0.0) + "," + std::to_string(0.0) + "," + std::to_string(0.0) + "," + std::to_string(0.0) + "," + "2";
+
+            std::cout << "发送结果为: " << poseResult << std::endl;
         }
 
         count ++;

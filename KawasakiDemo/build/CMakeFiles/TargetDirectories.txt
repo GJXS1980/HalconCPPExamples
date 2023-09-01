@@ -9,6 +9,12 @@
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/MechEyeDetectBox.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/MechEyeDetectEuclideanCluster.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/MechEyeDetectRegistration.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/MechEyeDetectRegistrationVideo.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/MechEyeDetectRobot.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/cameraHSVDemo.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/testDemo.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/mecheyeHSVPCLDemo.dir
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/mecheyePCLCornerDemo.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/edit_cache.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/CMakeFiles/rebuild_cache.dir
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/build/libs/tensorrt-cpp-api/CMakeFiles/tensorrt_cpp_api.dir

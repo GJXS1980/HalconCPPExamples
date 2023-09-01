@@ -260,6 +260,84 @@ MechEyeDetectRegistration/fast:
 .PHONY : MechEyeDetectRegistration/fast
 
 #=============================================================================
+# Target rules for targets named MechEyeDetectRegistrationVideo
+
+# Build rule for target.
+MechEyeDetectRegistrationVideo: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MechEyeDetectRegistrationVideo
+.PHONY : MechEyeDetectRegistrationVideo
+
+# fast build rule for target.
+MechEyeDetectRegistrationVideo/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistrationVideo.dir/build.make CMakeFiles/MechEyeDetectRegistrationVideo.dir/build
+.PHONY : MechEyeDetectRegistrationVideo/fast
+
+#=============================================================================
+# Target rules for targets named MechEyeDetectRobot
+
+# Build rule for target.
+MechEyeDetectRobot: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MechEyeDetectRobot
+.PHONY : MechEyeDetectRobot
+
+# fast build rule for target.
+MechEyeDetectRobot/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRobot.dir/build.make CMakeFiles/MechEyeDetectRobot.dir/build
+.PHONY : MechEyeDetectRobot/fast
+
+#=============================================================================
+# Target rules for targets named cameraHSVDemo
+
+# Build rule for target.
+cameraHSVDemo: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cameraHSVDemo
+.PHONY : cameraHSVDemo
+
+# fast build rule for target.
+cameraHSVDemo/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cameraHSVDemo.dir/build.make CMakeFiles/cameraHSVDemo.dir/build
+.PHONY : cameraHSVDemo/fast
+
+#=============================================================================
+# Target rules for targets named testDemo
+
+# Build rule for target.
+testDemo: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 testDemo
+.PHONY : testDemo
+
+# fast build rule for target.
+testDemo/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/testDemo.dir/build.make CMakeFiles/testDemo.dir/build
+.PHONY : testDemo/fast
+
+#=============================================================================
+# Target rules for targets named mecheyeHSVPCLDemo
+
+# Build rule for target.
+mecheyeHSVPCLDemo: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mecheyeHSVPCLDemo
+.PHONY : mecheyeHSVPCLDemo
+
+# fast build rule for target.
+mecheyeHSVPCLDemo/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyeHSVPCLDemo.dir/build.make CMakeFiles/mecheyeHSVPCLDemo.dir/build
+.PHONY : mecheyeHSVPCLDemo/fast
+
+#=============================================================================
+# Target rules for targets named mecheyePCLCornerDemo
+
+# Build rule for target.
+mecheyePCLCornerDemo: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mecheyePCLCornerDemo
+.PHONY : mecheyePCLCornerDemo
+
+# fast build rule for target.
+mecheyePCLCornerDemo/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyePCLCornerDemo.dir/build.make CMakeFiles/mecheyePCLCornerDemo.dir/build
+.PHONY : mecheyePCLCornerDemo/fast
+
+#=============================================================================
 # Target rules for targets named tensorrt_cpp_api
 
 # Build rule for target.
@@ -333,6 +411,30 @@ src/benchmark.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/src/benchmark.cpp.s
 .PHONY : src/benchmark.cpp.s
 
+src/cameraHSVDemo.o: src/cameraHSVDemo.cpp.o
+.PHONY : src/cameraHSVDemo.o
+
+# target to build an object file
+src/cameraHSVDemo.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cameraHSVDemo.dir/build.make CMakeFiles/cameraHSVDemo.dir/src/cameraHSVDemo.cpp.o
+.PHONY : src/cameraHSVDemo.cpp.o
+
+src/cameraHSVDemo.i: src/cameraHSVDemo.cpp.i
+.PHONY : src/cameraHSVDemo.i
+
+# target to preprocess a source file
+src/cameraHSVDemo.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cameraHSVDemo.dir/build.make CMakeFiles/cameraHSVDemo.dir/src/cameraHSVDemo.cpp.i
+.PHONY : src/cameraHSVDemo.cpp.i
+
+src/cameraHSVDemo.s: src/cameraHSVDemo.cpp.s
+.PHONY : src/cameraHSVDemo.s
+
+# target to generate assembly for a file
+src/cameraHSVDemo.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cameraHSVDemo.dir/build.make CMakeFiles/cameraHSVDemo.dir/src/cameraHSVDemo.cpp.s
+.PHONY : src/cameraHSVDemo.cpp.s
+
 src/kawasaki_mecheye_demo.o: src/kawasaki_mecheye_demo.cpp.o
 .PHONY : src/kawasaki_mecheye_demo.o
 
@@ -381,6 +483,54 @@ src/kawasaki_transform.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kawasaki_transform.dir/build.make CMakeFiles/kawasaki_transform.dir/src/kawasaki_transform.cpp.s
 .PHONY : src/kawasaki_transform.cpp.s
 
+src/mecheyeHSVPCLDemo.o: src/mecheyeHSVPCLDemo.cpp.o
+.PHONY : src/mecheyeHSVPCLDemo.o
+
+# target to build an object file
+src/mecheyeHSVPCLDemo.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyeHSVPCLDemo.dir/build.make CMakeFiles/mecheyeHSVPCLDemo.dir/src/mecheyeHSVPCLDemo.cpp.o
+.PHONY : src/mecheyeHSVPCLDemo.cpp.o
+
+src/mecheyeHSVPCLDemo.i: src/mecheyeHSVPCLDemo.cpp.i
+.PHONY : src/mecheyeHSVPCLDemo.i
+
+# target to preprocess a source file
+src/mecheyeHSVPCLDemo.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyeHSVPCLDemo.dir/build.make CMakeFiles/mecheyeHSVPCLDemo.dir/src/mecheyeHSVPCLDemo.cpp.i
+.PHONY : src/mecheyeHSVPCLDemo.cpp.i
+
+src/mecheyeHSVPCLDemo.s: src/mecheyeHSVPCLDemo.cpp.s
+.PHONY : src/mecheyeHSVPCLDemo.s
+
+# target to generate assembly for a file
+src/mecheyeHSVPCLDemo.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyeHSVPCLDemo.dir/build.make CMakeFiles/mecheyeHSVPCLDemo.dir/src/mecheyeHSVPCLDemo.cpp.s
+.PHONY : src/mecheyeHSVPCLDemo.cpp.s
+
+src/mecheyePCLCornerDemo.o: src/mecheyePCLCornerDemo.cpp.o
+.PHONY : src/mecheyePCLCornerDemo.o
+
+# target to build an object file
+src/mecheyePCLCornerDemo.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyePCLCornerDemo.dir/build.make CMakeFiles/mecheyePCLCornerDemo.dir/src/mecheyePCLCornerDemo.cpp.o
+.PHONY : src/mecheyePCLCornerDemo.cpp.o
+
+src/mecheyePCLCornerDemo.i: src/mecheyePCLCornerDemo.cpp.i
+.PHONY : src/mecheyePCLCornerDemo.i
+
+# target to preprocess a source file
+src/mecheyePCLCornerDemo.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyePCLCornerDemo.dir/build.make CMakeFiles/mecheyePCLCornerDemo.dir/src/mecheyePCLCornerDemo.cpp.i
+.PHONY : src/mecheyePCLCornerDemo.cpp.i
+
+src/mecheyePCLCornerDemo.s: src/mecheyePCLCornerDemo.cpp.s
+.PHONY : src/mecheyePCLCornerDemo.s
+
+# target to generate assembly for a file
+src/mecheyePCLCornerDemo.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mecheyePCLCornerDemo.dir/build.make CMakeFiles/mecheyePCLCornerDemo.dir/src/mecheyePCLCornerDemo.cpp.s
+.PHONY : src/mecheyePCLCornerDemo.cpp.s
+
 src/mecheye_boxes_Point_Cloud_Registration.o: src/mecheye_boxes_Point_Cloud_Registration.cpp.o
 .PHONY : src/mecheye_boxes_Point_Cloud_Registration.o
 
@@ -404,6 +554,54 @@ src/mecheye_boxes_Point_Cloud_Registration.s: src/mecheye_boxes_Point_Cloud_Regi
 src/mecheye_boxes_Point_Cloud_Registration.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistration.dir/build.make CMakeFiles/MechEyeDetectRegistration.dir/src/mecheye_boxes_Point_Cloud_Registration.cpp.s
 .PHONY : src/mecheye_boxes_Point_Cloud_Registration.cpp.s
+
+src/mecheye_boxes_Point_Cloud_Registration_TCP.o: src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.o
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_TCP.o
+
+# target to build an object file
+src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRobot.dir/build.make CMakeFiles/MechEyeDetectRobot.dir/src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.o
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.o
+
+src/mecheye_boxes_Point_Cloud_Registration_TCP.i: src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.i
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_TCP.i
+
+# target to preprocess a source file
+src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRobot.dir/build.make CMakeFiles/MechEyeDetectRobot.dir/src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.i
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.i
+
+src/mecheye_boxes_Point_Cloud_Registration_TCP.s: src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.s
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_TCP.s
+
+# target to generate assembly for a file
+src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRobot.dir/build.make CMakeFiles/MechEyeDetectRobot.dir/src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.s
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp.s
+
+src/mecheye_boxes_Point_Cloud_Registration_Video.o: src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.o
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_Video.o
+
+# target to build an object file
+src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistrationVideo.dir/build.make CMakeFiles/MechEyeDetectRegistrationVideo.dir/src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.o
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.o
+
+src/mecheye_boxes_Point_Cloud_Registration_Video.i: src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.i
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_Video.i
+
+# target to preprocess a source file
+src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistrationVideo.dir/build.make CMakeFiles/MechEyeDetectRegistrationVideo.dir/src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.i
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.i
+
+src/mecheye_boxes_Point_Cloud_Registration_Video.s: src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.s
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_Video.s
+
+# target to generate assembly for a file
+src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MechEyeDetectRegistrationVideo.dir/build.make CMakeFiles/MechEyeDetectRegistrationVideo.dir/src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.s
+.PHONY : src/mecheye_boxes_Point_Cloud_Registration_Video.cpp.s
 
 src/mecheye_boxes_detection_EuclideanCluster.o: src/mecheye_boxes_detection_EuclideanCluster.cpp.o
 .PHONY : src/mecheye_boxes_detection_EuclideanCluster.o
@@ -525,6 +723,30 @@ src/object_detection_video_stream.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/detect_object_video.dir/build.make CMakeFiles/detect_object_video.dir/src/object_detection_video_stream.cpp.s
 .PHONY : src/object_detection_video_stream.cpp.s
 
+src/test.o: src/test.cpp.o
+.PHONY : src/test.o
+
+# target to build an object file
+src/test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/testDemo.dir/build.make CMakeFiles/testDemo.dir/src/test.cpp.o
+.PHONY : src/test.cpp.o
+
+src/test.i: src/test.cpp.i
+.PHONY : src/test.i
+
+# target to preprocess a source file
+src/test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/testDemo.dir/build.make CMakeFiles/testDemo.dir/src/test.cpp.i
+.PHONY : src/test.cpp.i
+
+src/test.s: src/test.cpp.s
+.PHONY : src/test.s
+
+# target to generate assembly for a file
+src/test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/testDemo.dir/build.make CMakeFiles/testDemo.dir/src/test.cpp.s
+.PHONY : src/test.cpp.s
+
 src/yolov8.o: src/yolov8.cpp.o
 .PHONY : src/yolov8.o
 
@@ -563,28 +785,49 @@ help:
 	@echo "... MechEyeDetectBox"
 	@echo "... MechEyeDetectEuclideanCluster"
 	@echo "... MechEyeDetectRegistration"
+	@echo "... MechEyeDetectRegistrationVideo"
+	@echo "... MechEyeDetectRobot"
 	@echo "... YoloV8_TRT"
 	@echo "... benchmark"
+	@echo "... cameraHSVDemo"
 	@echo "... detect_object_image"
 	@echo "... detect_object_video"
 	@echo "... kawasaki_transform"
+	@echo "... mecheyeHSVPCLDemo"
+	@echo "... mecheyePCLCornerDemo"
 	@echo "... run_inference_benchmark"
 	@echo "... tensorrt_cpp_api"
+	@echo "... testDemo"
 	@echo "... src/CaptureDepthMap.o"
 	@echo "... src/CaptureDepthMap.i"
 	@echo "... src/CaptureDepthMap.s"
 	@echo "... src/benchmark.o"
 	@echo "... src/benchmark.i"
 	@echo "... src/benchmark.s"
+	@echo "... src/cameraHSVDemo.o"
+	@echo "... src/cameraHSVDemo.i"
+	@echo "... src/cameraHSVDemo.s"
 	@echo "... src/kawasaki_mecheye_demo.o"
 	@echo "... src/kawasaki_mecheye_demo.i"
 	@echo "... src/kawasaki_mecheye_demo.s"
 	@echo "... src/kawasaki_transform.o"
 	@echo "... src/kawasaki_transform.i"
 	@echo "... src/kawasaki_transform.s"
+	@echo "... src/mecheyeHSVPCLDemo.o"
+	@echo "... src/mecheyeHSVPCLDemo.i"
+	@echo "... src/mecheyeHSVPCLDemo.s"
+	@echo "... src/mecheyePCLCornerDemo.o"
+	@echo "... src/mecheyePCLCornerDemo.i"
+	@echo "... src/mecheyePCLCornerDemo.s"
 	@echo "... src/mecheye_boxes_Point_Cloud_Registration.o"
 	@echo "... src/mecheye_boxes_Point_Cloud_Registration.i"
 	@echo "... src/mecheye_boxes_Point_Cloud_Registration.s"
+	@echo "... src/mecheye_boxes_Point_Cloud_Registration_TCP.o"
+	@echo "... src/mecheye_boxes_Point_Cloud_Registration_TCP.i"
+	@echo "... src/mecheye_boxes_Point_Cloud_Registration_TCP.s"
+	@echo "... src/mecheye_boxes_Point_Cloud_Registration_Video.o"
+	@echo "... src/mecheye_boxes_Point_Cloud_Registration_Video.i"
+	@echo "... src/mecheye_boxes_Point_Cloud_Registration_Video.s"
 	@echo "... src/mecheye_boxes_detection_EuclideanCluster.o"
 	@echo "... src/mecheye_boxes_detection_EuclideanCluster.i"
 	@echo "... src/mecheye_boxes_detection_EuclideanCluster.s"
@@ -600,6 +843,9 @@ help:
 	@echo "... src/object_detection_video_stream.o"
 	@echo "... src/object_detection_video_stream.i"
 	@echo "... src/object_detection_video_stream.s"
+	@echo "... src/test.o"
+	@echo "... src/test.i"
+	@echo "... src/test.s"
 	@echo "... src/yolov8.o"
 	@echo "... src/yolov8.i"
 	@echo "... src/yolov8.s"

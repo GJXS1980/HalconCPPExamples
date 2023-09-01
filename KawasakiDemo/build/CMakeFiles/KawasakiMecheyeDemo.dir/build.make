@@ -120,6 +120,7 @@ KawasakiMecheyeDemo_EXTERNAL_OBJECTS =
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/local/lib/libopencv_reg.so.4.8.0
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/local/lib/libopencv_rgbd.so.4.8.0
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/local/lib/libopencv_saliency.so.4.8.0
+/home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/local/lib/libopencv_sfm.so.4.8.0
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/local/lib/libopencv_stereo.so.4.8.0
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/local/lib/libopencv_structured_light.so.4.8.0
 /home/grantli/halcon_ws/HalconCPPExamples/KawasakiDemo/bin/KawasakiMecheyeDemo: /usr/local/lib/libopencv_superres.so.4.8.0
