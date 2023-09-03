@@ -5,7 +5,7 @@ project(Halcon3DDemo)
 set(CMAKE_CXX_STANDARD 14)
 
 # 设置HALCON的安装路径，根据你的实际安装路径进行修改
-set(HALCON_INSTALL_DIR "/opt/MVTec/HALCON-23.05-Progress")
+#set(HALCON_INSTALL_DIR "/opt/MVTec/HALCON-23.05-Progress")
 
 set(Files ${PROJECT_SOURCE_DIR}/src/PCLDemo.cpp)
 
@@ -63,14 +63,14 @@ endif()
 
 include_directories(${MECHEYEAPI_INCLUDE_DIRS} 
                     ${OpenCV_INCLUDE_DIRS}
-                    ${HALCON_INSTALL_DIR}/include
-                    ${HALCON_INSTALL_DIR}/include/halconcpp
+                    $ENV{HALCONROOT}/include
+                    $ENV{HALCONROOT}/include/halconcpp
                     ${PCL_INCLUDE_DIRS}
 
 )
 link_directories(${MECHEYEAPI_LIBRARY_DIRS} 
                 ${OpenCV_LIBRARY_DIRS}
-                ${HALCON_INSTALL_DIR}/lib/x64-linux
+                $ENV{HALCONROOT}/lib/x64-linux
                 ${PCL_INCLUDE_DIRS}
                 )
 

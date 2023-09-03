@@ -17,7 +17,8 @@ if (ENABLE_BENCHMARKS)
 endif()
 
 # 设置HALCON的安装路径，根据你的实际安装路径进行修改
-set(HALCON_INSTALL_DIR "/opt/MVTec/HALCON-23.05-Progress")
+#set(HALCONROOT "/opt/MVTec/HALCON-23.05-Progress")
+#set(HALCONROOT $ENV{HALCONROOT})
 
 set(Files ${PROJECT_SOURCE_DIR}/src/PCLDemo.cpp)
 
@@ -75,15 +76,16 @@ endif()
 
 include_directories(${MECHEYEAPI_INCLUDE_DIRS} 
                     ${OpenCV_INCLUDE_DIRS}
-                    ${HALCON_INSTALL_DIR}/include
-                    ${HALCON_INSTALL_DIR}/include/halconcpp
+                    $ENV{HALCONROOT}/include
+                    $ENV{HALCONROOT}/include/halconcpp
                     ${PCL_INCLUDE_DIRS}
 )
 link_directories(${MECHEYEAPI_LIBRARY_DIRS} 
                 ${OpenCV_LIBRARY_DIRS}
-                ${HALCON_INSTALL_DIR}/lib/x64-linux
+               $ENV{HALCONROOT}/lib/x64-linux
                 ${PCL_INCLUDE_DIRS}
 )
+
 
 # TensorRT is found and linked by the tensorrt-cpp-api
 add_subdirectory(libs/tensorrt-cpp-api)
