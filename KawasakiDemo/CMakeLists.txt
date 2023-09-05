@@ -5,23 +5,8 @@ project(KawasakiDemo)
 find_package(Eigen3 REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Ofast -DNDEBUG -Wno-deprecated-declarations")
-
-# Use ccache to speed up rebuilds
-include(cmake/ccache.cmake)
-
-# CMake Options
-option(ENABLE_BENCHMARKS "Benchmark the preprocessing, inference, and post processing" OFF)
-if (ENABLE_BENCHMARKS)
-    add_compile_definitions(ENABLE_BENCHMARKS)
-endif()
-
-# 设置HALCON的安装路径，根据你的实际安装路径进行修改
-#set(HALCONROOT "/opt/MVTec/HALCON-23.05-Progress")
-#set(HALCONROOT $ENV{HALCONROOT})
 
 set(Files ${PROJECT_SOURCE_DIR}/src/PCLDemo.cpp)
-
 
 if(CMAKE_HOST_WIN32)
   find_package(MechEyeApi REQUIRED CONFIG PATHS "$ENV{MECHEYE_DIR}/API")
@@ -76,13 +61,10 @@ endif()
 
 include_directories(${MECHEYEAPI_INCLUDE_DIRS} 
                     ${OpenCV_INCLUDE_DIRS}
-                    $ENV{HALCONROOT}/include
-                    $ENV{HALCONROOT}/include/halconcpp
                     ${PCL_INCLUDE_DIRS}
 )
 link_directories(${MECHEYEAPI_LIBRARY_DIRS} 
                 ${OpenCV_LIBRARY_DIRS}
-               $ENV{HALCONROOT}/lib/x64-linux
                 ${PCL_INCLUDE_DIRS}
 )
 
@@ -100,10 +82,10 @@ add_executable(kawasaki_transform src/kawasaki_transform.cpp)
 target_link_libraries(kawasaki_transform Eigen3::Eigen)
 
 add_executable(KawasakiMecheyeDemo src/kawasaki_mecheye_demo.cpp)
-target_link_libraries(KawasakiMecheyeDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(KawasakiMecheyeDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 add_executable(CaptureDepthMap src/CaptureDepthMap.cpp)
-target_link_libraries(CaptureDepthMap ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(CaptureDepthMap ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 # Build the YoloV8 library
 add_library(YoloV8_TRT SHARED src/yolov8.cpp)
@@ -122,24 +104,24 @@ target_link_libraries(detect_object_video YoloV8_TRT)
 
 # Build and link the executables
 add_executable(MechEyeDetect src/mecheye_boxes_detection_compute3DCentroid.cpp)
-target_link_libraries(MechEyeDetect YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(MechEyeDetect YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 
 add_executable(MechEyeDetectBox src/mecheye_object_detection.cpp)
-target_link_libraries(MechEyeDetectBox YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(MechEyeDetectBox YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 add_executable(MechEyeDetectEuclideanCluster src/mecheye_boxes_detection_EuclideanCluster.cpp)
-target_link_libraries(MechEyeDetectEuclideanCluster YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(MechEyeDetectEuclideanCluster YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 add_executable(MechEyeDetectRegistration src/mecheye_boxes_Point_Cloud_Registration.cpp)
-target_link_libraries(MechEyeDetectRegistration YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(MechEyeDetectRegistration YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 add_executable(MechEyeDetectRegistrationVideo src/mecheye_boxes_Point_Cloud_Registration_Video.cpp)
-target_link_libraries(MechEyeDetectRegistrationVideo YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(MechEyeDetectRegistrationVideo YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 
 add_executable(MechEyeDetectRobot src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp)
-target_link_libraries(MechEyeDetectRobot YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(MechEyeDetectRobot YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 add_executable(cameraHSVDemo src/cameraHSVDemo.cpp)
 target_link_libraries(cameraHSVDemo  ${OpenCV_LIBS} ${MECHEYEAPI_LIBRARIES})
@@ -148,8 +130,8 @@ add_executable(testDemo src/test.cpp)
 target_link_libraries(testDemo  ${OpenCV_LIBS})
 
 add_executable(mecheyeHSVPCLDemo src/mecheyeHSVPCLDemo.cpp)
-target_link_libraries(mecheyeHSVPCLDemo  ${OpenCV_LIBS} ${MECHEYEAPI_LIBRARIES} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(mecheyeHSVPCLDemo  ${OpenCV_LIBS} ${MECHEYEAPI_LIBRARIES}  ${PCL_LIBRARIES})
 
 add_executable(mecheyePCLCornerDemo src/mecheyePCLCornerDemo.cpp)
-target_link_libraries(mecheyePCLCornerDemo  ${OpenCV_LIBS} ${MECHEYEAPI_LIBRARIES} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(mecheyePCLCornerDemo  ${OpenCV_LIBS} ${MECHEYEAPI_LIBRARIES}  ${PCL_LIBRARIES})
 

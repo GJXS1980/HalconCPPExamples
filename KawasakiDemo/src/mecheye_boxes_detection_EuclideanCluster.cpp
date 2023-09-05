@@ -4,9 +4,6 @@
 #include "OpenCVUtil.h"
 #include <opencv2/opencv.hpp>
 
-#include "HalconCpp.h"
-#include "HDevThread.h"
-
 #include "yolov8.h"
 #include "cmd_line_util.h"
 #include <typeinfo>
@@ -26,8 +23,6 @@
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
-
-using namespace HalconCpp;
 
 /**
  * @brief 将旋转矩阵转换为 ZYZ 欧拉角（角度制）

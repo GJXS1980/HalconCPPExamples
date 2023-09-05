@@ -2,7 +2,6 @@
 #include "cmd_line_util.h"
 #include <opencv2/cudaimgproc.hpp>
 
-
 // Benchmarks the specified model
 int main(int argc, char *argv[]) {
     YoloV8Config config;

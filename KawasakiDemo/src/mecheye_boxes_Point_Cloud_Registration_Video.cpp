@@ -4,9 +4,6 @@
 #include "OpenCVUtil.h"
 #include <opencv2/opencv.hpp>
 
-#include "HalconCpp.h"
-#include "HDevThread.h"
-
 #include "yolov8.h"
 #include "cmd_line_util.h"
 #include <typeinfo>
@@ -28,11 +25,9 @@
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/extract_indices.h>
 
-
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-using namespace HalconCpp;
 bool status_isOK = false;   //  相机连接状态
 
 /**

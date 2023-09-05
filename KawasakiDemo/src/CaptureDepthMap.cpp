@@ -39,15 +39,10 @@ With this sample program, you can obtain and save the depth map in OpenCV format
 #include "SampleUtil.h"
 #include "OpenCVUtil.h"
 
-#include "HalconCpp.h"
-#include "HDevThread.h"
 #include <opencv2/opencv.hpp>
 
 #include "PclUtil.h"
 #include <pcl/io/ply_io.h>
-
-using namespace HalconCpp;
-
 
 int main()
 {

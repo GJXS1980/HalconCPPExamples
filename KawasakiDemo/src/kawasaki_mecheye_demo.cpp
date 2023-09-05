@@ -7,8 +7,6 @@
 #include "MechEyeApi.h"
 #include "SampleUtil.h"
 
-#include "HalconCpp.h"
-#include "HDevThread.h"
 #include <opencv2/opencv.hpp>
 
 #include "PclUtil.h"

@@ -5,7 +5,7 @@
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [ "msvc_x64_x64" ],
-      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "buildRoot": "${projectDir}\\bin",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
@@ -14,6 +14,11 @@
         {
           "name": "Eigen_DIR",
           "value": "D:/PCL/3rdParty/Eigen/eigen3/Eigen",
+          "type": "PATH"
+        },
+        {
+          "name": "flann_DIR",
+          "value": "D:/PCL/3rdParty/FLANN",
           "type": "PATH"
         }
       ]

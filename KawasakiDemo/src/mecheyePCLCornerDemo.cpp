@@ -3,8 +3,6 @@
 #include "SampleUtil.h"
 #include "OpenCVUtil.h"
 
-#include "HalconCpp.h"
-#include "HDevThread.h"
 #include <opencv2/opencv.hpp>
 
 #include <exception>
@@ -31,10 +29,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-
 bool status_isOK = false;
-
-using namespace HalconCpp;
 
 // 定义全局变量，用于存储鼠标框选的矩形区域
 cv::Rect roiRect;

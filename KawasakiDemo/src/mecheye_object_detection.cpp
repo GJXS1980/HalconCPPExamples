@@ -3,8 +3,6 @@
 #include "SampleUtil.h"
 #include "OpenCVUtil.h"
 
-#include "HalconCpp.h"
-#include "HDevThread.h"
 #include <opencv2/opencv.hpp>
 
 #include "yolov8.h"
@@ -13,8 +11,6 @@
 #include <csignal> // 包含信号处理的头文件
 
 bool status_isOK = false;
-
-using namespace HalconCpp;
 
 // SIGINT 信号处理函数(Ctrl+C断开相机连接并退出程序)
 void signalHandler(int signum) 
