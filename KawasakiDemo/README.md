@@ -35,4 +35,15 @@ cd bin
 ./MechEyeDetectBox --model /path/to/your/onnx/model.onnx
 ```
 
+#   Q & A
+> Q1:mecheye_boxes_Point_Cloud_Registration.cpp:287:43: error: ‘make_shared’ is not a member of ‘boost’
+  287 |                 extract.setIndices(boost::make_shared<const pcl::PointIndices>(indices));
+          
+
+A: 将boost::make_shared换成std::make_shared
+
+
+
+
+
 
