@@ -313,7 +313,7 @@ int main(int argc, char *argv[])
                             pcl::ExtractIndices<pcl::PointXYZ> extract;
 
                             extract.setInputCloud(segCloud);
-                            extract.setIndices(std::make_shared<const pcl::PointIndices>(indices));
+                            extract.setIndices(boost::make_shared<const pcl::PointIndices>(indices));
                             extract.filter(*clusterCloud);
 
                             // 粗略配准

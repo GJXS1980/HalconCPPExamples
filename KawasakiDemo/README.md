@@ -40,10 +40,5 @@ cd bin
   287 |                 extract.setIndices(boost::make_shared<const pcl::PointIndices>(indices));
           
 
-A: 将boost::make_shared换成std::make_shared
-
-
-
-
-
+A1: 将boost::make_shared换成std::make_shared
 
