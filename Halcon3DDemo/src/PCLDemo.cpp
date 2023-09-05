@@ -18,7 +18,7 @@ using namespace std;
 int main() {
     // 读取.ply文件
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::io::loadPLYFile("../pointcloud.ply", *cloud);
+    pcl::io::loadPLYFile("../pointCloudColor.ply", *cloud);
     //  点云为空，则退出程序
     if (cloud->empty()) {
         std::cerr << "Point cloud is empty!" << std::endl;
@@ -26,7 +26,7 @@ int main() {
         // Handle the error or return from the function
     }
     // 读取掩膜图像
-    cv::Mat maskImage = cv::imread("boxes_mask_01.png", cv::IMREAD_GRAYSCALE);
+    cv::Mat maskImage = cv::imread("../boxes_mask_01.png", cv::IMREAD_GRAYSCALE);
 
     // 提取掩膜区域的点云
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr maskedCloud(new pcl::PointCloud<pcl::PointXYZRGB>);
