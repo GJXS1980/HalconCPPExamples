@@ -1,5 +1,5 @@
 #include<iostream>
-#include "HalconCpp.h"
+#include "halconcpp/HalconCpp.h"
 
 using namespace HalconCpp;
 using namespace std;
