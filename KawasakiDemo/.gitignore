@@ -1,5 +1,8 @@
 build/*
+build
 bin/*
+.vs/*
+bin
 cfg
 .vs
 
