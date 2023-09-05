@@ -8,6 +8,9 @@ project(Halcon3DDemo)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# 设置可执行文件输出目录为上一级目录的bin文件夹
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+
 set(Files ${PROJECT_SOURCE_DIR}/src/PCLDemo.cpp)
 
 if(CMAKE_HOST_WIN32)

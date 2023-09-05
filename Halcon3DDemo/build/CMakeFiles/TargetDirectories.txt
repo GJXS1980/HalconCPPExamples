@@ -1,4 +1,0 @@
-/home/grantli/halcon_ws/HalconCPPExamples/Halcon3DDemo/build/CMakeFiles/Halcon3DDemo.dir
-/home/grantli/halcon_ws/HalconCPPExamples/Halcon3DDemo/build/CMakeFiles/MaskToPose.dir
-/home/grantli/halcon_ws/HalconCPPExamples/Halcon3DDemo/build/CMakeFiles/edit_cache.dir
-/home/grantli/halcon_ws/HalconCPPExamples/Halcon3DDemo/build/CMakeFiles/rebuild_cache.dir

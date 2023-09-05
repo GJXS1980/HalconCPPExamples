@@ -4,6 +4,9 @@ project(HandeyeDemo)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# 设置可执行文件输出目录为上一级目录的bin文件夹
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+
 if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "aarch64")
   message(FATAL_ERROR "This sample is not valid in ARM platform.")
 endif()
