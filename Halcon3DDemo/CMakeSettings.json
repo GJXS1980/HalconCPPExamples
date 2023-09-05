@@ -1,0 +1,32 @@
+﻿{
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\bin",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "flann_DIR",
+          "value": "D:/PCL/3rdParty/FLANN",
+          "type": "PATH"
+        },
+        {
+          "name": "OpenCV_DIR",
+          "value": "D:/OpenCV/opencv/build/x64/vc16/lib",
+          "type": "PATH"
+        },
+        {
+          "name": "Qhull_DIR",
+          "value": "D:/PCL/3rdParty/Qhull",
+          "type": "PATH"
+        }
+      ]
+    }
+  ]
+}

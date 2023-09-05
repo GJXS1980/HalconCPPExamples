@@ -1,14 +1,14 @@
-cmake_minimum_required(VERSION 3.5)
+if(CMAKE_HOST_WIN32)
+  cmake_minimum_required(VERSION 3.19)
+else()
+  cmake_minimum_required(VERSION 3.5)
+endif()
 
 project(Halcon3DDemo)
 
 set(CMAKE_CXX_STANDARD 14)
 
-# 设置HALCON的安装路径，根据你的实际安装路径进行修改
-#set(HALCON_INSTALL_DIR "/opt/MVTec/HALCON-23.05-Progress")
-
 set(Files ${PROJECT_SOURCE_DIR}/src/PCLDemo.cpp)
-
 
 if(CMAKE_HOST_WIN32)
   find_package(MechEyeApi REQUIRED CONFIG PATHS "$ENV{MECHEYE_DIR}/API")
@@ -63,22 +63,19 @@ endif()
 
 include_directories(${MECHEYEAPI_INCLUDE_DIRS} 
                     ${OpenCV_INCLUDE_DIRS}
-                    $ENV{HALCONROOT}/include
-                    $ENV{HALCONROOT}/include/halconcpp
                     ${PCL_INCLUDE_DIRS}
 
 )
 link_directories(${MECHEYEAPI_LIBRARY_DIRS} 
                 ${OpenCV_LIBRARY_DIRS}
-                $ENV{HALCONROOT}/lib/x64-linux
                 ${PCL_INCLUDE_DIRS}
                 )
 
 add_executable(${PROJECT_NAME} ${Files})
 
-target_link_libraries(${PROJECT_NAME} ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 
 add_executable(MaskToPose src/MaskToPose.cpp)
 
-target_link_libraries(MaskToPose ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} halconcpp ${PCL_LIBRARIES})
+target_link_libraries(MaskToPose ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES})

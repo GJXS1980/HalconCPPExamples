@@ -38,14 +38,10 @@ With this sample program, you can obtain and save the depth map in OpenCV format
 #include "MechEyeApi.h"
 #include "SampleUtil.h"
 
-#include "HalconCpp.h"
-#include "HDevThread.h"
 #include <opencv2/opencv.hpp>
 
 #include "PclUtil.h"
 #include <pcl/io/ply_io.h>
-
-using namespace HalconCpp;
 
 
 int main()
@@ -57,7 +53,7 @@ int main()
     //  采集彩色点云数据
     mmind::api::PointXYZBGRMap pointXYZBGRMap;
     showError(device.capturePointXYZBGRMap(pointXYZBGRMap));
-    const std::string pointCloudColorPath = "pointCloudColor.ply";
+    const std::string pointCloudColorPath = "../pointCloudColor.ply";
     savePLY(pointXYZBGRMap, pointCloudColorPath);
 
     // //  将彩色点云转成640*480的点云
@@ -109,7 +105,7 @@ int main()
     //  将彩色点云转成tif格式图像
     // Load PLY point cloud
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_tif(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::io::loadPLYFile("pointCloudColor.ply", *cloud_tif);
+    pcl::io::loadPLYFile("../pointCloudColor.ply", *cloud_tif);
 
     // Create a 3-channel, 32-bit floating-point image
     cv::Mat image(cloud_tif->height, cloud_tif->width, CV_32FC3);

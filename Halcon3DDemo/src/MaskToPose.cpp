@@ -4,8 +4,6 @@
 #include "MechEyeApi.h"
 #include "SampleUtil.h"
 
-#include "HalconCpp.h"
-#include "HDevThread.h"
 #include <opencv2/opencv.hpp>
 
 #include "PclUtil.h"
@@ -22,14 +20,13 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/segmentation/extract_clusters.h>
 
-using namespace HalconCpp;
 using namespace std;
 
 int main() 
 {
     // 读取点云文件
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::io::loadPLYFile("pointCloudColor.ply", *cloud);
+    pcl::io::loadPLYFile("../pointCloudColor.ply", *cloud);
 
     // 定义掩膜范围
     int x_min = 673; // 填入实际的x_min值
@@ -46,7 +43,7 @@ int main()
     }
 
     // 保存提取的点云
-    pcl::io::savePLYFile("MaskPointCloud.ply", *maskedCloud);
+    pcl::io::savePLYFile("../MaskPointCloud.ply", *maskedCloud);
 
     // 创建法向量估计对象
     pcl::NormalEstimation<pcl::PointXYZRGB, pcl::Normal> ne;

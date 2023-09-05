@@ -2,8 +2,6 @@
 #include "MechEyeApi.h"
 #include "SampleUtil.h"
 
-#include "HalconCpp.h"
-#include "HDevThread.h"
 #include <opencv2/opencv.hpp>
 
 #include "PclUtil.h"
@@ -15,13 +13,12 @@
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/segmentation/sac_segmentation.h>
 
-using namespace HalconCpp;
 using namespace std;
 
 int main() {
     // 读取.ply文件
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::io::loadPLYFile("pointcloud.ply", *cloud);
+    pcl::io::loadPLYFile("../pointcloud.ply", *cloud);
     //  点云为空，则退出程序
     if (cloud->empty()) {
         std::cerr << "Point cloud is empty!" << std::endl;
@@ -42,7 +39,7 @@ int main() {
     }
 
     // 保存提取的点云
-    pcl::io::savePLYFile("MaskPointCloud.ply", *maskedCloud);
+    pcl::io::savePLYFile("../MaskPointCloud.ply", *maskedCloud);
     // 点云聚类
     pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
     tree->setInputCloud(maskedCloud);
