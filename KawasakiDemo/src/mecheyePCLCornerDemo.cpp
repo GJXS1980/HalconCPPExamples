@@ -99,11 +99,18 @@ int main()
     // device.disconnect();
     // std::cout << "Disconnected from the Mech-Eye device successfully." << std::endl;
 
+
     // 加载彩色图像和点云数据
-    cv::Mat colorImage = cv::imread("color.png");
+    cv::Mat colorNoMaskImage = cv::imread("boxes_01.png");   // 没有掩膜
+
+    cv::Mat colorImage = cv::imread("maskColor.jpg");   //  有掩膜
+
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr pointCloud(new pcl::PointCloud<pcl::PointXYZRGB>);
     pcl::PLYReader reader;
     reader.read("pointCloudColor.ply", *pointCloud);
+
+    //  创建点云可视化接口
+    pcl::visualization::PCLVisualizer::Ptr viewerColor(new pcl::visualization::PCLVisualizer("Segmented Point Cloud"));
 
     // 创建一个空白的掩膜图像
     cv::Mat grayImage;
@@ -111,20 +118,31 @@ int main()
     cv::cvtColor(colorImage, grayImage, cv::COLOR_BGR2GRAY);
     cv::Mat mask = grayImage.clone();
 
+    // 使用Canny边缘检测
+    cv::Mat edges;
+    cv::Canny(grayImage, edges, 50, 150, 3);  // 调整阈值和内核大小以适应您的图像
+
+
     // 在图像中找到墙体角点（优化：增加深度学习方法，获取识别区域掩膜再计算掩膜角点）
     std::vector<cv::Point2f> cornerPoints;
-    cv::goodFeaturesToTrack(grayImage, cornerPoints, 100, 0.01, 10);
+    cv::goodFeaturesToTrack(edges, cornerPoints, 1, 0.01, 10);
 
     // cv::Mat resultImage;
     for (const cv::Point2f& cornerPoint : cornerPoints) 
     {
         // 在结果图像上绘制红色圆圈
+        cv::circle(colorNoMaskImage, cornerPoint, 5, cv::Scalar(0, 0, 255), -1); // -1 表示实心圆
         cv::circle(colorImage, cornerPoint, 5, cv::Scalar(0, 0, 255), -1); // -1 表示实心圆
+
     }
 
     //  保存掩膜图像
     const auto cornerName = "cornerimg.png";
     cv::imwrite(cornerName, colorImage);
+
+    const auto cornerNoMaskName = "cornerimgNoMask.png";
+    cv::imwrite(cornerNoMaskName, colorNoMaskImage);
+
 
     // 将像素值为255的像素转换为像素值为0
     cv::threshold(grayImage, mask, 254, 0, cv::THRESH_BINARY);
@@ -171,11 +189,12 @@ int main()
 
     // 可视化点云
     viewer->addPointCloud(segcolorCloud);
+    viewerColor->addPointCloud(pointCloud);
 
     // Spin the viewer
     viewer->spin();
     // // Spin the viewer
-    // viewerColor->spin();
+    viewerColor->spin();
 
     return 0;
 }

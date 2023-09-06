@@ -87,14 +87,44 @@ target_link_libraries(KawasakiMecheyeDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}
 add_executable(CaptureDepthMap src/CaptureDepthMap.cpp)
 target_link_libraries(CaptureDepthMap ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
-# Build the YoloV8 library
+# Build the YoloV8  library
 add_library(YoloV8_TRT SHARED src/yolov8.cpp)
 target_link_libraries(YoloV8_TRT PUBLIC tensorrt_cpp_api ${OpenCV_LIBS})
 target_include_directories(YoloV8_TRT PUBLIC libs/tensorrt-cpp-api/src)
 
+
+# 构建药盒YoloV8检测库
+add_library(boxesYoloDemo SHARED src/yoloCfg/boxesYolov8.cpp)
+target_link_libraries(boxesYoloDemo PUBLIC tensorrt_cpp_api ${OpenCV_LIBS})
+target_include_directories(boxesYoloDemo PUBLIC libs/tensorrt-cpp-api/src)
+
+# 构建角落YoloV8检测库
+add_library(cornerYoloDemo SHARED src/yoloCfg/cornerYolov8.cpp)
+target_link_libraries(cornerYoloDemo PUBLIC tensorrt_cpp_api ${OpenCV_LIBS})
+target_include_directories(cornerYoloDemo PUBLIC libs/tensorrt-cpp-api/src)
+
+# 构建捆扎带YoloV8检测库
+add_library(strapYoloDemo SHARED src/yoloCfg/strapYolov8.cpp)
+target_link_libraries(strapYoloDemo PUBLIC tensorrt_cpp_api ${OpenCV_LIBS})
+target_include_directories(strapYoloDemo PUBLIC libs/tensorrt-cpp-api/src)
+
+
 # Build and link the executables
 add_executable(detect_object_image src/object_detection_image.cpp)
 target_link_libraries(detect_object_image YoloV8_TRT)
+
+# 药盒检测（图像检测）
+add_executable(detect_object_imageBoxes src/object_detection_image.cpp)
+target_link_libraries(detect_object_imageBoxes boxesYoloDemo)
+
+# 角点检测（图像检测）
+add_executable(detect_object_imageCorner src/object_detection_image.cpp)
+target_link_libraries(detect_object_imageCorner cornerYoloDemo)
+
+# 捆扎带检测（图像检测）
+add_executable(detect_object_imageStrap src/object_detection_image.cpp)
+target_link_libraries(detect_object_imageStrap strapYoloDemo)
+
 
 add_executable(benchmark src/benchmark.cpp)
 target_link_libraries(benchmark YoloV8_TRT)
@@ -106,9 +136,17 @@ target_link_libraries(detect_object_video YoloV8_TRT)
 add_executable(MechEyeDetect src/mecheye_boxes_detection_compute3DCentroid.cpp)
 target_link_libraries(MechEyeDetect YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
-
+# 药盒检测（实时检测）
 add_executable(MechEyeDetectBox src/mecheye_object_detection.cpp)
-target_link_libraries(MechEyeDetectBox YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
+target_link_libraries(MechEyeDetectBox boxesYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
+
+# 角点检测（实时检测）
+add_executable(MechEyeDetectCorner src/mecheye_object_detection.cpp)
+target_link_libraries(MechEyeDetectCorner cornerYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
+
+# 捆扎带检测（实时检测）
+add_executable(MechEyeDetectStrap src/mecheye_object_detection.cpp)
+target_link_libraries(MechEyeDetectStrap strapYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 add_executable(MechEyeDetectEuclideanCluster src/mecheye_boxes_detection_EuclideanCluster.cpp)
 target_link_libraries(MechEyeDetectEuclideanCluster YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})

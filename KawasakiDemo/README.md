@@ -33,7 +33,15 @@ cd bin
 
 #   梅卡相机测试(实时拍)
 ./MechEyeDetectBox --model /path/to/your/onnx/model.onnx
+
+
+# yolo官方命令
+
 ```
+
+
+
+
 
 #   Q & A
 > Q1:mecheye_boxes_Point_Cloud_Registration.cpp:287:43: error: ‘make_shared’ is not a member of ‘boost’
