@@ -6,13 +6,13 @@ from ultralytics import YOLO
 import numpy as np
 
 # 导入模型
-model = YOLO('/home/lsrobot/lsrobot_ws/HalconCPPExamples/KawasakiDemo/models/jl-best.pt')
+model = YOLO('/home/lsrobot/lsrobot_ws/HalconCPPExamples/KawasakiDemo/models/0907/corner-best-0907.pt')
 
 # 导入图片
-results = model('/home/lsrobot/lsrobot_ws/HalconCPPExamples/KawasakiDemo/bin/boxes_01.png')  # results list
+results = model('/home/lsrobot/lsrobot_ws/HalconCPPExamples/KawasakiDemo/bin/corner1.jpg')  # results list
 
 # 导入原图
-original_image = Image.open('/home/lsrobot/lsrobot_ws/HalconCPPExamples/KawasakiDemo/bin/boxes_01.png') 
+original_image = Image.open('/home/lsrobot/lsrobot_ws/HalconCPPExamples/KawasakiDemo/bin/corner2.jpg') 
 #   转换成图像数组
 original_array = np.array(original_image)
 

@@ -24,27 +24,27 @@ struct Object {
 // Config the behavior of the YoloV8 detector.
 // Can pass these arguments as command line parameters.
 struct YoloV8Config {
-    // 用于推断的精度
+    // The precision to be used for inference
     Precision precision = Precision::FP16;
-    // 校准数据目录。在使用 INT8 精度时必须指定。
+    // Calibration data directory. Must be specified when using INT8 precision.
     std::string calibrationDataDirectory;
-    // 用于过滤检测到的对象的概率阈值
+    // Probability threshold used to filter detected objects
     float probabilityThreshold = 0.8f;
-    // 非极大值抑制阈值
+    // Non-maximum suppression threshold
     float nmsThreshold = 0.65f;
-    // 返回的最大检测对象数
+    // Max number of detected objects to return
     int topK = 100;
-    // 分割配置选项
+    // Segmentation config options
     int segChannels = 32;
     int segH = 160;
     int segW = 160;
     float segmentationThreshold = 0.5f;
-    // 姿势估计选项
+    // Pose estimation options
     int numKPS = 17;
     float kpsThreshold = 0.5f;
-    // 类别阈值（默认是 COCO 类别）
+    // Class thresholds (default are COCO classes)
     std::vector<std::string> classNames = {
-        "tie"
+        "large", "middle", "small"
     };
 };
 
@@ -106,6 +106,9 @@ private:
 
     // Color list for drawing objects
     const std::vector<std::vector<float>> COLOR_LIST = {
+            {0.098, 0.325, 0.850},
+            {0.125, 0.694, 0.929},
+            {0.556, 0.184, 0.494},
             {0.188, 0.674, 0.466}
     };
 

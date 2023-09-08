@@ -62,6 +62,7 @@ endif()
 include_directories(${MECHEYEAPI_INCLUDE_DIRS} 
                     ${OpenCV_INCLUDE_DIRS}
                     ${PCL_INCLUDE_DIRS}
+                    ${CMAKE_SOURCE_DIR}/include
 )
 link_directories(${MECHEYEAPI_LIBRARY_DIRS} 
                 ${OpenCV_LIBRARY_DIRS}
@@ -145,7 +146,7 @@ add_executable(MechEyeDetectCorner src/mecheye_object_detection.cpp)
 target_link_libraries(MechEyeDetectCorner cornerYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 # 捆扎带检测（实时检测）
-add_executable(MechEyeDetectStrap src/mecheye_object_detection.cpp)
+add_executable(MechEyeDetectStrap src/mecheye_object_detectionStrap.cpp)
 target_link_libraries(MechEyeDetectStrap strapYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 add_executable(MechEyeDetectEuclideanCluster src/mecheye_boxes_detection_EuclideanCluster.cpp)
