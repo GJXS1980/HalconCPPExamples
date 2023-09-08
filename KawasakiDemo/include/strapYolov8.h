@@ -106,7 +106,7 @@ private:
 
     // Color list for drawing objects
     const std::vector<std::vector<float>> COLOR_LIST = {
-            {0.188, 0.674, 0.466}
+            {0.556, 0.184, 0.494}
     };
 
     const std::vector<std::vector<unsigned int>> KPS_COLORS = {
