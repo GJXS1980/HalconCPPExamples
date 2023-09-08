@@ -29,7 +29,7 @@ struct YoloV8Config {
     // Calibration data directory. Must be specified when using INT8 precision.
     std::string calibrationDataDirectory;
     // Probability threshold used to filter detected objects
-    float probabilityThreshold = 0.01f;
+    float probabilityThreshold = 0.8f;
     // Non-maximum suppression threshold
     float nmsThreshold = 0.65f;
     // Max number of detected objects to return
@@ -106,7 +106,8 @@ private:
 
     // Color list for drawing objects
     const std::vector<std::vector<float>> COLOR_LIST = {
-            {0.098, 0.325, 0.850}
+            {0.556, 0.184, 0.494},
+            {0.125, 0.694, 0.929}
     };
 
     const std::vector<std::vector<unsigned int>> KPS_COLORS = {

@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 
     for (const auto& object: objects) 
     {
-        if (object.label == 1)
+        if (object.label == 0)
         {
             std::cout << "Detected " << object.probability  << std::endl;
             std::cout << "Detected " << object.boxMask.cols  << std::endl;

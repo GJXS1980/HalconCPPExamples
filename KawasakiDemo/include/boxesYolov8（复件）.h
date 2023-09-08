@@ -2,69 +2,62 @@
 #include "engine.h"
 #include <fstream>
 
-// 检查文件是否存在
-inline bool doesFileExist (const std::string& name) 
-{
+// Utility method for checking if a file exists on disk
+inline bool doesFileExist (const std::string& name) {
     std::ifstream f(name.c_str());
     return f.good();
 }
 
-//  构建物体结构体
-struct Object 
-{
-    // 物体的类
+struct Object {
+    // The object class.
     int label{};
-    // 置信度
+    // The detection's confidence probability.
     float probability{};
     // The object bounding box rectangle.
     cv::Rect_<float> rect;
-    // 分割掩膜
+    // Semantic segmentation mask
     cv::Mat boxMask;
-    // 骨骼特征点
+    // Pose estimation key points
     std::vector<float> kps{};
 };
 
 // Config the behavior of the YoloV8 detector.
 // Can pass these arguments as command line parameters.
-// yolov8结构体
-struct YoloV8Config 
-{
+struct YoloV8Config {
     // The precision to be used for inference
     Precision precision = Precision::FP16;
     // Calibration data directory. Must be specified when using INT8 precision.
     std::string calibrationDataDirectory;
-    // 检测物体的置信度
+    // Probability threshold used to filter detected objects
     float probabilityThreshold = 0.8f;
     // Non-maximum suppression threshold
     float nmsThreshold = 0.65f;
-    // 最大检测物体数量
+    // Max number of detected objects to return
     int topK = 100;
-    // 分割选项
+    // Segmentation config options
     int segChannels = 32;
     int segH = 160;
     int segW = 160;
     float segmentationThreshold = 0.5f;
-    // 姿态估计选项
+    // Pose estimation options
     int numKPS = 17;
     float kpsThreshold = 0.5f;
-    // 检测类
+    // Class thresholds (default are COCO classes)
     std::vector<std::string> classNames = {
         "large", "middle", "small"
     };
 };
 
-//  boxes yolov8类
-class YoloV8 
-{
+class YoloV8 {
 public:
     // Builds the onnx model into a TensorRT engine, and loads the engine into memory
     YoloV8(const std::string& onnxModelPath, const YoloV8Config& config);
 
-    // 在图像中检测物体
+    // Detect the objects in the image
     std::vector<Object> detectObjects(const cv::Mat& inputImageBGR);
     std::vector<Object> detectObjects(const cv::cuda::GpuMat& inputImageBGR);
 
-    // 在图像中画出物体的框和标签
+    // Draw the object bounding boxes and labels on the image
     void drawObjectLabels(cv::Mat& image, const std::vector<Object> &objects, unsigned int scale = 2);
 private:
     // Preprocess the input
@@ -78,6 +71,9 @@ private:
 
     // Postprocess the output for segmentation model
     std::vector<Object> postProcessSegmentation(std::vector<std::vector<float>>& featureVectors);
+
+
+
     std::unique_ptr<Engine> m_trtEngine = nullptr;
 
     // Used for image preprocessing
@@ -108,17 +104,15 @@ private:
     const int NUM_KPS;
     const float KPS_THRESHOLD;
 
-    // 识别物体框的颜色
-    const std::vector<std::vector<float>> COLOR_LIST = 
-    {
+    // Color list for drawing objects
+    const std::vector<std::vector<float>> COLOR_LIST = {
             {0.098, 0.325, 0.850},
             {0.125, 0.694, 0.929},
             {0.556, 0.184, 0.494},
             {0.188, 0.674, 0.466}
     };
 
-    const std::vector<std::vector<unsigned int>> KPS_COLORS = 
-    {
+    const std::vector<std::vector<unsigned int>> KPS_COLORS = {
             {0, 255, 0},
             {0, 255, 0},
             {0, 255, 0},
@@ -138,8 +132,7 @@ private:
             {51, 153, 255}
     };
 
-    const std::vector<std::vector<unsigned int>> SKELETON = 
-    {
+    const std::vector<std::vector<unsigned int>> SKELETON = {
             {16, 14},
             {14, 12},
             {17, 15},
@@ -161,8 +154,7 @@ private:
             {5, 7}
     };
 
-    const std::vector<std::vector<unsigned int>> LIMB_COLORS = 
-    {
+    const std::vector<std::vector<unsigned int>> LIMB_COLORS = {
             {51, 153, 255},
             {51, 153, 255},
             {51, 153, 255},

@@ -45,42 +45,35 @@ inline bool tryGetNextArgument(int argc, char* argv[], int& currentIndex, std::s
     return true;
 }
 
-inline bool tryParseInt(const std::string& s, int& value, const std::string& flag) 
-{
-    try 
-    {
+inline bool tryParseInt(const std::string& s, int& value, const std::string& flag) {
+    try {
         value = std::stoi(s);
         return true;
     }
-    catch (const std::exception& e) 
-    {
+    catch (const std::exception& e) {
         std::cout << "Error: Could not parse '" << s << "' as an integer for flag '" << flag << "'" << std::endl;
         return false;
     }
 }
 
-inline bool tryParseFloat(const std::string& s, float& value, const std::string& flag) 
-{
-    try 
-    {
+inline bool tryParseFloat(const std::string& s, float& value, const std::string& flag) {
+    try {
         value = std::stof(s);
         return true;
     }
-    catch (const std::exception& e) 
-    {
+    catch (const std::exception& e) {
         std::cout << "Error: Could not parse '" << s << "' as a float for flag '" << flag << "'" << std::endl;
         return false;
     }
 }
 
-//  图片输入
 inline bool parseArguments(int argc, char* argv[], YoloV8Config& config, std::string& onnxModelPath, std::string& inputImage) 
 {
-    // if (argc == 1) 
-    // {
-    //     showHelp(argv);
-    //     return false;
-    // }
+    if (argc == 1) 
+    {
+        showHelp(argv);
+        return false;
+    }
 
     for (int i = 1; i < argc; i++) 
     {
@@ -91,14 +84,12 @@ inline bool parseArguments(int argc, char* argv[], YoloV8Config& config, std::st
             std::string flag = argument.substr(2);
             std::string nextArgument;
 
-            //  命令行输入模型
             if (flag == "model") 
             {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
-                if (!doesFileExist(nextArgument)) 
-                {
+                if (!doesFileExist(nextArgument)) {
                     std::cout << "Error: Unable to find model at path '" << nextArgument << "' for flag '" << flag << "'" << std::endl;
                     return false;
                 }
@@ -106,7 +97,6 @@ inline bool parseArguments(int argc, char* argv[], YoloV8Config& config, std::st
                 onnxModelPath = nextArgument;
             }
 
-            //  命令行输入待识别图像
             else if (flag == "input") 
             {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
@@ -121,7 +111,6 @@ inline bool parseArguments(int argc, char* argv[], YoloV8Config& config, std::st
                 inputImage = nextArgument;
             }
 
-            //  命令行输入置信度
             else if (flag == "prob-threshold") 
             {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
@@ -134,7 +123,6 @@ inline bool parseArguments(int argc, char* argv[], YoloV8Config& config, std::st
                 config.probabilityThreshold = value;
             }
 
-            //  命令行输入nms
             else if (flag == "nms-threshold") 
             {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
@@ -262,29 +250,27 @@ inline bool parseArguments(int argc, char* argv[], YoloV8Config& config, std::st
                 config.classNames = values;
             }
 
-            // else 
-            // {
-            //     std::cout << "Error: Unknown flag '" << flag << "'" << std::endl;
-            //     showHelp(argv);
-            //     return false;
-            // }
+            else 
+            {
+                std::cout << "Error: Unknown flag '" << flag << "'" << std::endl;
+                showHelp(argv);
+                return false;
+            }
         }
-        // else 
-        // {
-        //     std::cout << "Error: Unknown argument '" << argument << "'" << std::endl;
-        //     showHelp(argv);
-        //     return false;
-        // }
+        else 
+        {
+            std::cout << "Error: Unknown argument '" << argument << "'" << std::endl;
+            showHelp(argv);
+            return false;
+        }
     }
 
-    //  输入模型路径为空
     if (onnxModelPath.empty()) 
     {
         std::cout << "Error: No arguments provided for flag 'model'" << std::endl;
         return false;
     }
 
-    //  输入图片路径为空
     if (inputImage.empty()) 
     {
         std::cout << "Error: No arguments provided for flag 'input'" << std::endl;
@@ -294,31 +280,24 @@ inline bool parseArguments(int argc, char* argv[], YoloV8Config& config, std::st
     return true;
 }
 
-//  视频流输入
-inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, std::string& onnxModelPath, std::string& inputVideo) 
-{
-    // if (argc == 1) 
-    // {
-    //     showHelp(argv);
-    //     return false;
-    // }
+inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, std::string& onnxModelPath, std::string& inputVideo) {
+    if (argc == 1) {
+        showHelp(argv);
+        return false;
+    }
 
-    for (int i = 1; i < argc; i++) 
-    {
+    for (int i = 1; i < argc; i++) {
         std::string argument = argv[i];
 
-        if (argument.substr(0, 2) == "--") 
-        {
+        if (argument.substr(0, 2) == "--") {
             std::string flag = argument.substr(2);
             std::string nextArgument;
 
-            if (flag == "model") 
-            {
+            if (flag == "model") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
-                if (!doesFileExist(nextArgument)) 
-                {
+                if (!doesFileExist(nextArgument)) {
                     std::cout << "Error: Unable to find model at path '" << nextArgument << "' for flag '" << flag << "'" << std::endl;
                     return false;
                 }
@@ -326,16 +305,14 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 onnxModelPath = nextArgument;
             }
 
-            else if (flag == "input") 
-            {
+            else if (flag == "input") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
                 inputVideo = nextArgument;
             }
 
-            else if (flag == "prob-threshold") 
-            {
+            else if (flag == "prob-threshold") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
@@ -346,8 +323,7 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 config.probabilityThreshold = value;
             }
 
-            else if (flag == "nms-threshold") 
-            {
+            else if (flag == "nms-threshold") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
@@ -358,8 +334,7 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 config.nmsThreshold = value;
             }
 
-            else if (flag == "top-k") 
-            {
+            else if (flag == "top-k") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
@@ -370,8 +345,7 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 config.topK = value;
             }
 
-            else if (flag == "seg-channels") 
-            {
+            else if (flag == "seg-channels") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
@@ -382,8 +356,7 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 config.segChannels = value;
             }
 
-            else if (flag == "seg-h") 
-            {
+            else if (flag == "seg-h") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
@@ -394,36 +367,27 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 config.segH = value;
             }
 
-            else if (flag == "precision") 
-            {
+            else if (flag == "precision") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
-                if (nextArgument == "FP32") 
-                {
+                if (nextArgument == "FP32") {
                     config.precision = Precision::FP32;
-                } else if (nextArgument == "FP16") 
-                {
+                } else if (nextArgument == "FP16") {
                     config.precision = Precision::FP16;
-                } 
-                else if (nextArgument == "INT8") 
-                {
+                } else if (nextArgument == "INT8") {
                     config.precision = Precision::INT8;
-                } 
-                else 
-                {
+                } else {
                     std::cout << "Error: Unexpected precision value: " << nextArgument << ", options are FP32, FP16, INT8" << std::endl;
                     return false;
                 }
             }
 
-            else if (flag == "calibration-data") 
-            {
+            else if (flag == "calibration-data") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
-                if (!doesFileExist(nextArgument)) 
-                {
+                if (!doesFileExist(nextArgument)) {
                     std::cout << "Error: Calibration data at specified path does not exist: " << nextArgument << std::endl;
                     return false;
                 }
@@ -431,8 +395,7 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 config.calibrationDataDirectory = nextArgument;
             }
 
-            else if (flag == "seg-w") 
-            {
+            else if (flag == "seg-w") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
@@ -443,8 +406,7 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 config.segW = value;
             }
 
-            else if (flag == "seg-threshold") 
-            {
+            else if (flag == "seg-threshold") {
                 if (!tryGetNextArgument(argc, argv, i, nextArgument, flag))
                     return false;
 
@@ -455,16 +417,13 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 config.segmentationThreshold = value;
             }
 
-            else if (flag == "class-names") 
-            {
+            else if (flag == "class-names") {
                 std::vector<std::string> values;
-                while (tryGetNextArgument(argc, argv, i, nextArgument, flag, false)) 
-                {
+                while (tryGetNextArgument(argc, argv, i, nextArgument, flag, false)) {
                     values.push_back(nextArgument);
                 }
 
-                if (values.size() == 0) 
-                {
+                if (values.size() == 0) {
                     std::cout << "Error: No arguments provided for flag '" << flag << "'" << std::endl;
                     return false;
                 }
@@ -472,29 +431,25 @@ inline bool parseArgumentsVideo(int argc, char* argv[], YoloV8Config& config, st
                 config.classNames = values;
             }
 
-            // else 
-            // {
-            //     std::cout << "Error: Unknown flag '" << flag << "'" << std::endl;
-            //     showHelp(argv);
-            //     return false;
-            // }
+            else {
+                std::cout << "Error: Unknown flag '" << flag << "'" << std::endl;
+                showHelp(argv);
+                return false;
+            }
         }
-        // else 
-        // {
-        //     std::cout << "Error: Unknown argument '" << argument << "'" << std::endl;
-        //     showHelp(argv);
-        //     return false;
-        // }
+        else {
+            std::cout << "Error: Unknown argument '" << argument << "'" << std::endl;
+            showHelp(argv);
+            return false;
+        }
     }
 
-    if (onnxModelPath.empty()) 
-    {
+    if (onnxModelPath.empty()) {
         std::cout << "Error: No arguments provided for flag 'model'" << std::endl;
         return false;
     }
 
-    if (inputVideo.empty()) 
-    {
+    if (inputVideo.empty()) {
         std::cout << "Error: No arguments provided for flag 'input'" << std::endl;
         return false;
     }

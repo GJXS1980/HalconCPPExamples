@@ -243,7 +243,6 @@ std::vector<Object> YoloV8::postProcessSegmentation(std::vector<std::vector<floa
         auto maxSPtr = std::max_element(scoresPtr, scoresPtr + numClasses);
         float score = *maxSPtr;
         // 如果最高得分大于阈值，则处理这个目标
-        std::cout << "阈值： " << PROBABILITY_THRESHOLD << std::endl;
         if (score > PROBABILITY_THRESHOLD) 
         {
             // 从输出行数据中获取边界框坐标
