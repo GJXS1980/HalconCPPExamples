@@ -73,7 +73,6 @@ link_directories(${MECHEYEAPI_LIBRARY_DIRS}
 # TensorRT is found and linked by the tensorrt-cpp-api
 add_subdirectory(libs/tensorrt-cpp-api)
 
-
 # 设置可执行文件输出目录为上一级目录的bin文件夹
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 
@@ -85,11 +84,12 @@ target_link_libraries(kawasaki_transform Eigen3::Eigen)
 add_executable(KawasakiMecheyeDemo src/kawasaki_mecheye_demo.cpp)
 target_link_libraries(KawasakiMecheyeDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
+# 梅卡相机获取彩色图及点云
 add_executable(CaptureDepthMap src/CaptureDepthMap.cpp)
 target_link_libraries(CaptureDepthMap ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 # Build the YoloV8  library
-add_library(YoloV8_TRT SHARED src/yolov8.cpp)
+add_library(YoloV8_TRT SHARED src/yoloCfg/yolov8.cpp)
 target_link_libraries(YoloV8_TRT PUBLIC tensorrt_cpp_api ${OpenCV_LIBS})
 target_include_directories(YoloV8_TRT PUBLIC libs/tensorrt-cpp-api/src)
 
@@ -115,62 +115,69 @@ add_executable(detect_object_image src/object_detection_image.cpp)
 target_link_libraries(detect_object_image YoloV8_TRT)
 
 # 药盒检测（图像检测）
-add_executable(detect_object_imageBoxes src/object_detection_image.cpp)
+add_executable(detect_object_imageBoxes src/boxes/object_detection_imageBoxes.cpp)
 target_link_libraries(detect_object_imageBoxes boxesYoloDemo)
 
 # 角点检测（图像检测）
-add_executable(detect_object_imageCorner src/object_detection_image.cpp)
+add_executable(detect_object_imageCorner src/corner/object_detection_imageCorner.cpp)
 target_link_libraries(detect_object_imageCorner cornerYoloDemo)
 
 # 捆扎带检测（图像检测）
-add_executable(detect_object_imageStrap src/object_detection_image.cpp)
+add_executable(detect_object_imageStrap src/strap/object_detection_imageStrap.cpp)
 target_link_libraries(detect_object_imageStrap strapYoloDemo)
-
 
 add_executable(benchmark src/benchmark.cpp)
 target_link_libraries(benchmark YoloV8_TRT)
 
-add_executable(detect_object_video src/object_detection_video_stream.cpp)
+# 视频流检测药盒
+add_executable(detect_object_video src/boxes/object_detection_video_stream.cpp)
 target_link_libraries(detect_object_video YoloV8_TRT)
 
 # Build and link the executables
-add_executable(MechEyeDetect src/mecheye_boxes_detection_compute3DCentroid.cpp)
+add_executable(MechEyeDetect src/boxes/mecheye_boxes_detection_compute3DCentroid.cpp)
 target_link_libraries(MechEyeDetect YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 # 药盒检测（实时检测）
-add_executable(MechEyeDetectBox src/mecheye_object_detection.cpp)
+add_executable(MechEyeDetectBox src/boxes/mecheye_object_detectionBoxes.cpp)
 target_link_libraries(MechEyeDetectBox boxesYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 # 角点检测（实时检测）
-add_executable(MechEyeDetectCorner src/mecheye_object_detection.cpp)
+add_executable(MechEyeDetectCorner src/corner/mecheye_object_detectionCorner.cpp)
 target_link_libraries(MechEyeDetectCorner cornerYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 # 捆扎带检测（实时检测）
-add_executable(MechEyeDetectStrap src/mecheye_object_detectionStrap.cpp)
+add_executable(MechEyeDetectStrap src/strap/mecheye_object_detectionStrap.cpp)
 target_link_libraries(MechEyeDetectStrap strapYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
-add_executable(MechEyeDetectEuclideanCluster src/mecheye_boxes_detection_EuclideanCluster.cpp)
+# EuclideanCluster点云聚类
+add_executable(MechEyeDetectEuclideanCluster src/boxes/mecheye_boxes_detection_EuclideanCluster.cpp)
 target_link_libraries(MechEyeDetectEuclideanCluster YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
-add_executable(MechEyeDetectRegistration src/mecheye_boxes_Point_Cloud_Registration.cpp)
+# Registration点云聚类
+add_executable(MechEyeDetectRegistration src/boxes/mecheye_boxes_Point_Cloud_Registration.cpp)
 target_link_libraries(MechEyeDetectRegistration YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
-add_executable(MechEyeDetectRegistrationVideo src/mecheye_boxes_Point_Cloud_Registration_Video.cpp)
+# Registration点云聚类（图像流）
+add_executable(MechEyeDetectRegistrationVideo src/boxes/mecheye_boxes_Point_Cloud_Registration_Video.cpp)
 target_link_libraries(MechEyeDetectRegistrationVideo YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
-
-add_executable(MechEyeDetectRobot src/mecheye_boxes_Point_Cloud_Registration_TCP.cpp)
+# Registration点云聚类（图像流+机械臂TCP）
+add_executable(MechEyeDetectRobot src/boxes/mecheye_boxes_Point_Cloud_Registration_TCP.cpp)
 target_link_libraries(MechEyeDetectRobot YoloV8_TRT ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
+# hsv颜色识别捆扎带
 add_executable(cameraHSVDemo src/cameraHSVDemo.cpp)
 target_link_libraries(cameraHSVDemo  ${OpenCV_LIBS} ${MECHEYEAPI_LIBRARIES})
 
+# 测试程序
 add_executable(testDemo src/test.cpp)
 target_link_libraries(testDemo  ${OpenCV_LIBS})
 
+# hsv颜色识别及点云分割捆扎带
 add_executable(mecheyeHSVPCLDemo src/mecheyeHSVPCLDemo.cpp)
 target_link_libraries(mecheyeHSVPCLDemo  ${OpenCV_LIBS} ${MECHEYEAPI_LIBRARIES}  ${PCL_LIBRARIES})
 
-add_executable(mecheyePCLCornerDemo src/mecheyePCLCornerDemo.cpp)
+# 实例分割及点云分割捆扎带
+add_executable(mecheyePCLCornerDemo src/corner/mecheyePCLCornerDemo.cpp)
 target_link_libraries(mecheyePCLCornerDemo  ${OpenCV_LIBS} ${MECHEYEAPI_LIBRARIES}  ${PCL_LIBRARIES})
 

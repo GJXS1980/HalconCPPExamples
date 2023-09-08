@@ -4,8 +4,8 @@
 #include "OpenCVUtil.h"
 #include <opencv2/opencv.hpp>
 
-#include "yolov8.h"
-#include "cmd_line_util.h"
+#include "boxesYolov8.h"
+#include "cmd_line_utilBoxes.h"
 #include <typeinfo>
 #include <cmath>
 
@@ -284,7 +284,7 @@ int main(int argc, char *argv[])
                 pcl::ExtractIndices<pcl::PointXYZ> extract;
 
                 extract.setInputCloud(segCloud);
-                extract.setIndices(boost::make_shared<const pcl::PointIndices>(indices));
+                extract.setIndices(std::make_shared<const pcl::PointIndices>(indices));
                 extract.filter(*clusterCloud);
 
                 // 粗略配准
