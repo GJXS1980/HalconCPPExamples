@@ -122,7 +122,8 @@ std::vector<Object> YoloV8::detectObjects(const cv::cuda::GpuMat &inputImageBGR)
 #endif
     std::vector<std::vector<std::vector<float>>> featureVectors;
     auto succ = m_trtEngine->runInference(input, featureVectors);
-    if (!succ) {
+    if (!succ) 
+    {
         throw std::runtime_error("Error: Unable to run inference.");
     }
 #ifdef ENABLE_BENCHMARKS

@@ -20,6 +20,11 @@
           "name": "flann_DIR",
           "value": "D:/PCL/3rdParty/FLANN",
           "type": "PATH"
+        },
+        {
+          "name": "OpenCV_DIR",
+          "value": "D:/OpenCV/opencv/build/x64/vc16/lib",
+          "type": "PATH"
         }
       ]
     }
