@@ -104,11 +104,22 @@ add_library(cornerYoloDemo SHARED src/yoloCfg/cornerYolov8.cpp)
 target_link_libraries(cornerYoloDemo PUBLIC tensorrt_cpp_api ${OpenCV_LIBS})
 target_include_directories(cornerYoloDemo PUBLIC libs/tensorrt-cpp-api/src)
 
-# 构建捆扎带YoloV8检测库
-add_library(strapYoloDemo SHARED src/yoloCfg/strapYolov8.cpp)
-target_link_libraries(strapYoloDemo PUBLIC tensorrt_cpp_api ${OpenCV_LIBS})
-target_include_directories(strapYoloDemo PUBLIC libs/tensorrt-cpp-api/src)
+# 构建捆扎带和啤酒瓶YoloV8检测库
+add_library(beerYoloDemo SHARED src/yoloCfg/beerBottleYolov8.cpp)
+target_link_libraries(beerYoloDemo PUBLIC tensorrt_cpp_api ${OpenCV_LIBS})
+target_include_directories(beerYoloDemo PUBLIC libs/tensorrt-cpp-api/src)
 
+# 啤酒瓶检测（实时检测）
+add_executable(MechEyeDetectBeer src/beerbottle/mecheye_beerBottle_Point_Cloud_Registration.cpp)
+target_link_libraries(MechEyeDetectBeer beerYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
+
+# 啤酒瓶点云分割
+add_executable(MechEyeDetectBeerDemo src/beerbottle/beerBottle_Point_Cloud_Seg.cpp)
+target_link_libraries(MechEyeDetectBeerDemo beerYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
+
+# 啤酒瓶和捆扎带检测（图片）
+add_executable(MechEyeDetectBeerImgDemo src/beerbottle/beerBottle_Point_Cloud_Seg_yolo.cpp)
+target_link_libraries(MechEyeDetectBeerImgDemo beerYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 # Build and link the executables
 add_executable(detect_object_image src/object_detection_image.cpp)
@@ -123,8 +134,8 @@ add_executable(detect_object_imageCorner src/corner/object_detection_imageCorner
 target_link_libraries(detect_object_imageCorner cornerYoloDemo)
 
 # 捆扎带检测（图像检测）
-add_executable(detect_object_imageStrap src/strap/object_detection_imageStrap.cpp)
-target_link_libraries(detect_object_imageStrap strapYoloDemo)
+# add_executable(detect_object_imageStrap src/strap/object_detection_imageStrap.cpp)
+# target_link_libraries(detect_object_imageStrap strapYoloDemo)
 
 add_executable(benchmark src/benchmark.cpp)
 target_link_libraries(benchmark YoloV8_TRT)
@@ -146,8 +157,8 @@ add_executable(MechEyeDetectCorner src/corner/mecheye_object_detectionCorner.cpp
 target_link_libraries(MechEyeDetectCorner cornerYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 # 捆扎带检测（实时检测）
-add_executable(MechEyeDetectStrap src/strap/mecheye_object_detectionStrap.cpp)
-target_link_libraries(MechEyeDetectStrap strapYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
+# add_executable(MechEyeDetectStrap src/strap/mecheye_object_detectionStrap.cpp)
+# target_link_libraries(MechEyeDetectStrap strapYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
 # EuclideanCluster点云聚类
 add_executable(MechEyeDetectEuclideanCluster src/boxes/mecheye_boxes_detection_EuclideanCluster.cpp)

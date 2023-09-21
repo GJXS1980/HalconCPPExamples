@@ -34,9 +34,9 @@ struct YoloV8Config
     // Calibration data directory. Must be specified when using INT8 precision.
     std::string calibrationDataDirectory;
     // 检测物体的置信度
-    float probabilityThreshold = 0.4f;
+    float probabilityThreshold = 0.8f;
     // Non-maximum suppression threshold
-    float nmsThreshold = 0.65f;
+    float nmsThreshold = 0.4f;
     // 最大检测物体数量
     int topK = 100;
     // 分割选项
@@ -49,7 +49,7 @@ struct YoloV8Config
     float kpsThreshold = 0.5f;
     // 检测类
     std::vector<std::string> classNames = {
-        "large", "middle", "small"
+        "ties", "bottle"
     };
 };
 

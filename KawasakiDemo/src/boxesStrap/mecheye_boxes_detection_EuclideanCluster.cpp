@@ -4,8 +4,8 @@
 #include "OpenCVUtil.h"
 #include <opencv2/opencv.hpp>
 
-#include "boxesYolov8.h"
-#include "cmd_line_utilBoxes.h"
+#include "yolov8.h"
+#include "cmd_line_util.h"
 #include <typeinfo>
 #include <cmath>
 
@@ -19,10 +19,7 @@
 #include <pcl/surface/mls.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/common/transforms.h>
-#include <pcl/registration/icp.h>
-#include <pcl/filters/voxel_grid.h>
-#include <pcl/filters/extract_indices.h>
-
+#include <pcl/features/normal_3d.h>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
@@ -41,18 +38,13 @@ Eigen::Vector3d rotationMatrixToZYZEulerAngles(const Eigen::Matrix3d& rotationMa
     theta = atan2(sqrt(rotationMatrix(2, 0) * rotationMatrix(2, 0) + rotationMatrix(2, 1) * rotationMatrix(2, 1)), rotationMatrix(2, 2));
 
     // 处理 theta 为 0 或 pi 的情况
-    if (theta < 1e-6) 
-    {
+    if (theta < 1e-6) {
         phi = atan2(rotationMatrix(0, 1), rotationMatrix(0, 0));
         psi = 0.0;
-    } 
-    else if (theta > M_PI - 1e-6) 
-    {
+    } else if (theta > M_PI - 1e-6) {
         phi = -atan2(rotationMatrix(0, 1), rotationMatrix(0, 0));
         psi = 0.0;
-    } 
-    else 
-    {
+    } else {
         phi = atan2(rotationMatrix(2, 1) / sin(theta), rotationMatrix(2, 0) / sin(theta));
         psi = atan2(rotationMatrix(1, 2) / sin(theta), -rotationMatrix(0, 2) / sin(theta));
     }
@@ -78,7 +70,7 @@ Eigen::Matrix4d transformMatrixFromPose(double x, double y, double z, double qw,
     // 创建齐次变换矩阵
     Eigen::Affine3d transform = Eigen::Translation3d(translation) * quaternion;
     // 打印变换矩阵
-    // std::cout << "生成齐次变换矩阵:" << std::endl;
+    std::cout << "生成齐次变换矩阵:" << std::endl;
     std::cout << transform.matrix() << std::endl;
     return transform.matrix();
 }
@@ -87,8 +79,6 @@ Eigen::Matrix4d transformMatrixFromPose(double x, double y, double z, double qw,
 // Runs object detection on an input image then saves the annotated image to disk.
 int main(int argc, char *argv[]) 
 {
-    std::string poseResult; //  识别结果
-
     mmind::api::MechEyeDevice device;
     if (!findAndConnect(device))
         return -1;
@@ -123,8 +113,7 @@ int main(int argc, char *argv[])
 
     // 读取输入文件
     auto img = cv::imread(colorFile);
-    if (img.empty()) 
-    {
+    if (img.empty()) {
         std::cout << "Error: Unable to read image at path '" << colorFile << "'" << std::endl;
         return -1;
     }
@@ -143,8 +132,7 @@ int main(int argc, char *argv[])
 
     // 读取输入文件
     auto color_img = cv::imread(colorFile);
-    if (img.empty()) 
-    {
+    if (img.empty()) {
         std::cout << "Error: Unable to read image at path '" << colorFile << "'" << std::endl;
         return -1;
     }
@@ -156,26 +144,6 @@ int main(int argc, char *argv[])
     int choice;
     std::cout << "请输入选项的编号：";
     std::cin >> choice;
-
-    //  导入点云模板
-    std::string icpPlyName;
-    switch (choice) 
-    {
-        case 1:
-            //  大药盒点云模板
-            icpPlyName = "../models/plyModel/model/large/model_large.ply";
-            break;
-        case 2:
-            //  中药盒点云模板
-            icpPlyName = "../models/plyModel/model/middle/model_middle.ply";
-            break;
-        case 3:
-            //  小药盒点云模板
-            icpPlyName = "../models/plyModel/model/small/model_small.ply";
-            break;
-        default:
-            break;
-    }
 
     //  点云处理
     int count = 0;
@@ -231,6 +199,7 @@ int main(int argc, char *argv[])
             Writer.write(plyName, *segmentedCloud);
 
             /*                  求解平面中心点坐标和法向量        */
+
             // 创建点云指针，用于存储加载的点云数据
             pcl::PointCloud<pcl::PointXYZ>::Ptr segCloud(new pcl::PointCloud<pcl::PointXYZ>);
              // 从PLY文件中加载点云数据到segCloud
@@ -262,76 +231,44 @@ int main(int argc, char *argv[])
             // 执行聚类提取
             clusterExtractor.extract(clusters);
 
-            // 粗略配准
-            pcl::PointCloud<pcl::PointXYZ>::Ptr icpCloud(new pcl::PointCloud<pcl::PointXYZ>);
-            pcl::io::loadPLYFile<pcl::PointXYZ>(icpPlyName, *icpCloud);
-
-            pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
-            icp.setInputSource(icpCloud); // 定义源点云
-            icp.setMaximumIterations(50);
-            
-            // 精细配准
-            pcl::PointCloud<pcl::PointXYZ>::Ptr icpFineCloud(new pcl::PointCloud<pcl::PointXYZ>);
-            pcl::io::loadPLYFile<pcl::PointXYZ>(icpPlyName, *icpFineCloud);
-
-            pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icpFine;
-            icpFine.setInputSource(icpFineCloud); // 定义源点云
-            icpFine.setMaximumIterations(100);
-
+            // 遍历每个聚类
+            int clusterNum = 1;
             for (const auto& indices : clusters) 
             {
+                // 创建一个新的点云指针，用于存储当前聚类的点云数据
                 pcl::PointCloud<pcl::PointXYZ>::Ptr clusterCloud(new pcl::PointCloud<pcl::PointXYZ>);
-                pcl::ExtractIndices<pcl::PointXYZ> extract;
-
-                extract.setInputCloud(segCloud);
-                extract.setIndices(std::make_shared<const pcl::PointIndices>(indices));
-                extract.filter(*clusterCloud);
-
-                // 粗略配准
-                icp.setInputTarget(clusterCloud); // 设置目标点云
-                pcl::PointCloud<pcl::PointXYZ> alignedCloudCoarse;
-                icp.align(alignedCloudCoarse);
-
-                // 精细配准
-                icpFine.setInputTarget(alignedCloudCoarse.makeShared()); // 设置目标点云
-                pcl::PointCloud<pcl::PointXYZ> alignedCloudFine;
-                icpFine.align(alignedCloudFine);
-
-                // 获取配准后点云的质心和姿态矩阵
-                pcl::CentroidPoint<pcl::PointXYZ> centroid;
-                for (const auto& point : alignedCloudFine.points)
-                {
-                    centroid.add(point);
+                 // 将当前聚类中的点索引对应的点数据存入clusterCloud
+                for (const auto& index : indices.indices) {
+                    clusterCloud->push_back(segCloud->points[index]);
                 }
-                pcl::PointXYZ centroidPoint;
-                centroid.get(centroidPoint);
 
-                // 计算法向量
-                pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normalEstimation;
-                normalEstimation.setInputCloud(alignedCloudFine.makeShared());
-                normalEstimation.setSearchMethod(tree);
-                normalEstimation.setRadiusSearch(0.03); // 根据点云密度调整搜索半径
-                pcl::PointCloud<pcl::Normal>::Ptr normals(new pcl::PointCloud<pcl::Normal>);
-                normalEstimation.compute(*normals);
+                // 计算当前聚类的质心坐标
+                Eigen::Vector4f centroid;
+                pcl::compute3DCentroid(*clusterCloud, centroid);
 
-                // 从ICP变换获取姿态矩阵
-                Eigen::Matrix4f pose = icpFine.getFinalTransformation();
+                // 计算当前聚类的协方差矩阵
+                Eigen::Matrix3f covariance_matrix;
+                Eigen::Vector4f centroid4f;
+                pcl::computeCovarianceMatrixNormalized(*clusterCloud, centroid4f, covariance_matrix);
+                // 使用SelfAdjointEigenSolver计算协方差矩阵的特征向量
+                Eigen::SelfAdjointEigenSolver<Eigen::Matrix3f> eigen_solver(covariance_matrix);
+                Eigen::Vector3f normal = eigen_solver.eigenvectors().col(0);
+                // 输出当前聚类的中心坐标和法向量
+                std::cout << "Cluster " << clusterNum << " Center: " << centroid << std::endl;
+                std::cout << "Cluster " << clusterNum << " Normal: " << normal << std::endl;
 
-                // 打印质心和姿态矩阵
-                std::cout << "质心坐标: " << centroidPoint.x << ", " << centroidPoint.y << ", " << centroidPoint.z << std::endl;
-                std::cout << "法向量: " << normals->at(0).normal_x << ", " << normals->at(0).normal_y << ", " << normals->at(0).normal_z << std::endl;
-                std::cout << "姿态矩阵：" << std::endl << pose << std::endl;
-
-                //     /*                  可视化抓取点        */
+                /*                  可视化抓取点        */
                 // 创建点云可视化
-                pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("物体抓取点可视界面"));
-
-                pcl::PointCloud<pcl::PointXYZRGB>::Ptr colorCloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-                pcl::PLYReader reader;
-                reader.read("pointCloudColor.ply", *colorCloud);
+                pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("Point Cloud Viewer"));
 
                 // 可视化点云
-                viewer->addPointCloud(colorCloud);
+                viewer->addPointCloud(segCloud);
+
+                // 可视化质心xyz坐标值
+                pcl::PointXYZ centroid_point;
+                centroid_point.x = centroid[0];
+                centroid_point.y = centroid[1];
+                centroid_point.z = centroid[2];
 
                 // Define coordinate system colors
                 Eigen::Vector3i colors[3];
@@ -349,84 +286,28 @@ int main(int argc, char *argv[])
                     // 创建一个仿射变换矩阵，初始化为单位矩阵
                     Eigen::Affine3f transform = Eigen::Affine3f::Identity();
                     // 设置变换矩阵的平移部分，即将坐标原点放置在点云的质心位置
-                    transform.translation() <<  centroidPoint.x,  centroidPoint.y, centroidPoint.z;
+                    transform.translation() << centroid[0],centroid[1],centroid[2];
 
                     // 创建两个点 p1 和 p2 用于绘制坐标轴线段
                     pcl::PointXYZ p1, p2;
-                    // 将 p1 设置为质心位置
-                    p1.getVector3fMap() = centroidPoint.getVector3fMap();
+                     // 将 p1 设置为质心位置
+                    p1.getVector3fMap() = centroid.head<3>();
                     // 将 p2 设置为质心位置加上坐标轴方向的一点，构成线段
-                    p2.getVector3fMap() = centroidPoint.getVector3fMap() + axis * 0.1;
+                    p2.getVector3fMap() = centroid.head<3>() + axis * 0.1;
                     // 在可视化器中添加线段，用于绘制坐标轴
                     viewer->addLine<pcl::PointXYZ, pcl::PointXYZ>(p1, p2, colors[i][0], colors[i][1], colors[i][2], "axis_" + std::to_string(i), 0);
                 }
 
-                /*                  求解物体相对于机器人基座位姿      */
-                //  法向量转四元数
-                Eigen::Vector3f normal(normal.x(), normal.y(), normal.z()); 
-                // 计算旋转矩阵
-                Eigen::Vector3f up(0, 0, 1); // 参考向上的向量
-                Eigen::Vector3f axis = normal.cross(up);
-                float angle = std::acos(normal.dot(up));
-                Eigen::Matrix3f rotation;
-                rotation = Eigen::AngleAxisf(angle, axis);
-                // 构造旋转四元数(在Eigen库中，四元数的构造方式默认使用的是XYZW的顺序)
-                Eigen::Quaternionf quaternion;
-                quaternion = Eigen::AngleAxisf(angle, axis);
-                double qw = quaternion.w();
-                double qx = quaternion.x();
-                double qy = quaternion.y();
-                double qz = quaternion.z();
-
-                //  相机相对于机器人基座的齐次变换矩阵
-                // Eigen::Matrix4d transform_cam_to_base = transformMatrixFromPose(-0.329298, 1.03579, 1.15312, 0.0496425, 0.00719909, 0.998676, -0.0113733);
-                Eigen::Matrix4d transform_cam_to_base = transformMatrixFromPose(-0.326236, 1.037561, 1.618068, 0.048358, 0.006901, 0.998734, -0.012014);
-
-                //  识别到物体相对于相机的齐次变换矩阵
-                Eigen::Matrix4d transform_obj_to_cam = transformMatrixFromPose(centroidPoint.x, centroidPoint.y, centroidPoint.z, qw, qx, qy, qz);
-
-                // 计算物体相对于机器人基座的位姿
-                Eigen::Matrix4d result = transform_cam_to_base * transform_obj_to_cam.matrix();
-                result(0,3) = result(0, 3) + 0.009014; //   x方向偏差补偿
-                result(1,3) = result(1, 3) + 0.00851; //   y方向偏差补偿
-                result(2,3) = result(2, 3) - 0.289; // 增加末端执行器的长度
-
-                // 输出结果
-                std::cout << "Resulting Homogeneous Transformation Matrix:" << std::endl;
-                std::cout << result << std::endl;
-
-                // 提取平移向量
-                Eigen::Vector3d translation = result.block<3, 1>(0, 3);
-
-                // 提取旋转矩阵
-                Eigen::Matrix3d rotationMatrix = result.block<3, 3>(0, 0);
-
-                // 将旋转矩阵转换为 ZYZ 欧拉角
-                Eigen::Vector3d robot_euler_angles = rotationMatrixToZYZEulerAngles(rotationMatrix);
-
-                // 输出平移向量和欧拉角
-                std::cout << "Translation vector: " << translation.transpose() * 1000 << std::endl;
-                std::cout << "ZYZ Euler angles (phi, theta, psi): " << robot_euler_angles.transpose() << std::endl;
-                
-                //  提取结果
-                poseResult = std::to_string(translation(0)*1000) + "," + std::to_string(translation(1)*1000) + "," + std::to_string(translation(2)*1000) + "," + std::to_string(robot_euler_angles(0)) + "," + std::to_string(robot_euler_angles(1)) + "," + std::to_string(robot_euler_angles(2)) + "," + "1";
-
-                std::cout << "发送结果为: " << poseResult << std::endl;
-
                 // Spin the viewer
                 viewer->spin();
+                clusterNum++;
             }
-        }
-        else
-        {
-            //  发送结果
-            
-            poseResult = std::to_string(0.0) + "," + std::to_string(0.0) + "," + std::to_string(0.0) + "," + std::to_string(0.0) + "," + std::to_string(0.0) + "," + std::to_string(0.0) + "," + "2";
 
-            std::cout << "发送结果为: " << poseResult << std::endl;
         }
 
         count ++;
     }
+
+
     return 0;
 }
