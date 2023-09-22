@@ -121,6 +121,11 @@ target_link_libraries(MechEyeDetectBeerDemo beerYoloDemo ${MECHEYEAPI_LIBRARIES}
 add_executable(MechEyeDetectBeerImgDemo src/beerbottle/beerBottle_Point_Cloud_Seg_yolo.cpp)
 target_link_libraries(MechEyeDetectBeerImgDemo beerYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
 
+# 啤酒瓶和捆扎带检测（梅卡相机）
+add_executable(LSrobotMechEyeDetectBeerImgDemo src/beerbottle/mecheye_beerBottle_Point_Cloud_Seg_yolo.cpp)
+target_link_libraries(LSrobotMechEyeDetectBeerImgDemo beerYoloDemo ${MECHEYEAPI_LIBRARIES} ${OpenCV_LIBS}  ${PCL_LIBRARIES})
+
+
 # Build and link the executables
 add_executable(detect_object_image src/object_detection_image.cpp)
 target_link_libraries(detect_object_image YoloV8_TRT)
